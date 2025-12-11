@@ -12,12 +12,14 @@ GO
 CREATE TABLE NGUOI_DUNG(
     MaNguoiDung nchar(10) PRIMARY KEY,
     HoTen nvarchar(50) NOT NULL,
-    CMND nchar(12) UNIQUE,
+    CMND nchar(12),
     NgSinh date CHECK (NgSinh < GETDATE()),
     DiaChi nvarchar(100),
-    SDT nchar(10) UNIQUE CHECK (SDT LIKE '0%' AND LEN(SDT) = 10),
+    SDT nchar(10)  CHECK (SDT LIKE '0%' AND LEN(SDT) = 10),
     LoaiND nchar(2) NOT NULL CHECK (LoaiND IN ('KH', 'NV'))
 );
+CREATE UNIQUE INDEX IX_CMND ON NGUOI_DUNG(CMND) WHERE CMND IS NOT NULL;
+CREATE UNIQUE INDEX IX_SDT ON NGUOI_DUNG(SDT) WHERE SDT IS NOT NULL;
 
 -- 2. Bảng TAI_KHOAN
 CREATE TABLE TAI_KHOAN (
@@ -39,9 +41,9 @@ CREATE TABLE CHINH_SACH_LUONG (
     MaLoaiNV nchar(2) PRIMARY KEY,
     LuongCoBan decimal(12, 2) NOT NULL,
     PhuCap decimal(12, 2) NOT NULL,
-    ThuLaoChuyen decimal(12, 2),
-    ThuLaoThayThe decimal(12, 2),
-    PhatNghiPhep decimal(12, 2)
+    ThuLaoChuyen decimal(12, 2) CHECK (ThuLaoChuyen >= 0),
+    ThuLaoThayThe decimal(12, 2) CHECK (ThuLaoThayThe >= 0),
+    PhatNghiPhep decimal(12, 2) CHECK (PhatNghiPhepPhatNghiPhep >= 0)
 );
 
 -- 5. Bảng DOAN_TAU
@@ -284,4 +286,5 @@ ALTER TABLE CHI_TIET_VE ADD
     CONSTRAINT FK1_CTV_CHO FOREIGN KEY (MaCho, MaToa) REFERENCES VI_TRI_CHO_TRONG(MaChoTrong,MaToa),
     CONSTRAINT FK2_CTV_DON FOREIGN KEY (MaDon) REFERENCES DON_DAT_VE(MaDon),
     CONSTRAINT FK3_CTV_KHACH FOREIGN KEY (MaKH) REFERENCES KHACH_HANG(MaKH);
+
 
