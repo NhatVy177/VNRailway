@@ -126,7 +126,7 @@ CREATE TABLE PHANCONG_TOA (
 
 -- 14. Bảng GHE
 CREATE TABLE GHE (
-    MaGhe nchar(5),
+    MaGhe nchar(6),
     MaToa nchar(5),
     Hang int,
     Cot int
@@ -135,7 +135,7 @@ CREATE TABLE GHE (
 
 -- 15. Bảng GIUONG
 CREATE TABLE GIUONG (
-    MaGiuong nchar(5),
+    MaGiuong nchar(6),
     MaToa nchar(5),
     Tang nvarchar(6) NOT NULL,
     SoPhong int NOT NULL,
@@ -171,14 +171,14 @@ CREATE TABLE CHI_TIET_VE (
     ThanhTien decimal(12, 2),
     PhuongThucTT nvarchar(12) NOT NULL CHECK (PhuongThucTT IN (N'Tiền mặt', N'Chuyển khoản')),
     MaToa nchar(5) NOT NULL,
-    MaCho nchar(5) NOT NULL,
+    MaCho nchar(6) NOT NULL,
     MaDon nchar(10) NOT NULL,
     MaKH nchar(10) NOT NULL
 );
 
 -- 19. Bảng VI_TRI_CHO_TRONG
 CREATE TABLE VI_TRI_CHO_TRONG (
-    MaChoTrong nchar(5),
+    MaChoTrong nchar(6),
     MaToa nchar(5),
     LoaiCho nchar(2) NOT NULL CHECK (LoaiCho IN ('GH', 'GI'))
 	PRIMARY KEY(MaChoTrong,MaToa)
@@ -287,6 +287,7 @@ ALTER TABLE CHI_TIET_VE ADD
     CONSTRAINT FK1_CTV_CHO FOREIGN KEY (MaCho, MaToa) REFERENCES VI_TRI_CHO_TRONG(MaChoTrong,MaToa),
     CONSTRAINT FK2_CTV_DON FOREIGN KEY (MaDon) REFERENCES DON_DAT_VE(MaDon),
     CONSTRAINT FK3_CTV_KHACH FOREIGN KEY (MaKH) REFERENCES KHACH_HANG(MaKH);
+
 
 
 
