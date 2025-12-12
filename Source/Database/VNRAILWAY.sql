@@ -43,7 +43,7 @@ CREATE TABLE CHINH_SACH_LUONG (
     PhuCap decimal(12, 2) NOT NULL,
     ThuLaoChuyen decimal(12, 2) CHECK (ThuLaoChuyen >= 0),
     ThuLaoThayThe decimal(12, 2) CHECK (ThuLaoThayThe >= 0),
-    PhatNghiPhep decimal(12, 2) CHECK (PhatNghiPhepPhatNghiPhep >= 0)
+    PhatNghiPhep decimal(12, 2) CHECK (PhatNghiPhep >= 0)
 );
 
 -- 5. Bảng DOAN_TAU
@@ -287,6 +287,7 @@ ALTER TABLE CHI_TIET_VE ADD
     CONSTRAINT FK1_CTV_CHO FOREIGN KEY (MaCho, MaToa) REFERENCES VI_TRI_CHO_TRONG(MaChoTrong,MaToa),
     CONSTRAINT FK2_CTV_DON FOREIGN KEY (MaDon) REFERENCES DON_DAT_VE(MaDon),
     CONSTRAINT FK3_CTV_KHACH FOREIGN KEY (MaKH) REFERENCES KHACH_HANG(MaKH);
+
 
 
 
