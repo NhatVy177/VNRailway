@@ -205,8 +205,8 @@ CREATE TABLE CHUYEN_GA(
     MaChuyenTau nchar(10),
     MaGa        nchar(5),
     TrinhTu     int NOT NULL,
-    ThoiGianDen time,
-    ThoiGianDi  time
+    ThoiGianDen datetime,
+    ThoiGianDi  datetime
     PRIMARY KEY (MaChuyenTau, MaGa)
 )
 -----------------------------------------------------------------------------------------------------
@@ -287,7 +287,6 @@ ALTER TABLE CHI_TIET_VE ADD
     CONSTRAINT FK1_CTV_CHO FOREIGN KEY (MaCho, MaToa) REFERENCES VI_TRI_CHO_TRONG(MaChoTrong,MaToa),
     CONSTRAINT FK2_CTV_DON FOREIGN KEY (MaDon) REFERENCES DON_DAT_VE(MaDon),
     CONSTRAINT FK3_CTV_KHACH FOREIGN KEY (MaKH) REFERENCES KHACH_HANG(MaKH);
-
 
 
 
