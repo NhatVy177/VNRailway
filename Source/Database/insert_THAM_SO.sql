@@ -4,18 +4,18 @@ GO
 DELETE THAM_SO
 GO
 
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV001', N'Ghế - Hạng sang', 450000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV002', N'Giường phòng 4 tầng 1 - Hạng sang', 700000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV003', N'Giường phòng 4 tầng 2 - Hạng sang', 650000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV004', N'Giường phòng 6 tầng 1 - Hạng sang', 670000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV005', N'Giường phòng 6 tầng 2 - Hạng sang', 620000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV006', N'Giường phòng 6 tầng 3 - Hạng sang', 570000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV007', N'Ghế - Hạng thường', 350000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV008', N'Giường phòng 4 tầng 1 - Hạng thường', 600000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV009', N'Giường phòng 4 tầng 2 - Hạng thường', 550000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV010', N'Giường phòng 6 tầng 1 - Hạng thường', 580000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV011', N'Giường phòng 6 tầng 2 - Hạng thường', 530000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV012', N'Giường phòng 6 tầng 3 - Hạng thường', 480000);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV001', N'Ghế - Hạng sang', 450);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV002', N'Giường phòng 4 tầng 1 - Hạng sang', 700);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV003', N'Giường phòng 4 tầng 2 - Hạng sang', 650);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV004', N'Giường phòng 6 tầng 1 - Hạng sang', 670);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV005', N'Giường phòng 6 tầng 2 - Hạng sang', 620);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV006', N'Giường phòng 6 tầng 3 - Hạng sang', 570);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV007', N'Ghế - Hạng thường', 350);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV008', N'Giường phòng 4 tầng 1 - Hạng thường', 600);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV009', N'Giường phòng 4 tầng 2 - Hạng thường', 550);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV010', N'Giường phòng 6 tầng 1 - Hạng thường', 580);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV011', N'Giường phòng 6 tầng 2 - Hạng thường', 530);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('GV012', N'Giường phòng 6 tầng 3 - Hạng thường', 480);
 INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS001', N'Số vé tối đa mỗi tài khoản được đặt cho 1 chuyến tàu (vé)', 6);
 INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS002', N'Thời điểm mở bán vé trước thời điểm tàu xuất phát (ngày)', 30);
 INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS003', N'Thời điểm đóng bán vé trước thời điểm tàu xuất phát (phút)', 60);
@@ -37,3 +37,4 @@ INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS017', N'Tổn
 GO
 
 select * from THAM_SO
+
