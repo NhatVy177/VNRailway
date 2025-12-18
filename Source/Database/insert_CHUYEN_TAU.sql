@@ -50,7 +50,7 @@ INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiG
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNWB4C45C1', N'TN08', N'D025', '2025-11-18 06:00:00', '2025-11-18 08:43:00');
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNWB5EE377', N'TN05', N'D029', '2025-09-16 02:40:00', '2025-09-16 04:42:00');
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNWBA55104', N'TN01', N'D030', '2025-04-12 06:50:00', '2025-04-13 17:11:00');
-INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNWBBC3C1C7', N'TN04', N'D026', '2025-08-20 03:40:00', '2025-08-20 09:30:00');
+INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNWBC3C1C7', N'TN04', N'D026', '2025-08-20 03:40:00', '2025-08-20 09:30:00');
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNWBDB5001', N'TN09', N'D022', '2025-01-29 14:50:00', '2025-01-30 11:25:00');
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNWC4439DA', N'TN09', N'D022', '2025-07-09 01:30:00', '2025-07-09 22:05:00');
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNWDD1F230', N'TN06', N'D023', '2025-02-07 06:40:00', '2025-02-07 08:46:00');
