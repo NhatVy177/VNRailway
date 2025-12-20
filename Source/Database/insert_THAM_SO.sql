@@ -29,10 +29,10 @@ INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS010', N'Tỷ 
 INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS011', N'Tỷ lệ giảm giá vé cho sinh viên (%)', 0.1);
 INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS012', N'Thời điểm phân công trước thời điểm tàu xuất phát (giờ)', 24);
 INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS013', N'Thời điểm duyệt nghỉ phép trước thời điểm tàu xuất phát (giờ)', 12);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS014', N'Tổng số km tối thiểu mỗi đoàn tàu chạy trong 1 tuần (km)', 4000);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS015', N'Tổng số km tối đa mỗi đoàn tàu chạy trong 1 tuần (km)', 500);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS016', N'Tổng thời gian chạy tàu tối thiểu của mỗi nhân viên lái tàu trong 1 tuần (giờ)', 45);
-INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS017', N'Tổng thời gian chạy tàu tối đa của mỗi nhân viên lái tàu trong 1 tuần (giờ)', 10);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS014', N'Tổng số km tối thiểu mỗi đoàn tàu chạy trong 1 tuần (km)', 500);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS015', N'Tổng số km tối đa mỗi đoàn tàu chạy trong 1 tuần (km)', 4000);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS016', N'Tổng thời gian chạy tàu tối thiểu của mỗi nhân viên lái tàu trong 1 tuần (giờ)', 10);
+INSERT INTO THAM_SO (MaThamSo, TenThamSo, GiaTriThamSo) VALUES ('TS017', N'Tổng thời gian chạy tàu tối đa của mỗi nhân viên lái tàu trong 1 tuần (giờ)', 45);
 
 GO
 
