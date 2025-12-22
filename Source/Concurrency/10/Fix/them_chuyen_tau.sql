@@ -1,5 +1,5 @@
 ﻿/* Thêm chuyến tàu */
-CREATE OR ALTER PROC usp_ThemChuyenTau
+CREATE OR ALTER PROC usp_ThemChuyenTau_fix
 	@MaTuyen NCHAR(4),
 	@MaDoanTau NCHAR(4),
 	@ThoiGianXuatPhat DATETIME
@@ -184,5 +184,5 @@ COMMIT TRAN;
 RETURN 0;
 GO
 
---EXEC usp_ThemChuyenTau N'TN01', N'D030', '2026-04-15 21:00:00';
+--EXEC usp_ThemChuyenTau_fix N'TN01', N'D030', '2026-04-15 21:00:00';
 --GO

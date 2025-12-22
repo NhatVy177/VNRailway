@@ -73,8 +73,6 @@ BEGIN TRAN;
 	  AND ThoiGianXuatPhat >= @DauTuan
 	  AND ThoiGianXuatPhat < @CuoiTuan;
 	
-	WAITFOR DELAY '00:00:10';
-
 	-- Tính tổng số km mà đoàn tàu này đã được phân công trong tuần đó
 	DECLARE @TongKmTrongTuan DECIMAL(6,2);
 

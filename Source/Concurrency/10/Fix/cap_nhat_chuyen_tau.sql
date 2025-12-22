@@ -1,5 +1,5 @@
 /* Cập nhật chuyến tàu */
-CREATE OR ALTER PROC usp_CapNhatChuyenTau
+CREATE OR ALTER PROC usp_CapNhatChuyenTau_fix
 	@MaChuyenTau NCHAR(10),
 	@MaTuyen NCHAR(4),
 	@MaDoanTau NCHAR(4),
@@ -206,5 +206,5 @@ COMMIT TRAN;
 RETURN 0;
 GO
 
---EXEC usp_CapNhatChuyenTau N'VNW8F484B2', N'TN01', N'D030', '2026-04-18 12:00:00';
+--EXEC usp_CapNhatChuyenTau_fix N'VNW8F484B2', N'TN01', N'D030', '2026-04-18 12:00:00';
 --GO
