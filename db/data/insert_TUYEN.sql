@@ -1,0 +1,12 @@
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN01', N'Hà Nội – Sài Gòn', N'U010001');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN02', N'Hà Nội – Đà Nẵng', N'U010002');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN03', N'Hà Nội – Vinh – Đồng Hới – Huế', N'U010003');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN04', N'Hà Nội – Lào Cai', N'U010004');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN05', N'Hà Nội – Hải Phòng', N'U010005');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN06', N'Hà Nội – Thái Nguyên', N'U010006');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN07', N'Hà Nội – Đồng Đăng', N'U010007');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN08', N'Kép – Hạ Long', N'U010008');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN09', N'Sài Gòn – Huế', N'U010009');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN10', N'Sài Gòn – Quy Nhơn', N'U010010');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN11', N'Sài Gòn – Nha Trang – Tuy Hoà', N'U010011');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN12', N'Sài Gòn – Phan Thiết', N'U010012');

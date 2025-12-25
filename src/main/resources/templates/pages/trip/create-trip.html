@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{layout/main :: layout(~{::section}, 'Thêm chuyến tàu')}"
+>
+  <section>
+    <div class="main__container">
+      <h1 class="main__title">Thêm chuyến tàu</h1>
+
+      <div class="form-card">
+        <form
+          class="form"
+          hx-post="/trips/"
+          hx-target="#modal-root"
+          hx-target-error="#modal-root"
+          hx-swap="innerHTML"
+        >
+          <!-- Tuyến -->
+          <div class="form__group">
+            <label class="form__label">
+              Tuyến <span class="form__required">*</span>
+            </label>
+            <div class="form__control form__control--with-button">
+              <input
+                type="text"
+                class="input"
+                readonly
+                required
+                th:value="${routeName}"
+              />
+              <input type="hidden" name="routeId" th:value="${routeId}" />
+              <a
+                th:href="@{/route/add-to-trip(returnUrl='/trips/new')}"
+                class="btn btn--primary"
+              >
+                Chọn tuyến
+              </a>
+            </div>
+          </div>
+
+          <!-- Thời gian xuất phát -->
+          <div class="form__group">
+            <label class="form__label">
+              Thời gian xuất phát <span class="form__required">*</span>
+            </label>
+            <div class="form__control form__control--single">
+              <input
+                type="datetime-local"
+                name="departureTime"
+                class="input"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Đoàn tàu -->
+          <div class="form__group">
+            <label class="form__label">
+              Đoàn tàu <span class="form__required">*</span>
+            </label>
+            <div class="form__control form__control--with-button">
+              <input
+                type="text"
+                class="input"
+                readonly
+                required
+                th:value="${trainName}"
+              />
+              <input type="hidden" name="trainId" th:value="${trainId}" />
+              <a
+                th:href="@{/train/add-to-trip(returnUrl='/trips/new')}"
+                class="btn btn--primary"
+              >
+                Chọn tàu
+              </a>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <div class="form__actions">
+            <button type="submit" class="btn btn--primary">Thêm</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</html>

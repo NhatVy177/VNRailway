@@ -1,0 +1,19 @@
+/* Font */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* Base */
+@import url("./variables.css");
+@import url("./reset.css");
+@import url("./layout.css");
+
+/* Components */
+@import url("./components/header.css");
+@import url("./components/footer.css");
+@import url("./components/logo.css");
+@import url("./components/button.css");
+@import url("./components/form.css");
+@import url("./components/input.css");
+@import url("./components/info-modal.css");
+
+/* Pages */
+@import url("./pages/create-trip.css");

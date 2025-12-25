@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  lang="vi"
+  th:fragment="layout(content, title)"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="htmx-config"
+      content='{"responseHandling": [{"code":"...", "swap": true}]}'
+    />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <title th:text="${title} ?: 'VNRailWay'">VNRailWay</title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+
+    <script th:src="@{/js/htmx.min.js}" defer></script>
+    <script th:src="@{/js/alpine.min.js}" defer></script>
+    <script th:src="@{/js/app.js}"></script>
+    <script src="/js/livereload.js"></script>
+  </head>
+
+  <body class="page">
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <main class="main">
+      <div th:replace="${content}"></div>
+    </main>
+
+    <div id="modal-root"></div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>

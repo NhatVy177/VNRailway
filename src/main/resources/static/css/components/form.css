@@ -1,0 +1,4 @@
+.form__label.required::after {
+  content: " *";
+  color: var(--color-error);
+}

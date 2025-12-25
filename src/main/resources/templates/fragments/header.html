@@ -1,0 +1,44 @@
+<header th:fragment="header" class="header">
+  <div class="header__container">
+    <div class="header__content">
+      <!-- Logo -->
+      <div class="header__logo">
+        <img src="/images/logo/logo.png" alt="VNRailWay" class="logo__image" />
+      </div>
+
+      <!-- Navigation -->
+      <nav class="nav">
+        <a href="/statistics" class="nav__item">Thống kê</a>
+        <a href="/routes" class="nav__item">Tuyến</a>
+        <a href="/trains" class="nav__item">Tàu</a>
+        <a href="/trips" class="nav__item nav__item--active">Chuyến</a>
+        <a href="/employees" class="nav__item">Nhân viên</a>
+        <a href="/settings" class="nav__item">Cấu hình</a>
+      </nav>
+
+      <!-- User -->
+      <div class="header__user">
+        <!-- <span class="user__name" th:text="${userName}">Nguyễn Nhật Vy</span> -->
+        <span class="user__name">Nguyễn Nhật Vy</span>
+        <div class="user__avatar">
+          <img
+            src="/images/icons/user.png"
+            alt="User"
+            class="user__icon--image"
+          />
+          <input id="user-menu-toggle" class="user__toggle" type="checkbox" />
+          <label for="user-menu-toggle" class="user__arrow-label">
+            <img
+              src="/images/icons/down-arrow.png"
+              alt="Options"
+              class="user__arrow--image"
+            />
+          </label>
+          <div class="user__menu" aria-hidden="true">
+            <a href="/logout" class="user__menu-item">Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

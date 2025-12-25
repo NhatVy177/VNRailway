@@ -1,0 +1,18 @@
+<div
+  th:fragment="info-modal"
+  class="modal"
+  x-data="{ open: true }"
+  x-show="open"
+  x-transition
+>
+  <div class="modal__overlay" @click="open = false"></div>
+
+  <div class="modal__content">
+    <h2 class="modal__title" th:text="${title}"></h2>
+    <p class="modal__message" th:text="${message}"></p>
+
+    <div class="modal__actions">
+      <button class="btn btn--primary" @click="open = false">Đồng ý</button>
+    </div>
+  </div>
+</div>
