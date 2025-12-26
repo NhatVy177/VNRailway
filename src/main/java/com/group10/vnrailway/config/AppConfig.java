@@ -11,5 +11,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class AppConfig {
+    private int problem = 0;
     private ProcedureMode mode = ProcedureMode.NORMAL;
 }

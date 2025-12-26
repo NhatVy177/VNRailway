@@ -1,5 +1,6 @@
 package com.group10.vnrailway.repository;
 
+import com.group10.vnrailway.config.AppConfig;
 import com.group10.vnrailway.db.ProcedureNameResolver;
 import com.group10.vnrailway.dto.DbOutput;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,13 +16,15 @@ import java.util.Map;
 @Repository
 public class TripRepository {
 
-    private final ProcedureNameResolver resolver;
     private final SimpleJdbcCall createTripCall;
 //    private SimpleJdbcCall updateCall;
 
-    public TripRepository(JdbcTemplate jdbcTemplate, ProcedureNameResolver resolver) {
-        this.resolver = resolver;
-        String spCreateTrip = this.resolver.resolve("usp_ThemChuyenTau");
+    public TripRepository(JdbcTemplate jdbcTemplate, AppConfig config, ProcedureNameResolver resolver) {
+        String spCreateTrip = "usp_ThemChuyenTau";
+
+        if (config.getProblem() == 10) {
+            spCreateTrip = resolver.resolve(spCreateTrip);
+        }
 
         this.createTripCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName(spCreateTrip)

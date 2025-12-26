@@ -1,4 +1,5 @@
 app:
+  problem: ${PROBLEM:0}
   mode: ${MODE:NORMAL}
 
 server:
