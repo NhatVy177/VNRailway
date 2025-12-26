@@ -22,7 +22,7 @@ public class TripController {
     }
 
     @GetMapping("/new")
-    public String getCreateForm(Model model,
+    public String getCreateTrip(Model model,
         @RequestParam(required = false) Long routeId,
         @RequestParam(required = false) Long trainId) {
 
