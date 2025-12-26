@@ -1,5 +1,5 @@
 ﻿/* Thêm chuyến tàu */
-CREATE OR ALTER PROC usp_ThemChuyenTau_err
+CREATE OR ALTER PROC usp_10_err_ThemChuyenTau
 	@MaTuyen NCHAR(4),
 	@MaDoanTau NCHAR(4),
 	@ThoiGianXuatPhat DATETIME,
@@ -186,6 +186,6 @@ GO
 
 --DECLARE @ReturnCode INT;
 --DECLARE @ThongBao NVARCHAR(200);
---EXEC @ReturnCode = usp_ThemChuyenTau_err N'TN01', N'D030', '2026-04-15 21:00:00', @ThongBao OUT;
+--EXEC @ReturnCode = usp_10_err_ThemChuyenTau N'TN01', N'D030', '2026-04-15 21:00:00', @ThongBao OUT;
 --PRINT CONCAT(@ReturnCode, N': ', @ThongBao);
 --GO

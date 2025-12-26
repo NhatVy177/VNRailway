@@ -10,10 +10,16 @@ public class ProcedureNameResolver {
     private final AppConfig config;
 
     public String resolve(String baseProcedureName) {
-        return switch (config.getMode()) {
-            case NORMAL -> baseProcedureName;
-            case ERROR  -> baseProcedureName + "_err";
-            case FIX    -> baseProcedureName + "_fix";
-        };
+        if (config.getMode().isNormal()) {
+            return baseProcedureName;
+        }
+
+        String suffix = baseProcedureName.substring("usp_".length());
+
+        return "usp_" +
+            config.getProblem() + "_" +
+            config.getMode().getValue() + "_" +
+            suffix;
+
     }
 }

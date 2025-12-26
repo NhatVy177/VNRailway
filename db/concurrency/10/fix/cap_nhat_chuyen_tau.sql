@@ -1,5 +1,5 @@
 /* Cập nhật chuyến tàu */
-CREATE OR ALTER PROC usp_CapNhatChuyenTau_fix
+CREATE OR ALTER PROC usp_10_fix_CapNhatChuyenTau
 	@MaChuyenTau NCHAR(10),
 	@MaTuyen NCHAR(4),
 	@MaDoanTau NCHAR(4),
@@ -215,6 +215,6 @@ GO
 
 --DECLARE @ReturnCode INT;
 --DECLARE @ThongBao NVARCHAR(200);
---EXEC @ReturnCode = usp_CapNhatChuyenTau_fix N'VNW8F484B2', N'TN01', N'D030', '2026-04-18 12:00:00', @ThongBao OUT;
+--EXEC @ReturnCode = usp_10_fix_CapNhatChuyenTau N'VNW8F484B2', N'TN01', N'D030', '2026-04-18 12:00:00', @ThongBao OUT;
 --PRINT CONCAT(@ReturnCode, N': ', @ThongBao);
 --GO
