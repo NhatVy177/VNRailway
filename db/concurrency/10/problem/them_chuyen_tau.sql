@@ -167,6 +167,8 @@ BEGIN TRAN;
 		RETURN -9001;
 	END;
 
+
+	-- 9. Thêm danh sách ga của chuyến tàu
 	INSERT INTO CHUYEN_GA (MaChuyenTau, MaGa, TrinhTu)
         SELECT @MaChuyenTau, MaGa, TrinhTu
         FROM TUYEN_GA

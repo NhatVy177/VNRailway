@@ -184,18 +184,22 @@ BEGIN TRAN;
 	BEGIN
 		SET @ThongBao = N'Lỗi khi cập nhật chuyến tàu.';
 		ROLLBACK TRAN;
-		RETURN -9003;
+		RETURN -9101;
 	END;
 
+	
+	-- 10. Cập nhật danh sách ga của chuyến tàu
+	-- Xóa danh sách ga cũ
 	DELETE FROM CHUYEN_GA WHERE MaChuyenTau = @MaChuyenTau;
 
 	IF @@ERROR <> 0
 	BEGIN
 		SET @ThongBao = N'Lỗi khi xóa ga cũ của chuyến tàu.';
 		ROLLBACK TRAN;
-		RETURN -9004;
+		RETURN -9201;
 	END;
 
+	-- Thêm danh sách ga mới
 	INSERT INTO CHUYEN_GA (MaChuyenTau, MaGa, TrinhTu)
         SELECT @MaChuyenTau, MaGa, TrinhTu
         FROM TUYEN_GA
