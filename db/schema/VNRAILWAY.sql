@@ -109,7 +109,6 @@ CREATE TABLE PHANCONG_LAITAU (
     MaChuyenTau nchar(10),
     VaiTro nvarchar(10) NOT NULL CHECK (VaiTro IN (N'Lái chính', N'Lái phụ')),
     TrangThai nvarchar(10) NOT NULL CHECK (TrangThai IN (N'Thực hiện', N'Thay thế', N'Nghỉ phép')),
-    ThoiGianLamViec time,
     MaNVQL nchar(10) NOT NULL
 	PRIMARY KEY(MaNV, MaChuyenTau)
 );
