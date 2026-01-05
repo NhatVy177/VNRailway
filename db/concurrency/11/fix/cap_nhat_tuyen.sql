@@ -192,6 +192,10 @@ BEGIN TRAN;
 		RETURN -9202;
 	END;
 
+
+	WAITFOR DELAY '00:00:10';
+
+
 	-- Thêm danh sách ga mới cho tuyến
 	INSERT INTO TUYEN_GA (
 		MaTuyen,
@@ -214,9 +218,6 @@ BEGIN TRAN;
 		ROLLBACK TRAN;
 		RETURN -9003;
 	END;
-
-
-	WAITFOR DELAY '00:00:10';
 
 
 	-- 13. Cập nhật danh sách ga của chuyến thuộc tuyến
