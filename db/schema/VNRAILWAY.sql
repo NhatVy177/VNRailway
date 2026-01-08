@@ -156,7 +156,7 @@ CREATE TABLE DON_DAT_VE (
     MaChuyenTau nchar(10) NOT NULL,
     MaGaDi nchar(5) NOT NULL,
     MaGaDen nchar(5) NOT NULL,
-    MaNVBanVe nchar(10) NOT NULL,
+    MaNVBanVe nchar(10),
     MaKH nchar(10) NOT NULL
 );
 
