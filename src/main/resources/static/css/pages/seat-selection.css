@@ -1,0 +1,598 @@
+/* =========================================================
+   SEAT SELECTION PAGE – REDESIGNED TO MATCH VNRAILWAY UI
+   ========================================================= */
+
+:root {
+    /* Seat Colors - Match design */
+    --color-seat-avail: #4B3A3A;      /* Nâu ghế trống */
+    --color-seat-occupied: #d4d4d4;   /* Xám nhạt đã đặt */
+    
+    /* Berth Colors - Match design */
+    --color-berth-avail: #7B4BA0;     /* Tím giường trống */
+    --color-berth-occupied: #d4d4d4;  /* Xám nhạt đã đặt */
+    
+    /* Selected state */
+    --color-selected: #e67e22;        /* Cam đang chọn */
+    
+    /* UI Colors */
+    --color-text-dark: #333;
+    --color-text-light: #666;
+    --color-border: #ddd;
+    --color-bg-card: #ffffff;
+    --color-bg-page: #f8f9fa;
+}
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+.seat-selection-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    background: var(--color-bg-page);
+}
+
+/* =========================================================
+   HEADER SECTION
+   ========================================================= */
+.selection-header {
+    margin-bottom: 24px;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--color-text-light);
+    text-decoration: none;
+    margin-bottom: 12px;
+    transition: color 0.2s;
+}
+
+.back-button:hover {
+    color: var(--color-text-dark);
+}
+
+.back-button img {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+}
+
+.page-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    margin: 0;
+}
+
+.train-badge {
+    background: #DBB240;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-left: 12px;
+}
+
+/* =========================================================
+   TOP CONTROLS - INFO & LEGEND
+   ========================================================= */
+.top-controls {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+/* Legend (left side in design) */
+.seat-legend {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--color-text-dark);
+}
+
+.legend-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+/* Legend colors */
+.bg-seat-avail { 
+    background-color: var(--color-seat-avail); 
+}
+
+.bg-berth-avail { 
+    background-color: var(--color-berth-avail); 
+}
+
+.bg-occupied { 
+    background-color: var(--color-seat-occupied);
+    border: 1px solid #bbb;
+}
+
+.bg-selected { 
+    background-color: var(--color-selected); 
+}
+
+/* Info Summary Card (right side) */
+.info-summary-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 20px 28px;
+    min-width: 320px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.info-label { 
+    color: var(--color-text-light); 
+}
+
+.info-val { 
+    font-weight: 600; 
+    color: var(--color-text-dark); 
+}
+
+.price-highlight { 
+    color: #d35400; 
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   VISUALIZATION AREA
+   ========================================================= */
+.visualization-area {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 24px;
+}
+
+.viz-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+/* =========================================================
+   1. TOA GHẾ (SEAT CARRIAGE)
+   ========================================================= */
+.seat-map-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.seat-grid {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 8px;
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.seat-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+/* Individual Seat */
+.seat-item {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    position: relative;
+}
+
+/* Seat States */
+.seat-item.seat-available {
+    background-color: var(--color-seat-avail);
+    color: white;
+}
+
+.seat-item.seat-available:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 8px rgba(75, 58, 58, 0.3);
+}
+
+.seat-item.seat-occupied {
+    background-color: var(--color-seat-occupied);
+    color: #888;
+    cursor: not-allowed;
+    border: 1px solid #bbb;
+}
+
+.seat-item.seat-selected {
+    background-color: var(--color-selected) !important;
+    color: white;
+    transform: scale(1.12);
+    box-shadow: 0 4px 12px rgba(230, 126, 34, 0.5);
+    z-index: 10;
+}
+
+/* =========================================================
+   2. TOA GIƯỜNG (BERTH CARRIAGE)
+   ========================================================= */
+.berth-map-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.berth-map-wrapper > div {
+    background: white;
+    padding: 28px 32px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Container for floor labels + rooms */
+.berth-layout-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* Left Column: Floor Labels */
+.floor-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 42px; /* Offset for room headers */
+}
+
+.floor-label {
+    height: 80px; /* Match floor-group height */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-text-dark);
+    white-space: nowrap;
+}
+
+/* Right Section: All Rooms */
+.rooms-grid {
+    display: flex;
+    gap: 16px;
+}
+
+/* Single Room Column */
+.berth-room-column {
+    display: flex;
+    flex-direction: column;
+    min-width: 120px;
+}
+
+.room-header {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e8e8e8;
+}
+
+/* Vertical Stack of Floors */
+.berth-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* One Floor Row (contains 1 or 2 berths side by side) */
+.floor-group {
+    height: 80px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Individual Berth */
+.berth-item {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    position: relative;
+}
+
+/* Berth States */
+.berth-item.berth-available {
+    background-color: var(--color-berth-avail);
+    color: white;
+}
+
+.berth-item.berth-available:hover {
+    transform: scale(1.12);
+    box-shadow: 0 4px 8px rgba(123, 75, 160, 0.4);
+}
+
+.berth-item.berth-occupied {
+    background-color: var(--color-berth-occupied);
+    color: #888;
+    cursor: not-allowed;
+    border: 1px solid #bbb;
+}
+
+.berth-item.berth-selected {
+    background-color: var(--color-selected) !important;
+    color: white;
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(230, 126, 34, 0.5);
+    z-index: 10;
+}
+
+/* =========================================================
+   SPECIAL CASE: 4-BERTH (2 TẦNG) vs 6-BERTH (3 TẦNG)
+   ========================================================= */
+
+/* For 4-berth carriages (GI4): only 2 floor-groups will render (Tầng 1, Tầng 2) */
+/* For 6-berth carriages (GI6): 3 floor-groups will render (Tầng 1, 2, 3) */
+/* The Thymeleaf template handles conditional rendering */
+
+/* Ensure consistent spacing regardless of tier count */
+.berth-stack.berth-4 .floor-group {
+    height: 90px; /* Slightly taller for 2-tier layout */
+}
+
+.berth-stack.berth-6 .floor-group {
+    height: 80px; /* Standard for 3-tier layout */
+}
+
+/* =========================================================
+   TOOLTIP FOR PRICE DISPLAY
+   ========================================================= */
+[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.88);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.88);
+    z-index: 100;
+    pointer-events: none;
+}
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.btn {
+    padding: 14px 40px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel {
+    background: #f1f2f6;
+    color: #666;
+}
+
+.btn-cancel:hover {
+    background: #e8e9ed;
+    color: #333;
+}
+
+.btn-confirm {
+    background: #a66c7e;
+    color: white;
+}
+
+.btn-confirm:hover {
+    background: #915a6b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(166, 108, 126, 0.3);
+}
+
+.btn-confirm:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+@media (max-width: 1024px) {
+    .top-controls {
+        grid-template-columns: 1fr;
+    }
+    
+    .info-summary-card {
+        min-width: 100%;
+    }
+    
+    .seat-grid {
+        padding: 16px;
+    }
+    
+    .rooms-grid {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .seat-selection-container {
+        padding: 20px 12px;
+    }
+    
+    .visualization-area {
+        padding: 20px 12px;
+    }
+    
+    .seat-item {
+        width: 36px;
+        height: 36px;
+        font-size: 11px;
+    }
+    
+    .berth-item {
+        width: 32px;
+        height: 32px;
+        font-size: 11px;
+    }
+    
+    .floor-group {
+        height: 70px;
+    }
+    
+    .floor-label {
+        height: 70px;
+        font-size: 12px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   LOADING & ERROR STATES
+   ========================================================= */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #854759;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+.seat-item:focus,
+.berth-item:focus {
+    outline: 3px solid #4A90E2;
+    outline-offset: 2px;
+}
+
+.seat-item[aria-disabled="true"],
+.berth-item[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Screen reader only text */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

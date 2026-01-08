@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html
+    xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout/main :: layout(~{::section}, 'Chọn chỗ')}"
+>
+<section>
+
+    <div class="container seat-selection-container">
+        
+        <div class="selection-header">
+            <a th:href="@{/trips/{tripId}(
+                    tripId=${tripId},
+                    departureStation=${departureStationId},
+                    arrivalStation=${arrivalStationId}
+                )}" class="back-button">
+                <img src="/images/icons/previous-page.png" alt="Back">
+                Quay lại chọn toa
+            </a>
+            
+            <h1 class="page-title">
+                Toa <span th:text="${carriage.sequenceNumber}">1</span>
+                <span class="train-badge" th:text="${carriage.seatCarriage ? 'Ghế ngồi' : 'Giường nằm'}">Loại toa</span>
+            </h1>
+        </div>
+
+        <div class="top-controls">
+            <!-- Left: Legend -->
+            <div class="seat-legend">
+                <div class="legend-item">
+                    <div class="legend-box" 
+                         th:classappend="${carriage.seatCarriage} ? 'bg-seat-avail' : 'bg-berth-avail'"></div>
+                    <span th:text="${carriage.seatCarriage} ? 'Chỗ ghế trống' : 'Chỗ giường trống'">Chỗ trống</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box bg-occupied"></div>
+                    <span>Chỗ người khác đã đặt</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #6b9c65; border: 1px solid #5a8556;"></div>
+                    <span>Chỗ bạn đã đặt</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box bg-selected"></div>
+                    <span>Chỗ đang chọn</span>
+                </div>
+            </div>
+
+            <!-- Right: Info Summary -->
+            <div class="info-summary-card">
+                <div class="info-row">
+                    <span class="info-label">Chỗ trống:</span>
+                    <span class="info-val" th:text="${carriage.availableSeats}">42</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ghế đang chọn:</span>
+                    <span class="info-val" id="selectedSeatLabel">--</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tạm tính:</span>
+                    <span class="info-val price-highlight" id="selectedSeatPrice">0 VNĐ</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="visualization-area">
+            
+            <!-- ============================================
+                 TOA GHẾ (SEAT CARRIAGE)
+                 ============================================ -->
+            <th:block th:if="${carriage.seatCarriage}">
+                <div class="viz-title">Toa <span th:text="${carriage.sequenceNumber}">1</span>: Ghế ngồi mềm</div>
+                
+                <div class="seat-map-wrapper">
+                    <div class="seat-grid">
+                        <th:block th:each="entry : ${seatLayout}">
+                            <div class="seat-row">
+                                <th:block th:each="seat : ${entry.value}">
+                                    <div class="seat-item"
+                                         th:classappend="${seat.available} ? 'seat-available' : 'seat-occupied'"
+                                         th:data-seat-id="${seat.seatId}"
+                                         th:data-price="${seat.price}"
+                                         th:data-available="${seat.available}"
+                                         th:attr="data-tooltip=${seat.available ? 'Giá: ' + #numbers.formatDecimal(seat.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : 'Đã bán'}"
+                                         tabindex="0"
+                                         role="button"
+                                         th:aria-label="'Ghế ' + ${seat.column} + ', hàng ' + ${seat.row}">
+                                        <span th:text="${seat.column}">1</span>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+            </th:block>
+
+            <!-- ============================================
+                 TOA GIƯỜNG (BERTH CARRIAGE)
+                 Support both GI4 (2 tiers) and GI6 (3 tiers)
+                 ============================================ -->
+            <th:block th:unless="${carriage.seatCarriage}">
+                <div class="viz-title">
+                    Toa <span th:text="${carriage.sequenceNumber}">5</span>: 
+                    <span th:text="${carriage.sixBerthCarriage} ? 'Giường phòng 6' : 'Giường phòng 4'">Giường</span>
+                </div>
+
+                <div class="berth-map-wrapper">
+                    <div class="berth-layout-container">
+                        <!-- Left: Floor Labels -->
+                        <div class="floor-labels">
+                            <div class="floor-label" th:if="${carriage.sixBerthCarriage}">Tầng 3</div>
+                            <div class="floor-label">Tầng 2</div>
+                            <div class="floor-label">Tầng 1</div>
+                        </div>
+
+                        <!-- Right: Rooms Grid -->
+                        <div class="rooms-grid">
+                            <th:block th:each="entry : ${berthLayout}">
+                                <div class="berth-room-column">
+                                    <div class="room-header">Phòng <span th:text="${entry.key}">1</span></div>
+                                    
+                                    <div class="berth-stack" 
+                                         th:classappend="${carriage.sixBerthCarriage} ? 'berth-6' : 'berth-4'">
+                                        
+                                        <!-- Tầng 3 (only for 6-berth carriages) -->
+                                        <div class="floor-group" th:if="${carriage.sixBerthCarriage}">
+                                            <th:block th:each="berth : ${entry.value}" th:if="${berth.tierNumber == 3}">
+                                                <div class="berth-item"
+                                                     th:classappend="${berth.available} ? 'berth-available' : 'berth-occupied'"
+                                                     th:data-berth-id="${berth.berthId}"
+                                                     th:data-price="${berth.price}"
+                                                     th:data-available="${berth.available}"
+                                                     th:attr="data-tooltip=${berth.available ? 'Giá: ' + #numbers.formatDecimal(berth.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : 'Đã bán'}"
+                                                     tabindex="0"
+                                                     role="button"
+                                                     th:aria-label="'Giường ' + ${berth.berthId} + ', tầng 3, phòng ' + ${berth.roomNumber}">
+                                                    <span th:text="${berth.berthId}">11</span>
+                                                </div>
+                                            </th:block>
+                                        </div>
+
+                                        <!-- Tầng 2 (for both 4-berth and 6-berth) -->
+                                        <div class="floor-group">
+                                            <th:block th:each="berth : ${entry.value}" th:if="${berth.tierNumber == 2}">
+                                                <div class="berth-item"
+                                                     th:classappend="${berth.available} ? 'berth-available' : 'berth-occupied'"
+                                                     th:data-berth-id="${berth.berthId}"
+                                                     th:data-price="${berth.price}"
+                                                     th:data-available="${berth.available}"
+                                                     th:attr="data-tooltip=${berth.available ? 'Giá: ' + #numbers.formatDecimal(berth.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : 'Đã bán'}"
+                                                     tabindex="0"
+                                                     role="button"
+                                                     th:aria-label="'Giường ' + ${berth.berthId} + ', tầng 2, phòng ' + ${berth.roomNumber}">
+                                                    <span th:text="${berth.berthId}">9</span>
+                                                </div>
+                                            </th:block>
+                                        </div>
+
+                                        <!-- Tầng 1 (for both 4-berth and 6-berth) -->
+                                        <div class="floor-group">
+                                            <th:block th:each="berth : ${entry.value}" th:if="${berth.tierNumber == 1}">
+                                                <div class="berth-item"
+                                                     th:classappend="${berth.available} ? 'berth-available' : 'berth-occupied'"
+                                                     th:data-berth-id="${berth.berthId}"
+                                                     th:data-price="${berth.price}"
+                                                     th:data-available="${berth.available}"
+                                                     th:attr="data-tooltip=${berth.available ? 'Giá: ' + #numbers.formatDecimal(berth.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : 'Đã bán'}"
+                                                     tabindex="0"
+                                                     role="button"
+                                                     th:aria-label="'Giường ' + ${berth.berthId} + ', tầng 1, phòng ' + ${berth.roomNumber}">
+                                                    <span th:text="${berth.berthId}">7</span>
+                                                </div>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+        </div>
+
+        <div class="action-buttons">
+            <button type="button" class="btn btn-cancel" id="cancelBtn">Hủy bỏ</button>
+            <button type="button" class="btn btn-confirm" id="confirmBtn" disabled>Đặt vé</button>
+        </div>
+    </div>
+
+    <input type="hidden" id="tripId" th:value="${tripId}">
+    <input type="hidden" id="carriageId" th:value="${carriage.carriageId}">
+    <input type="hidden" id="departureStationId" th:value="${departureStationId}">
+    <input type="hidden" id="arrivalStationId" th:value="${arrivalStationId}">
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/js/seat-selection.js}"></script>
+    </th:block>
+
+</section>
+</html>

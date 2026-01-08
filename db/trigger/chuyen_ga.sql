@@ -10,6 +10,16 @@ BEGIN
     SET NOCOUNT ON;
     IF TRIGGER_NESTLEVEL() > 1 RETURN;
 
+    /*
+        Quy ước theo dữ liệu TUYEN_GA đang insert:
+        - TGDiChuyenGiuaCacGa tại TrinhTu = k là thời gian di chuyển từ ga (k-1) -> ga k
+          (ví dụ TrinhTu=2 có 0:10 nghĩa là ga 1 -> ga 2 mất 10 phút)
+        Nghiệp vụ:
+        - Ga đầu (TrinhTu=1): Den = Di = ThoiGianXuatPhat
+        - Ga giữa: Den(k) = Di(k-1) + TG(k) ; Di(k) = Den(k) + 5 phút
+        - Ga cuối: Den = Di
+    */
+
     ;WITH AffectedTrips AS (
         SELECT DISTINCT MaChuyenTau FROM inserted
     ),
@@ -25,13 +35,13 @@ BEGIN
         GROUP BY cg.MaChuyenTau
     ),
     Stops AS (
-        -- TG của trinhTu k là chặng k -> k+1
+        -- Lấy TG tại chính TrinhTu hiện tại (k)
         SELECT
             cg.MaChuyenTau,
             cg.TrinhTu,
             mt.MaxTrinhTu,
             ti.ThoiGianXuatPhat,
-            tg.TGDiChuyenGiuaCacGa AS TravelToNext
+            tg.TGDiChuyenGiuaCacGa AS TravelFromPrev
         FROM dbo.CHUYEN_GA cg
         JOIN TripInfo ti ON ti.MaChuyenTau = cg.MaChuyenTau
         JOIN MaxTT mt ON mt.MaChuyenTau = cg.MaChuyenTau
@@ -40,38 +50,47 @@ BEGIN
          AND tg.TrinhTu = cg.TrinhTu
     ),
     R AS (
-        -- Ga 1: Den = Di = ThoiGianXuatPhat (datetime thật, có ngày)
+        -- Ga đầu: Den = Di = XuatPhat
         SELECT
             s.MaChuyenTau, s.TrinhTu, s.MaxTrinhTu,
             CAST(s.ThoiGianXuatPhat AS datetime) AS DenDT,
             CAST(s.ThoiGianXuatPhat AS datetime) AS DiDT,
-            s.TravelToNext
+            s.TravelFromPrev
         FROM Stops s
         WHERE s.TrinhTu = 1
 
         UNION ALL
 
-        -- Ga k>1: Den(k)=Di(k-1)+TG(k-1)  (TG lấy từ row trước: r.TravelToNext)
+        -- Ga k>1:
+        -- Den(k) = Di(k-1) + TG(k)
+        -- Di(k)  = Den(k) + 5' (nếu không phải ga cuối), còn ga cuối Den=Di
         SELECT
             s.MaChuyenTau, s.TrinhTu, s.MaxTrinhTu,
-            DATEADD(SECOND,
-                DATEDIFF(SECOND, CAST('00:00:00' AS time), r.TravelToNext),
+
+            DATEADD(
+                SECOND,
+                DATEDIFF(SECOND, CAST('00:00:00' AS time), s.TravelFromPrev),
                 r.DiDT
             ) AS DenDT,
+
             CASE
                 WHEN s.TrinhTu = s.MaxTrinhTu
-                    THEN DATEADD(SECOND,
-                        DATEDIFF(SECOND, CAST('00:00:00' AS time), r.TravelToNext),
+                    THEN DATEADD(
+                        SECOND,
+                        DATEDIFF(SECOND, CAST('00:00:00' AS time), s.TravelFromPrev),
                         r.DiDT
                     )
-                ELSE DATEADD(MINUTE, 5,
-                    DATEADD(SECOND,
-                        DATEDIFF(SECOND, CAST('00:00:00' AS time), r.TravelToNext),
-                        r.DiDT
+                ELSE DATEADD(
+                        MINUTE, 5,
+                        DATEADD(
+                            SECOND,
+                            DATEDIFF(SECOND, CAST('00:00:00' AS time), s.TravelFromPrev),
+                            r.DiDT
+                        )
                     )
-                )
             END AS DiDT,
-            s.TravelToNext
+
+            s.TravelFromPrev
         FROM R
         JOIN Stops s
           ON s.MaChuyenTau = r.MaChuyenTau
@@ -88,11 +107,3 @@ BEGIN
     OPTION (MAXRECURSION 32767);
 END
 GO
-
--- Update
-UPDATE CHUYEN_GA
-SET TrinhTu = TrinhTu
--- Test
-SELECT * FROM CHUYEN_GA
-WHERE MaChuyenTau = 'VNW051D768'
-ORDER BY TrinhTu 

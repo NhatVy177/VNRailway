@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{layout/main :: layout(~{::section}, 'Tra cứu chuyến tàu')}"
+>
+  <section>
+    <div class="main__container">
+      <h1 class="main__title">Tra cứu chuyến tàu</h1>
+
+      <!-- Form tìm kiếm -->
+      <div class="search-card">
+        <form
+          class="search-form"
+          method="post"
+          th:action="@{/trips/search}"
+          th:object="${searchRequest}"
+          id="searchForm"
+        >
+          <!-- Hidden input để giữ page number -->
+          <input type="hidden" name="page" th:value="${searchRequest?.page}" id="pageInput" />
+          
+          <!-- Row 1: Ga đi, Ngày đi, Loại tàu -->
+          <div class="search-form__row">
+            <div class="search-form__group">
+              <label class="search-form__label">Ga đi</label>
+              <select name="maGaDi" class="input" id="maGaDi">
+                <option value="">-- Chọn ga đi --</option>
+                <option 
+                  th:each="station : ${stations}" 
+                  th:value="${station.maGa}"
+                  th:text="${station.tenGa}"
+                  th:selected="${station.maGa == searchRequest?.maGaDi}"
+                ></option>
+              </select>
+            </div>
+
+            <div class="search-form__group">
+              <label class="search-form__label">Ngày đi</label>
+              <input
+                type="date"
+                name="ngayDi"
+                class="input"
+                th:value="${searchRequest?.ngayDi}"
+              />
+            </div>
+
+            <div class="search-form__group">
+              <label class="search-form__label">Loại tàu</label>
+              <select name="loaiTau" class="input">
+                <option value="">Tất cả</option>
+                <option value="S" th:selected="${searchRequest?.loaiTau == 'S'}">Se (Nhanh)</option>
+                <option value="T" th:selected="${searchRequest?.loaiTau == 'T'}">Thường</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Row 2: Ga đến, Giờ khởi hành, Loại chỗ -->
+          <div class="search-form__row">
+            <div class="search-form__group">
+              <label class="search-form__label">Ga đến</label>
+              <select name="maGaDen" class="input" id="maGaDen">
+                <option value="">-- Chọn ga đến --</option>
+                <option 
+                  th:each="station : ${stations}" 
+                  th:value="${station.maGa}"
+                  th:text="${station.tenGa}"
+                  th:selected="${station.maGa == searchRequest?.maGaDen}"
+                ></option>
+              </select>
+            </div>
+
+            <div class="search-form__group">
+              <label class="search-form__label">Giờ khởi hành</label>
+              <div class="time-range">
+                <input
+                  type="time"
+                  name="gioKhoiHanhTu"
+                  class="input"
+                  placeholder="00:00"
+                  th:value="${searchRequest?.gioKhoiHanhTu}"
+                />
+                <span class="time-separator">–</span>
+                <input
+                  type="time"
+                  name="gioKhoiHanhDen"
+                  class="input"
+                  placeholder="23:59"
+                  th:value="${searchRequest?.gioKhoiHanhDen}"
+                />
+              </div>
+            </div>
+
+            <div class="search-form__group">
+              <label class="search-form__label">Loại chỗ</label>
+              <select name="loaiCho" class="input">
+                <option value="">Tất cả</option>
+                <option value="GH" th:selected="${searchRequest?.loaiCho == 'GH'}">Ghế</option>
+                <option value="GI4" th:selected="${searchRequest?.loaiCho == 'GI4'}">Giường 4</option>
+                <option value="GI6" th:selected="${searchRequest?.loaiCho == 'GI6'}">Giường 6</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Row 3: Tình trạng -->
+          <div class="search-form__row">
+            <div class="search-form__group">
+              <label class="search-form__label">Tình trạng</label>
+              <select name="trangThai" class="input">
+                <option value="">Tất cả</option>
+                <option value="C" th:selected="${searchRequest?.trangThai == 'C'}">Còn chỗ trống</option>
+              </select>
+            </div>
+            
+            <!-- Các ô trống để căn chỉnh layout -->
+            <div class="search-form__group"></div>
+            <div class="search-form__group"></div>
+          </div>
+
+          <!-- Nút tìm kiếm -->
+          <div class="search-form__actions">
+            <button type="submit" class="btn btn--primary search-btn" onclick="resetPage()">
+              Tìm kiếm
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Kết quả tìm kiếm -->
+      <div th:if="${trips != null and not #lists.isEmpty(trips)}" class="search-results">
+        <div class="search-results__header">
+          <span>
+            Kết quả: <strong th:text="${pageResult.totalElements}"></strong>
+            <span th:if="${pageResult.totalPages > 1}">
+              (trang <span th:text="${pageResult.page}"></span> trên <span th:text="${pageResult.totalPages}"></span>)
+            </span>
+          </span>
+        </div>
+
+        <!-- Danh sách chuyến tàu -->
+        <div class="trip-list">
+          <!-- ✅ THÊM LINK VÀO MỖI TRIP CARD -->
+          <a
+            th:each="trip : ${trips}"
+            th:href="@{/trips/{tripId}(
+              tripId=${trip.maChuyenTau},
+              departureStation=${trip.maGaDi},
+              arrivalStation=${trip.maGaDen}
+            )}"
+            class="trip-card-link"
+          >
+            <div
+              class="trip-card"
+              th:classappend="${trip.soChoTrong > 0} ? 'card-available' : 'card-full'"
+            >
+              <!-- Header: Mã tàu và loại -->
+              <div class="trip-card__header">
+                <span class="trip-card__train-name" th:text="${trip.tenTau}"></span>
+                
+                <!-- Badge Hạng sang (Se) - Màu vàng #DBB240 -->
+                <span
+                  th:if="${trip.loaiTau == 'S'}"
+                  class="trip-card__badge badge-premium"
+                >
+                  Hạng sang
+                </span>
+                
+                <!-- Badge Bình thường - Màu xám #666666 -->
+                <span
+                  th:if="${trip.loaiTau == 'T'}"
+                  class="trip-card__badge badge-regular"
+                >
+                  Bình thường
+                </span>
+              </div>
+
+              <!-- Body: Thông tin chuyến đi -->
+              <div class="trip-card__body">
+                <!-- Ga đi -->
+                <div class="trip-card__station">
+                  <div class="trip-card__time">
+                    <span 
+                      class="time-text"
+                      th:text="${#temporals.format(trip.thoiGianKhoiHanh, 'HH:mm dd/MM/yyyy')}"
+                    ></span>
+                    <span 
+                      class="station-text"
+                      th:text="'(' + ${trip.tenGaDi} + ')'"
+                    ></span>
+                  </div>
+                </div>
+
+                <!-- Mũi tên và khoảng cách -->
+                <div class="trip-card__journey">
+                  <span 
+                    class="trip-card__distance" 
+                    th:text="${trip.khoangCach} + ' km'"
+                  ></span>
+                  <div class="trip-card__arrow">→</div>
+                </div>
+
+                <!-- Ga đến -->
+                <div class="trip-card__station">
+                  <div class="trip-card__time">
+                    <span 
+                      class="time-text"
+                      th:text="${#temporals.format(trip.thoiGianDenDuKien, 'HH:mm dd/MM/yyyy')}"
+                    ></span>
+                    <span 
+                      class="station-text"
+                      th:text="'(' + ${trip.tenGaDen} + ')'"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer: Số chỗ trống -->
+              <div class="trip-card__footer">
+                <span class="trip-card__seats">
+                  Số chỗ trống còn lại:
+                  <strong 
+                    class="seats-count"
+                    th:text="${trip.soChoTrong}"
+                    th:classappend="${trip.soChoTrong > 0} ? 'seats-available' : 'seats-full'"
+                  ></strong>
+                </span>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Pagination -->
+        <div th:if="${pageResult.totalPages > 1}" class="pagination">
+          <!-- Nút Previous -->
+          <button 
+            class="pagination__btn" 
+            th:disabled="${pageResult.page == 1}"
+            th:attr="data-page=${pageResult.page - 1}"
+            onclick="changePage(this.getAttribute('data-page'))"
+            type="button"
+          >
+            ← Trang trước
+          </button>
+          
+          <!-- Hiển thị số trang -->
+          <span class="pagination__info">
+            Trang <span class="pagination__current" th:text="${pageResult.page}"></span>
+            trên <span th:text="${pageResult.totalPages}"></span>
+          </span>
+          
+          <!-- Nút Next -->
+          <button 
+            class="pagination__btn"
+            th:disabled="${pageResult.page >= pageResult.totalPages}"
+            th:attr="data-page=${pageResult.page + 1}"
+            onclick="changePage(this.getAttribute('data-page'))"
+            type="button"
+          >
+            Trang sau →
+          </button>
+        </div>
+      </div>
+
+      <!-- Thông báo không có kết quả -->
+      <div
+        th:if="${trips != null and #lists.isEmpty(trips)}"
+        class="no-results"
+      >
+        <p>Không tìm thấy chuyến tàu phù hợp với tiêu chí tìm kiếm.</p>
+      </div>
+    </div>
+
+    <!-- JavaScript cho pagination và lưu ga đi/đến -->
+    <script>
+      function changePage(page) {
+        document.getElementById('pageInput').value = page;
+        document.getElementById('searchForm').submit();
+      }
+      
+      function resetPage() {
+        document.getElementById('pageInput').value = 1;
+      }
+      
+      // ✅ LƯU GA ĐI VÀ GA ĐẾN VÀO sessionStorage
+      document.addEventListener('DOMContentLoaded', function() {
+        const searchForm = document.getElementById('searchForm');
+        const maGaDi = document.getElementById('maGaDi');
+        const maGaDen = document.getElementById('maGaDen');
+        
+        // Lưu khi submit form
+        searchForm.addEventListener('submit', function() {
+          if (maGaDi.value) {
+            sessionStorage.setItem('lastDepartureStation', maGaDi.value);
+          }
+          if (maGaDen.value) {
+            sessionStorage.setItem('lastArrivalStation', maGaDen.value);
+          }
+        });
+      });
+    </script>
+
+    <!-- ✅ CSS BỔ SUNG CHO TRIP CARD LINK -->
+    <style>
+      /* ==================================================
+         TRIP CARD LINK STYLES
+         ================================================== */
+      
+      .trip-card-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        margin-bottom: 16px;
+        transition: transform 0.2s ease;
+      }
+      
+      .trip-card-link:hover {
+        transform: translateY(-4px);
+      }
+      
+      .trip-card-link:active {
+        transform: translateY(-1px);
+      }
+      
+      /* Trip Card Base */
+      .trip-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+      
+      .trip-card-link:hover .trip-card {
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      }
+      
+      /* Card Available (còn chỗ) */
+      .trip-card.card-available {
+        background-color: #e1e1f6;
+        border-left: 4px solid #4b4a69;
+      }
+      
+      .trip-card-link:hover .trip-card.card-available {
+        border-left-width: 6px;
+      }
+      
+      /* Card Full (hết chỗ) */
+      .trip-card.card-full {
+        background-color: #fce0e8;
+        border-left: 4px solid #854759;
+        opacity: 0.85;
+      }
+      
+      .trip-card-link:hover .trip-card.card-full {
+        border-left-width: 6px;
+      }
+      
+      /* Badge Styles */
+      .trip-card__badge {
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+      
+      .badge-premium {
+        background-color: #DBB240;
+        color: white;
+      }
+      
+      .badge-regular {
+        background-color: #666666;
+        color: white;
+      }
+      
+      /* Time and Station Text */
+      .time-text {
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: #333;
+      }
+      
+      .station-text {
+        color: #666;
+        font-size: 0.875rem;
+      }
+      
+      /* Journey Arrow */
+      .trip-card__distance {
+        color: #854759;
+        font-weight: 500;
+      }
+      
+      .trip-card__arrow {
+        color: #854759;
+        font-size: 1.5rem;
+      }
+      
+      /* Seats Count */
+      .trip-card__seats {
+        color: #333;
+        font-weight: 500;
+      }
+      
+      .seats-count.seats-available {
+        color: #4b4a69;
+      }
+      
+      .seats-count.seats-full {
+        color: #854759;
+      }
+      
+      /* Responsive */
+      @media (max-width: 768px) {
+        .trip-card-link:hover {
+          transform: translateY(-2px);
+        }
+      }
+    </style>
+  </section>
+</html>

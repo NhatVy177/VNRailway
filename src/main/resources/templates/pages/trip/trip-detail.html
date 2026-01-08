@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout(~{::section}, 'Chi tiết chuyến tàu')}">
+<section>
+    <div id="priceTooltip"></div>
+
+    <div class="container trip-detail-container">
+        
+        <div class="trip-header">
+            <div>
+                <a th:href="@{/trips/search}" class="back-link">
+                    <img src="/images/icons/previous-page.png" alt="Back" width="16">
+                    Quay lại tìm kiếm
+                </a>
+                <h2 class="trip-title">
+                    Chuyến tàu <span th:text="${tripDetail.tripId}">SE2</span>
+                    <span class="badge-train-type" 
+                          th:text="${tripDetail.premiumTrain ? 'Hạng sang' : 'Phổ thông'}">
+                        Hạng sang
+                    </span>
+                </h2>
+            </div>
+            <div style="text-align: right;">
+                 <span style="font-size: 2.5rem; font-weight: 700; color: var(--color-primary)" 
+                       th:text="${tripDetail.availableSeats}">72</span>
+                 <div style="font-size: 0.9rem; color: #666">Tổng chỗ trống</div>
+            </div>
+        </div>
+
+        <div class="top-section">
+            <div class="info-left">
+                <div class="info-card">
+                    <div class="info-row">
+                        <span class="info-label">Thời gian</span>
+                        <span class="info-value highlight">
+                            <span th:text="${#temporals.format(tripDetail.departureTime, 'HH:mm dd/MM/yyyy')}"></span>
+                            →
+                            <span th:text="${#temporals.format(tripDetail.estimatedArrivalTime, 'HH:mm dd/MM/yyyy')}"></span>
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Tuyến đường</span>
+                        <span class="info-value" th:text="${tripDetail.routeName}">Sài Gòn - Hà Nội</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-right">
+                <div class="legend-header">
+                    <div class="legend-icon-group">
+                        <img src="/images/icons/carriage-brown.png" class="legend-icon-img" alt="Ghế" width="30">
+                        <span>Toa ghế</span>
+                    </div>
+                    <div class="legend-icon-group">
+                        <img src="/images/icons/carriage-violet.png" class="legend-icon-img" alt="Giường" width="30">
+                        <span>Toa giường</span>
+                    </div>
+                </div>
+
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <div class="color-box bg-seat-avail"></div> 
+                        <span>Chỗ ghế trống</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box bg-bed-avail"></div> 
+                        <span>Chỗ giường trống</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box bg-booked"></div> 
+                        <span>Chỗ người khác đã đặt</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box bg-my-seat"></div> 
+                        <span>Chỗ bạn đã đặt</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box bg-selected"></div> 
+                        <span>Chỗ đang chọn</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="train-selector-wrapper">
+            <img src="/images/icons/train.png" class="locomotive-icon" alt="Locomotive">
+            
+            <div class="train-selector">
+                <div th:each="carriage : ${carriages}"
+                     class="car-item"
+                     th:classappend="${carriage.availableSeats == 0} ? 'disabled' : ''"
+                     th:attr="data-carriage-id=${carriage.carriageId},
+                              data-available=${carriage.availableSeats},
+                              data-carriage-type=${carriage.carriageType},
+                              data-sequence=${carriage.sequenceNumber}"
+                     onclick="loadSeatSelection(this)">
+                    
+                    <div class="car-shape">
+                        <th:block th:if="${carriage.seatCarriage}">
+                            <div class="win-s"></div><div class="win-s"></div><div class="win-s"></div>
+                        </th:block>
+                        <th:block th:unless="${carriage.seatCarriage}">
+                            <div class="win-b"></div><div class="win-b"></div>
+                        </th:block>
+                    </div>
+                    
+                    <span class="car-label" th:text="'Toa ' + ${carriage.sequenceNumber}">Toa 1</span>
+                    <span class="car-avail-text" th:text="'Còn ' + ${carriage.availableSeats}">Còn 10</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="seat-map-area" id="seatSelectionArea">
+            <h3 id="seatSelectionTitle" class="map-title">Chọn toa để xem sơ đồ</h3>
+            
+            <div id="seatGrid">
+                 <div style="text-align:center; color:#999; padding:40px;">
+                    <img src="/images/icons/down-arrow.png" width="32" style="opacity:0.5; margin-bottom:10px; display:block; margin: 0 auto;">
+                    Vui lòng chọn một toa tàu ở trên
+                 </div>
+            </div>
+        </div>
+
+        <div class="action-panel">
+            <div class="selected-info">
+                Đang chọn: <b id="selectedSeatLabel">--</b>
+                <span class="price-display" id="selectedSeatPrice">0 VNĐ</span>
+            </div>
+            <div>
+                <button class="btn-book" id="confirmBtn" disabled onclick="handleConfirm()">
+                    Đặt vé ngay
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <input type="hidden" id="tripId" th:value="${tripDetail.tripId}">
+    <input type="hidden" id="departureStationId" th:value="${departureStationId}">
+    <input type="hidden" id="arrivalStationId" th:value="${arrivalStationId}">
+    <input type="hidden" id="currentCarriageId">
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/js/trip-detail.js}"></script>
+    </th:block>
+</section>
+</html>

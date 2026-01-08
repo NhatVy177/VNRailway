@@ -13,14 +13,42 @@
 }
 
 .main__container {
-  max-width: 1920px;
+  max-width: var(--container-2xl);
   margin: 0 auto;
-  padding-left: 3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: 100%;
 }
 
 .main__title {
-  font-size: 1.875rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--color-secondary);
-  margin-top: var(--spacing-xl);
+  margin-top: var(--spacing-lg);
+  padding: 0 0.5rem;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .main__container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .main__title {
+    font-size: 1.5rem;
+    margin-top: var(--spacing-xl);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .main__container {
+    padding-left: 3rem;
+    padding-right: 2rem;
+  }
+
+  .main__title {
+    font-size: 1.875rem;
+  }
 }

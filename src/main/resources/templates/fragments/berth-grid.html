@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Berth Grid Fragment -->
+<th:block th:fragment="berthGrid">
+    <div class="berth-map-wrapper">
+        <div class="berth-layout-container">
+            <!-- Floor Labels -->
+            <div class="floor-labels">
+                <div class="floor-label" th:if="${isSixBerth}">Tầng 3</div>
+                <div class="floor-label">Tầng 2</div>
+                <div class="floor-label">Tầng 1</div>
+            </div>
+
+            <!-- Rooms Grid -->
+            <div class="rooms-grid">
+                <th:block th:each="entry : ${berthLayout}">
+                    <div class="berth-room-column">
+                        <div class="room-header">Phòng <span th:text="${entry.key}">1</span></div>
+                        
+                        <div class="berth-stack" th:classappend="${isSixBerth} ? 'berth-6' : 'berth-4'">
+                            
+                            <!-- Tầng 3 (only for 6-berth) -->
+                            <div class="floor-group" th:if="${isSixBerth}">
+                                <th:block th:each="berth : ${entry.value}" th:if="${berth.tierNumber == 3}">
+                                    <div class="berth-item"
+                                         th:classappend="${berth.available} ? 'berth-available' : 'berth-occupied'"
+                                         th:data-berth-id="${berth.berthId}"
+                                         th:data-price="${berth.price}"
+                                         th:data-available="${berth.available}"
+                                         th:attr="data-tooltip=${berth.available ? 'Giá: ' + #numbers.formatDecimal(berth.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : 'Đã bán'}"
+                                         tabindex="0"
+                                         role="button">
+                                        <span th:text="${berth.berthNumber}">11</span>
+                                    </div>
+                                </th:block>
+                            </div>
+
+                            <!-- Tầng 2 -->
+                            <div class="floor-group">
+                                <th:block th:each="berth : ${entry.value}" th:if="${berth.tierNumber == 2}">
+                                    <div class="berth-item"
+                                         th:classappend="${berth.available} ? 'berth-available' : 'berth-occupied'"
+                                         th:data-berth-id="${berth.berthId}"
+                                         th:data-price="${berth.price}"
+                                         th:data-available="${berth.available}"
+                                         th:attr="data-tooltip=${berth.available ? 'Giá: ' + #numbers.formatDecimal(berth.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : 'Đã bán'}"
+                                         tabindex="0"
+                                         role="button">
+                                        <span th:text="${berth.berthNumber}">9</span>
+                                    </div>
+                                </th:block>
+                            </div>
+
+                            <!-- Tầng 1 -->
+                            <div class="floor-group">
+                                <th:block th:each="berth : ${entry.value}" th:if="${berth.tierNumber == 1}">
+                                    <div class="berth-item"
+                                         th:classappend="${berth.available} ? 'berth-available' : 'berth-occupied'"
+                                         th:data-berth-id="${berth.berthId}"
+                                         th:data-price="${berth.price}"
+                                         th:data-available="${berth.available}"
+                                         th:attr="data-tooltip=${berth.available ? 'Giá: ' + #numbers.formatDecimal(berth.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : 'Đã bán'}"
+                                         tabindex="0"
+                                         role="button">
+                                        <span th:text="${berth.berthNumber}">7</span>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .berth-map-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .berth-layout-container {
+            background: white;
+            padding: 28px 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            gap: 20px;
+        }
+
+        .floor-labels {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 42px;
+        }
+
+        .floor-label {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .rooms-grid {
+            display: flex;
+            gap: 16px;
+        }
+
+        .berth-room-column {
+            display: flex;
+            flex-direction: column;
+            min-width: 120px;
+        }
+
+        .room-header {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .berth-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .berth-stack.berth-4 .floor-group {
+            height: 90px;
+        }
+
+        .berth-stack.berth-6 .floor-group {
+            height: 80px;
+        }
+
+        .floor-group {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .berth-item {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            position: relative;
+        }
+
+        .berth-item.berth-available {
+            background-color: #7B4BA0;
+            color: white;
+        }
+
+        .berth-item.berth-available:hover {
+            transform: scale(1.12);
+            box-shadow: 0 4px 8px rgba(123, 75, 160, 0.4);
+        }
+
+        .berth-item.berth-occupied {
+            background-color: #d4d4d4;
+            color: #888;
+            cursor: not-allowed;
+            border: 1px solid #bbb;
+        }
+
+        .berth-item.berth-selected {
+            background-color: #e67e22 !important;
+            color: white;
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.5);
+            z-index: 10;
+        }
+
+        [data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.88);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 100;
+            pointer-events: none;
+        }
+    </style>
+</th:block>
+
+</body>
+</html>

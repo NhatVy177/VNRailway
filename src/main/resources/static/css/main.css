@@ -17,3 +17,7 @@
 
 /* Pages */
 @import url("./pages/create-trip.css");
+@import url("./pages/search-trip.css");
+@import url("./pages/seat-selection.css");
+@import url("./pages/trip-detail.css");
+

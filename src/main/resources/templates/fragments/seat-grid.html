@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Seat Grid Fragment -->
+<th:block th:fragment="seatGrid">
+    <th:block th:each="entry : ${seatLayout}">
+        <div class="seat-row" th:classappend="${entry.key == 1} ? 'row-before-aisle' : ''">
+            <th:block th:each="seat : ${entry.value}">
+                <div class="seat-item seat-available"
+                     th:classappend="${!seat.available} ? 'seat-occupied' : ''"
+                     th:attr="data-seat-id=${seat.seatId},
+                              data-price=${seat.price},
+                              data-available=${seat.available},
+                              data-seat-code=${seat.seatId}"
+                     tabindex="0"
+                     role="button">
+                    <!-- ★ Hiển thị seatNumber từ backend -->
+                    <span th:text="${seat.seatNumber}">1</span>
+                </div>
+            </th:block>
+        </div>
+    </th:block>
+</th:block>
+
+</body>
+</html>
