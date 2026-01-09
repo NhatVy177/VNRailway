@@ -1,0 +1,500 @@
+/* ============================================================================
+   BOOKING INFO PAGE - STYLES
+   Sử dụng CSS variables từ variables.css
+   ============================================================================ */
+
+/* Container */
+.booking-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.booking-container {
+  width: 100%;
+}
+
+/* Title */
+.booking-title {
+  color: var(--color-secondary);
+  font-weight: 700;
+  font-size: 1.75rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+.booking-subtitle {
+  color: #6c757d;
+  font-size: 1.125rem;
+  margin-bottom: var(--spacing-md);
+  font-weight: 500;
+}
+
+/* Form */
+.booking-form {
+  width: 100%;
+}
+
+/* ============================================================================
+   TABLE STYLES
+   ============================================================================ */
+
+.booking-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.booking-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.booking-table thead th {
+  background-color: var(--color-table-head);
+  color: white;
+  font-weight: 500;
+  text-align: center;
+  vertical-align: middle;
+  padding: 12px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.booking-table tbody td {
+  vertical-align: middle;
+  text-align: center;
+  padding: 12px 8px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+/* Column widths */
+.col-stt {
+  width: 50px;
+}
+
+.col-passenger {
+  width: 350px;
+  text-align: left !important;
+}
+
+.col-carriage,
+.col-seat {
+  width: 80px;
+}
+
+.col-price,
+.col-discount,
+.col-total {
+  width: 120px;
+}
+
+/* Passenger cell */
+.booking-table tbody td:nth-child(2) {
+  text-align: left;
+}
+
+.passenger-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.passenger-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.passenger-input {
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  width: 100%;
+  height: 38px;
+  border-radius: var(--radius-sm);
+}
+
+.passenger-name {
+  font-weight: normal;
+  padding-left: 8px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 200px;
+  cursor: help;
+}
+
+/* Update button */
+.btn-update {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 6px 15px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-update:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* Footer */
+.booking-table tfoot td {
+  vertical-align: middle;
+  background-color: white;
+  padding: 12px 8px;
+  border-top: 2px solid var(--color-table-head);
+}
+
+.footer-spacer {
+  border-right: 1px solid #dee2e6;
+}
+
+.footer-label {
+  font-weight: bold;
+  text-align: right;
+}
+
+.footer-total {
+  font-weight: bold;
+  text-align: center;
+  color: var(--color-primary);
+  font-size: 1.2rem;
+}
+
+/* ============================================================================
+   NOTE SECTION
+   ============================================================================ */
+
+.booking-note {
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.note-title {
+  margin-bottom: var(--spacing-sm);
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+.note-content {
+  font-weight: normal;
+  color: #6c757d;
+}
+
+.note-list {
+  list-style: none;
+  padding-left: var(--spacing-lg);
+  margin: 0;
+}
+
+.note-list li {
+  margin-bottom: var(--spacing-xs);
+}
+
+/* ============================================================================
+   PAYMENT SECTION
+   ============================================================================ */
+
+.booking-payment {
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.payment-title {
+  color: var(--color-secondary);
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.payment-options {
+  margin-left: var(--spacing-lg);
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+  cursor: pointer;
+}
+
+.payment-radio {
+  margin-right: var(--spacing-sm);
+  cursor: pointer;
+}
+
+.payment-label {
+  cursor: pointer;
+}
+
+/* ============================================================================
+   BOOKING BUTTON
+   ============================================================================ */
+
+.btn-booking {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 10px 30px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: var(--spacing-lg);
+}
+
+.btn-booking:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* ============================================================================
+   MODAL STYLES
+   ============================================================================ */
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-dialog {
+  width: 100%;
+  max-width: 800px;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-content {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  width: 100%;
+  text-align: center;
+  color: var(--color-primary);
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  position: absolute;
+  right: var(--spacing-lg);
+}
+
+.modal-close:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.modal-body {
+  padding: var(--spacing-xl);
+}
+
+.modal-footer {
+  padding: var(--spacing-lg);
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+}
+
+/* ============================================================================
+   FORM STYLES (MODAL)
+   ============================================================================ */
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+  font-weight: bold;
+  font-size: 0.875rem;
+  margin-bottom: var(--spacing-xs);
+  color: #333;
+}
+
+.required-star {
+  color: var(--color-error);
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Radio group */
+.radio-group {
+  margin-left: var(--spacing-sm);
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
+  cursor: pointer;
+}
+
+.radio-input {
+  margin-right: var(--spacing-sm);
+  cursor: pointer;
+}
+
+.radio-label {
+  cursor: pointer;
+}
+
+/* Modal buttons */
+.btn-modal {
+  padding: 8px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #5a6268;
+}
+
+.btn-confirm {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-confirm:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .booking-page {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  .booking-title {
+    font-size: 1.5rem;
+  }
+
+  .booking-table {
+    font-size: 0.75rem;
+  }
+
+  .booking-table thead th {
+    padding: 8px 4px;
+  }
+
+  .booking-table tbody td {
+    padding: 8px 4px;
+  }
+
+  .btn-update {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-dialog {
+    margin: var(--spacing-sm);
+  }
+}

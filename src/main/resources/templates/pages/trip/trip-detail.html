@@ -135,10 +135,19 @@
 
     </div>
 
+    <!-- Hidden inputs cho thông tin chuyến tàu -->
     <input type="hidden" id="tripId" th:value="${tripDetail.tripId}">
     <input type="hidden" id="departureStationId" th:value="${departureStationId}">
     <input type="hidden" id="arrivalStationId" th:value="${arrivalStationId}">
     <input type="hidden" id="currentCarriageId">
+
+    <!-- Form POST ẩn để submit sang booking-info.html -->
+    <form id="bookingForm" method="POST" th:action="@{/booking/info}">
+        <input type="hidden" name="maChuyenTau" id="formMaChuyenTau">
+        <input type="hidden" name="maGaDi" id="formMaGaDi">
+        <input type="hidden" name="maGaDen" id="formMaGaDen">
+        <input type="hidden" name="danhSachChoJson" id="formDanhSachChoJson">
+    </form>
 
     <th:block th:fragment="scripts">
         <script th:src="@{/js/trip-detail.js}"></script>

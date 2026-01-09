@@ -1,12 +1,12 @@
 /**
  * trip-detail.js
- * Logic: AJAX fetch, Booking
+ * Logic: AJAX fetch carriages & seats/berths, Multiple seat selection, POST booking data
  * UI: Tooltip dynamic, Class switching
  */
 
-let selectedSeats = []; // ★ Array thay vì single object (max 6)
+let selectedSeats = []; // Array chứa các ghế/giường đã chọn (max 6)
 const MAX_SEATS = 6;
-let tripId, departureStationId, arrivalStationId, currentCarriageId;
+let tripId, departureStationId, arrivalStationId, currentCarriageId, currentCarriageType;
 const tooltip = document.getElementById('priceTooltip');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -19,7 +19,9 @@ function initializeVariables() {
     arrivalStationId = document.getElementById('arrivalStationId')?.value;
 }
 
+// ============================================================================
 // 1. XỬ LÝ CLICK CHỌN TOA (UPDATE UI TRAIN SELECTOR)
+// ============================================================================
 function loadSeatSelection(carriageElement) {
     const carriageId = carriageElement.dataset.carriageId;
     const available = parseInt(carriageElement.dataset.available || '0');
@@ -37,6 +39,7 @@ function loadSeatSelection(carriageElement) {
 
     // Update hidden inputs
     currentCarriageId = carriageId;
+    currentCarriageType = carriageType;
     document.getElementById('currentCarriageId').value = carriageId;
 
     // Update Title
@@ -52,7 +55,9 @@ function loadSeatSelection(carriageElement) {
     loadSeatGrid(carriageId, carriageType);
 }
 
-// 2. LOAD SƠ ĐỒ GHẾ (AJAX)
+// ============================================================================
+// 2. LOAD SƠ ĐỒ GHẾ/GIƯỜNG (AJAX)
+// ============================================================================
 function loadSeatGrid(carriageId, carriageType) {
     // Xác định endpoint dựa trên loại toa
     const isSeatCarriage = carriageType.includes('GH') || carriageType.includes('Seat');
@@ -91,9 +96,11 @@ function loadSeatGrid(carriageId, carriageType) {
         });
 }
 
-// 3. XỬ LÝ TƯƠNG TÁC GHẾ (TOOLTIP & CLICK)
+// ============================================================================
+// 3. XỬ LÝ TƯƠNG TÁC GHẾ/GIƯỜNG (TOOLTIP & CLICK)
+// ============================================================================
 function initializeSeatInteraction() {
-    // Selector lấy cả ghế (.seat-item) và giường (.bed-item)
+    // Selector lấy cả ghế (.seat-item) và giường (.bed-item, .berth-item)
     const items = document.querySelectorAll('.seat-item, .bed-item, .berth-item');
 
     items.forEach(item => {
@@ -127,11 +134,11 @@ function initializeSeatInteraction() {
                 );
                 
                 if (index > -1) {
-                    // ★ Bỏ chọn nếu đã chọn rồi
+                    // ☆ Bỏ chọn nếu đã chọn rồi
                     this.classList.remove('item-selected');
                     selectedSeats.splice(index, 1);
                 } else {
-                    // ★ Thêm vào danh sách chọn (nếu chưa đủ 6)
+                    // ☆ Thêm vào danh sách chọn (nếu chưa đủ 6)
                     if (selectedSeats.length >= MAX_SEATS) {
                         showNotification(`Chỉ được chọn tối đa ${MAX_SEATS} chỗ!`, 'warning');
                         return;
@@ -150,7 +157,9 @@ function initializeSeatInteraction() {
     });
 }
 
-// ★ HÀM MỚI: Cập nhật hiển thị ghế đã chọn
+// ============================================================================
+// 4. CẬP NHẬT HIỂN THỊ GHẾ ĐÃ CHỌN
+// ============================================================================
 function updateSelectionDisplay() {
     const count = selectedSeats.length;
     const confirmBtn = document.getElementById('confirmBtn');
@@ -176,9 +185,11 @@ function updateSelectionDisplay() {
     }
 }
 
-// 4. ACTION HANDLERS
+// ============================================================================
+// 5. HỦY CHỌN GHẾ
+// ============================================================================
 function handleCancel() {
-    // ★ Clear tất cả ghế đã chọn
+    // ☆ Clear tất cả ghế đã chọn
     selectedSeats.forEach(seat => {
         seat.classList.remove('item-selected');
     });
@@ -189,29 +200,48 @@ function handleCancel() {
     document.getElementById('confirmBtn').disabled = true;
 }
 
+// ============================================================================
+// 6. XÁC NHẬN ĐẶT VÉ - POST SANG BOOKING-INFO
+// ============================================================================
 function handleConfirm() {
     if (selectedSeats.length === 0) return;
     
-    // ★ Thu thập thông tin tất cả ghế đã chọn
-    const seatIds = selectedSeats.map(s => s.dataset.seatId || s.dataset.berthId);
-    const totalPrice = selectedSeats.reduce((sum, s) => sum + parseFloat(s.dataset.price || 0), 0);
-    const seatLabels = selectedSeats.map(s => s.textContent.trim()).join(', ');
-    
-    // Tạo URL với multiple seats
-    const params = new URLSearchParams({
-        tripId: tripId,
-        carriageId: currentCarriageId,
-        seatIds: seatIds.join(','),
-        totalPrice: totalPrice
+    // ☆ Thu thập thông tin tất cả ghế đã chọn
+    const seatsData = selectedSeats.map(seat => {
+        const seatId = seat.dataset.seatId || seat.dataset.berthId;
+        const seatCode = seat.textContent.trim();
+        const price = parseFloat(seat.dataset.price || 0);
+        const paramCode = seat.dataset.paramCode || ''; // Mã tham số (GV001, GV002,...)
+        
+        return {
+            maToa: currentCarriageId,
+            maCho: seatId,
+            maCho_Display: seatCode, // Để hiển thị
+            giaGoc: price,
+            maThamSo: paramCode,
+            loaiToa: currentCarriageType
+        };
     });
     
-    const url = `/booking/create?${params.toString()}`;
+    const totalPrice = seatsData.reduce((sum, s) => sum + s.giaGoc, 0);
+    const seatLabels = seatsData.map(s => s.maCho_Display).join(', ');
     
+    // Confirm trước khi submit
     if(confirm(`Xác nhận đặt ${selectedSeats.length} chỗ: ${seatLabels}\nTổng giá: ${new Intl.NumberFormat('vi-VN').format(totalPrice)} VNĐ?`)){
-        window.location.href = url;
+        // Điền data vào form
+        document.getElementById('formMaChuyenTau').value = tripId;
+        document.getElementById('formMaGaDi').value = departureStationId;
+        document.getElementById('formMaGaDen').value = arrivalStationId;
+        document.getElementById('formDanhSachChoJson').value = JSON.stringify(seatsData);
+        
+        // Submit form POST
+        document.getElementById('bookingForm').submit();
     }
 }
 
+// ============================================================================
+// 7. SHOW NOTIFICATION
+// ============================================================================
 function showNotification(msg, type) {
     alert(msg); // Có thể thay bằng custom toast
 }

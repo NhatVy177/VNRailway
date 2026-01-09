@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout(~{::section}, 'Đặt vé tàu')}">
+<section class="booking-page">
+    
+    <div class="booking-container">
+        <h2 class="booking-title">
+            Đặt vé chuyến tàu <span th:text="${maChuyenTau}">SE2</span>
+        </h2>
+
+        <h5 class="booking-subtitle">Danh sách vé đặt</h5>
+
+        <!-- FORM chính POST đến /booking/create -->
+        <form method="POST" th:action="@{/booking/create}" id="bookingForm" class="booking-form">
+
+            <!-- Hidden inputs: thông tin chuyến tàu -->
+            <input type="hidden" name="maChuyenTau" th:value="${maChuyenTau}">
+            <input type="hidden" name="maGaDi" th:value="${maGaDi}">
+            <input type="hidden" name="maGaDen" th:value="${maGaDen}">
+
+            <!-- Hidden input: JSON data từ trip-detail -->
+            <input type="hidden" id="danhSachChoJson" th:value="${danhSachChoJson}">
+
+            <!-- Bảng danh sách vé -->
+            <div class="booking-table-wrapper">
+                <table class="booking-table">
+                    <thead>
+                        <tr>
+                            <th class="col-stt">STT</th>
+                            <th class="col-passenger">Thông tin hành khách</th>
+                            <th class="col-carriage">Toa</th>
+                            <th class="col-seat">Chỗ</th>
+                            <th class="col-price">Giá gốc (VNĐ)</th>
+                            <th class="col-discount">Giảm giá (VNĐ)</th>
+                            <th class="col-total">Thành tiền (VNĐ)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ticketTableBody">
+                        <!-- Dynamic rows được render bởi JS -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="footer-spacer"></td>
+                            <td class="footer-label">Tổng:</td>
+                            <td class="footer-total" id="totalPrice">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Ghi chú -->
+            <div class="booking-note">
+                <p class="note-title">
+                    Lưu ý: 
+                    <span class="note-content">
+                        Hành khách thuộc các đối tượng sau cần mang giấy tờ tương ứng khi lên tàu để nhân viên kiểm tra:
+                    </span>
+                </p>
+                <ul class="note-list">
+                    <li>- Người già (≥60 tuổi): CMND - Giảm 15%</li>
+                    <li>- Học sinh: Thẻ học sinh - Giảm 12%</li>
+                    <li>- Sinh viên: Thẻ sinh viên - Giảm 10%</li>
+                </ul>
+            </div>
+
+            <!-- Phương thức thanh toán -->
+            <div class="booking-payment">
+                <h5 class="payment-title">Phương thức thanh toán</h5>
+                <div class="payment-options">
+                    <label class="payment-option">
+                        <input class="payment-radio" type="radio" 
+                               name="phuongThucTT" id="payOnline" 
+                               value="Chuyển khoản" required>
+                        <span class="payment-label">Chuyển khoản (Online)</span>
+                    </label>
+                    <label class="payment-option">
+                        <input class="payment-radio" type="radio" 
+                               name="phuongThucTT" id="payCash" 
+                               value="Tiền mặt">
+                        <span class="payment-label">Tiền mặt (Thanh toán tại quầy)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Nút đặt vé -->
+            <button type="submit" class="btn-booking">Đặt vé</button>
+
+        </form>
+    </div>
+
+    <!-- MODAL: Nhập thông tin hành khách -->
+    <div class="modal-overlay" id="infoModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thông tin hành khách</h5>
+                    <button type="button" class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="passengerForm">
+                        <!-- Row 1: Họ tên & CMND -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Họ tên <span class="required-star">*</span>
+                                </label>
+                                <input type="text" class="form-input" 
+                                       id="modalName" required 
+                                       placeholder="Nhập họ và tên">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Số CMND/CCCD <span class="required-star">*</span>
+                                </label>
+                                <input type="text" class="form-input" 
+                                       id="modalCmnd" required 
+                                       placeholder="Nhập CMND/CCCD (9-12 số)">
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Ngày sinh & SĐT -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Ngày sinh</label>
+                                <input type="date" class="form-input" id="modalDob">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Số điện thoại</label>
+                                <input type="text" class="form-input" 
+                                       id="modalPhone" 
+                                       placeholder="Nhập SĐT (10 số)">
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Địa chỉ -->
+                        <div class="form-group">
+                            <label class="form-label">Địa chỉ</label>
+                            <textarea class="form-textarea" 
+                                      id="modalAddress" 
+                                      rows="3" 
+                                      placeholder="Nhập địa chỉ"></textarea>
+                        </div>
+
+                        <!-- Đối tượng giảm giá -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                Đối tượng <span class="required-star">*</span>
+                            </label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input class="radio-input" type="radio" 
+                                           name="discountType" id="typeNone" 
+                                           value="" checked>
+                                    <span class="radio-label">Không</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input class="radio-input" type="radio" 
+                                           name="discountType" id="typeStudent" 
+                                           value="TS011">
+                                    <span class="radio-label">Sinh viên (được giảm 10% giá vé)</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input class="radio-input" type="radio" 
+                                           name="discountType" id="typePupil" 
+                                           value="TS010">
+                                    <span class="radio-label">Học sinh (được giảm 12% giá vé)</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input class="radio-input" type="radio" 
+                                           name="discountType" id="typeElderly" 
+                                           value="TS009">
+                                    <span class="radio-label">Người già từ 60 tuổi trở lên (được giảm 15% giá vé)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal btn-cancel" onclick="closeModal()">
+                        Hủy
+                    </button>
+                    <button type="button" class="btn-modal btn-confirm" onclick="savePassengerInfo()">
+                        Cập nhật
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script chỉ load cho trang này -->
+    <script th:inline="javascript">
+        // Inline script để đảm bảo variables có sẵn
+        window.bookingData = {
+            maChuyenTau: /*[[${maChuyenTau}]]*/ 'SE2',
+            maGaDi: /*[[${maGaDi}]]*/ 'SG',
+            maGaDen: /*[[${maGaDen}]]*/ 'HN'
+        };
+    </script>
+</section>
+</html>
