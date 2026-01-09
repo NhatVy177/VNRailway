@@ -57,7 +57,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 5. Kiểm tra số km mà đoàn tàu này đã được phân công trong tuần đó có vượt mức tối đa không
+	-- 5. Kiểm tra tổng số km mà đoàn tàu này được phân công trong tuần đó có vượt mức tối đa không
 	-- Lấy thời điểm bắt đầu và kết thúc của tuần đó
 	DECLARE @DauTuan DATETIME;
 	DECLARE @CuoiTuan DATETIME;
@@ -108,25 +108,25 @@ BEGIN TRAN;
 	
 
 	-- 6. Kiểm tra thời gian chạy có bị trùng với chuyến khác của cùng đoàn tàu không
-	-- Tổng thời gian di chuyển giữa các ga (phút)
+	-- Tính tổng thời gian di chuyển giữa các ga (phút)
 	DECLARE @TongThoiGianChay INT;
 
 	SELECT @TongThoiGianChay = SUM(DATEDIFF(MINUTE, '00:00:00', TGDiChuyenGiuaCacGa))
 	FROM TUYEN_GA
 	WHERE MaTuyen = @MaTuyen;
 
-	-- Số ga trên tuyến
+	-- Tính số ga trên tuyến
 	DECLARE @SoGa INT;
 
 	SELECT @SoGa = COUNT(*)
 	FROM TUYEN_GA
 	WHERE MaTuyen = @MaTuyen;
 
-	-- Tổng thời gian dừng (5 phút cho mỗi ga trung gian)
+	-- Tính tổng thời gian dừng (5 phút cho mỗi ga trung gian)
 	DECLARE @ThoiGianDung INT;
 	SET @ThoiGianDung = (@SoGa - 2) * 5;
 
-	-- Thời gian dự kiến đến của chuyến cần thêm
+	-- Tính thời gian dự kiến đến của chuyến cần thêm
 	DECLARE @ThoiGianDuKienDen DATETIME;
 	SET @ThoiGianDuKienDen =
 		DATEADD(MINUTE, @TongThoiGianChay + @ThoiGianDung, @ThoiGianXuatPhat);

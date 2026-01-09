@@ -84,7 +84,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 7. Kiểm tra số km mà đoàn tàu này đã được phân công trong tuần đó có vượt mức tối đa không
+	-- 7. Kiểm tra tổng số km mà đoàn tàu này được phân công trong tuần đó có vượt mức tối đa không
 	-- Lấy thời điểm bắt đầu và kết thúc của tuần đó
 	DECLARE @DauTuan DATETIME;
 	DECLARE @CuoiTuan DATETIME;
@@ -134,25 +134,25 @@ BEGIN TRAN;
 	
 
 	-- 8. Kiểm tra thời gian chạy có bị trùng với chuyến khác của cùng đoàn tàu không
-	-- Tổng thời gian di chuyển giữa các ga (phút)
+	-- Tính tổng thời gian di chuyển giữa các ga (phút)
 	DECLARE @TongThoiGianChay INT;
 
 	SELECT @TongThoiGianChay = SUM(DATEDIFF(MINUTE, '00:00:00', TGDiChuyenGiuaCacGa))
 	FROM TUYEN_GA
 	WHERE MaTuyen = @MaTuyen;
 
-	-- Số ga trên tuyến
+	-- Tính số ga trên tuyến
 	DECLARE @SoGa INT;
 
 	SELECT @SoGa = COUNT(*)
 	FROM TUYEN_GA
 	WHERE MaTuyen = @MaTuyen;
 
-	-- Tổng thời gian dừng (5 phút cho mỗi ga trung gian)
+	-- Tính tổng thời gian dừng (5 phút cho mỗi ga trung gian)
 	DECLARE @ThoiGianDung INT;
 	SET @ThoiGianDung = (@SoGa - 2) * 5;
 
-	-- Thời gian dự kiến đến mới của chuyến cần cập nhật
+	-- Tính thời gian dự kiến đến mới của chuyến cần cập nhật
 	DECLARE @ThoiGianDuKienDen DATETIME;
 	SET @ThoiGianDuKienDen =
 		DATEADD(MINUTE, @TongThoiGianChay + @ThoiGianDung, @ThoiGianXuatPhat);
@@ -219,6 +219,6 @@ GO
 
 --DECLARE @ReturnCode INT;
 --DECLARE @ThongBao NVARCHAR(200);
---EXEC @ReturnCode = usp_10_fix_CapNhatChuyenTau N'VNW8F484B2', N'TN01', N'D030', '2026-04-18 12:00:00', @ThongBao OUT;
+--EXEC @ReturnCode = usp_10_fix_CapNhatChuyenTau N'VNW8F484B2', N'TN01', N'D030', '2026-04-18 08:10:00', @ThongBao OUT;
 --PRINT CONCAT(@ReturnCode, N': ', @ThongBao);
 --GO
