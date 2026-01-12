@@ -24,7 +24,7 @@ CREATE UNIQUE INDEX IX_SDT ON NGUOI_DUNG(SDT) WHERE SDT IS NOT NULL;
 -- 2. Bảng TAI_KHOAN
 CREATE TABLE TAI_KHOAN (
     MaTaiKhoan nchar(10) PRIMARY KEY,
-    MatKhau varchar(12) NOT NULL CHECK (LEN(MatKhau) BETWEEN 8 AND 12),
+    MatKhau varchar(255) NOT NULL,
     NgayDK date NOT NULL CHECK (NgayDK <= GETDATE()),
     MaUser nchar(10) NOT NULL
 );

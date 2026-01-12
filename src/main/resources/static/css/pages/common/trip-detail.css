@@ -7,7 +7,7 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--spacing-lg);
-    background: var(--color-bg-input);
+    background: var(--color-input-bg);
     border-radius: var(--radius-lg);
     box-shadow: 0 0 15px rgba(0,0,0,0.05);
     min-height: 80vh;

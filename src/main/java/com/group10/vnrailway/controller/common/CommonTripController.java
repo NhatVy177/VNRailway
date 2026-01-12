@@ -1,4 +1,4 @@
-package com.group10.vnrailway.controller;
+package com.group10.vnrailway.controller.common;
 
 import com.group10.vnrailway.dto.TripSearchResult;
 import com.group10.vnrailway.dto.TripDetail;
@@ -6,12 +6,10 @@ import com.group10.vnrailway.dto.Carriage;
 import com.group10.vnrailway.dto.PageResult;
 import com.group10.vnrailway.entity.Station;
 import com.group10.vnrailway.repository.StationRepository;
-import com.group10.vnrailway.request.CreateTripRequest;
 import com.group10.vnrailway.request.SearchTripRequest;
 import com.group10.vnrailway.service.TripService;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +19,11 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/trips")
-public class TripController {
+public class CommonTripController {
 
     private final TripService tripService;
     private final StationRepository stationRepository;
 
-    @GetMapping("/")
-    public String getAllTrip(Model model) {
-        return "pages/trip/trip-list";
-    }
 
     @GetMapping("/search")
     public String getSearchTrip(Model model) {
@@ -39,7 +33,7 @@ public class TripController {
         model.addAttribute("searchRequest", new SearchTripRequest());
         model.addAttribute("stations", stations);
         
-        return "pages/trip/search-trip";
+        return "pages/common/trip/search-trip";
     }
 
 
@@ -62,13 +56,10 @@ public class TripController {
         model.addAttribute("searchRequest", request);
         model.addAttribute("stations", stations);
 
-        return "pages/trip/search-trip";
+        return "pages/common/trip/search-trip";
     }
 
-    // ============================================================
-    // ✅ ENDPOINT MỚI - TRIP DETAIL
-    // ============================================================
-    
+
     /**
      * Display trip details with carriage list
      * URL: GET /trips/{tripId}?departureStation={id}&arrivalStation={id}
@@ -113,7 +104,7 @@ public class TripController {
             model.addAttribute("departureStationId", departureStationId);
             model.addAttribute("arrivalStationId", arrivalStationId);
             
-            return "pages/trip/trip-detail";
+            return "pages/common/trip/trip-detail";
             
         } catch (IllegalArgumentException e) {
             // Handle business errors (trip not found, invalid stations, etc.)
@@ -127,35 +118,5 @@ public class TripController {
             model.addAttribute("errorDetails", "Đã xảy ra lỗi khi tải thông tin chuyến tàu. Vui lòng thử lại sau.");
             return "pages/error";
         }
-    }
-
-    // ============================================================
-    // EXISTING ENDPOINTS - CREATE TRIP
-    // ============================================================
-
-    @GetMapping("/new")
-    public String getCreateTrip(Model model,
-        @RequestParam(required = false) Long routeId,
-        @RequestParam(required = false) Long trainId) {
-
-        model.addAttribute("routeId", "TN01");
-        model.addAttribute("routeName", "Hà Nội - Sài Gòn");
-
-        model.addAttribute("trainId", "D030");
-        model.addAttribute("trainName", "SE5");
-
-        return "pages/trip/create-trip";
-    }
-
-    @PostMapping("/")
-    public ResponseEntity<Void> createTrip(
-            @ModelAttribute CreateTripRequest request
-    ) {
-        tripService.createTrip(request);
-
-        return ResponseEntity
-                .noContent()
-                .header("HX-Redirect", "/trips/")
-                .build();
     }
 }

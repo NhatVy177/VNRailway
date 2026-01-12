@@ -2,3 +2,4 @@ INSERT INTO CHINH_SACH_LUONG (MaLoaiNV, LuongCoBan, PhuCap, ThuLaoChuyen, ThuLao
 INSERT INTO CHINH_SACH_LUONG (MaLoaiNV, LuongCoBan, PhuCap, ThuLaoChuyen, ThuLaoThayThe, PhatNghiPhep) VALUES (N'BV', 8000000, 1000000, 0, 100000, 50000);
 INSERT INTO CHINH_SACH_LUONG (MaLoaiNV, LuongCoBan, PhuCap, ThuLaoChuyen, ThuLaoThayThe, PhatNghiPhep) VALUES (N'LT', 12000000, 2000000, 200000, 300000, 150000);
 INSERT INTO CHINH_SACH_LUONG (MaLoaiNV, LuongCoBan, PhuCap, ThuLaoChuyen, ThuLaoThayThe, PhatNghiPhep) VALUES (N'TT', 7000000, 1000000, 80000, 120000, 50000);
+INSERT INTO CHINH_SACH_LUONG (MaLoaiNV, LuongCoBan, PhuCap, ThuLaoChuyen, ThuLaoThayThe, PhatNghiPhep) VALUES (N'AD', 10000000, 1500000, 0, 0, 80000);

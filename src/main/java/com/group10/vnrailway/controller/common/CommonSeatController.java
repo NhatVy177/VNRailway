@@ -1,4 +1,4 @@
-package com.group10.vnrailway.controller;
+package com.group10.vnrailway.controller.common;
 
 import com.group10.vnrailway.dto.Seat;
 import com.group10.vnrailway.dto.Berth;
@@ -20,12 +20,12 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/trips/{tripId}/carriages/{carriageId}")
-public class SeatController {
+public class CommonSeatController {
     
     private final SeatService seatService;
     private final TripService tripService;
     
-    public SeatController(SeatService seatService, TripService tripService) {
+    public CommonSeatController(SeatService seatService, TripService tripService) {
         this.seatService = seatService;
         this.tripService = tripService;
     }
@@ -63,7 +63,7 @@ public class SeatController {
                 model.addAttribute("seatLayout", seatService.getSeatLayout(
                     tripId, carriageId, departureStationId, arrivalStationId
                 ));
-                return "pages/trip/seat-selection";
+                return "pages/common/trip/seat-selection";
                 
             } else {
                 List<Berth> berths = seatService.getBerthsWithPrices(
@@ -73,7 +73,7 @@ public class SeatController {
                 model.addAttribute("berthLayout", seatService.getBerthLayout(
                     tripId, carriageId, departureStationId, arrivalStationId
                 ));
-                return "pages/trip/seat-selection";
+                return "pages/common/trip/seat-selection";
             }
             
         } catch (IllegalArgumentException e) {

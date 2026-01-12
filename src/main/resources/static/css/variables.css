@@ -8,11 +8,12 @@
   --color-secondary-dark: #333244;
   --color-border: #7d7d7d;
   --color-error: #da4141;
+  --color-error-bg: #fce0e8;
   --color-footer-bg: #24262b;
   --color-footer-text: #bbbbbb;
   --color-table-head: #414141;
   --color-table-row: #eeeeee;
-  --color-bg-input: #ffffff;
+  --color-input-bg: #ffffff;
   --color-input-disabled: #f5f5f5;
   --color-input-placeholder: #999999;
   --color-item-hover: #eaeaea;

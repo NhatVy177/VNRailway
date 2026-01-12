@@ -39,7 +39,6 @@ public class TripRepository {
 
         if (config.getProblem() == 10) {
             spCreateTrip = resolver.resolve(spCreateTrip);
-            spSearchTrip = resolver.resolve(spSearchTrip);
         }
 
         this.createTripCall = new SimpleJdbcCall(jdbcTemplate)
