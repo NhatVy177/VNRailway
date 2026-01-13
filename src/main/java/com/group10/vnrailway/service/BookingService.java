@@ -8,7 +8,10 @@ import com.group10.vnrailway.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class BookingService {
@@ -84,6 +87,9 @@ public class BookingService {
             BookingTicket ticket = request.getDanhSachVe().get(i);
             validateTicket(ticket, i);
         }
+
+        // Validate CMND không trùng lặp
+        validateUniqueCMND(request.getDanhSachVe());
     }
 
     /**
@@ -100,8 +106,9 @@ public class BookingService {
             throw new Exception(prefix + "Mã chỗ không được để trống");
         }
         
-        if (ticket.getMaThamSo() == null || ticket.getMaThamSo().trim().isEmpty()) {
-            throw new Exception(prefix + "Mã tham số không được để trống");
+        // Allow NULL maThamSo (no discount for regular customers), but reject pure whitespace
+        if (ticket.getMaThamSo() != null && ticket.getMaThamSo().trim().isEmpty()) {
+            throw new Exception(prefix + "Mã tham số không hợp lệ (không được để trống chuỗi khoảng trắng)");
         }
         
         if (ticket.getHoTen() == null || ticket.getHoTen().trim().isEmpty()) {
@@ -124,6 +131,25 @@ public class BookingService {
             if (!sdt.matches("0\\d{9}")) {
                 throw new Exception(prefix + "Số điện thoại không hợp lệ (phải bắt đầu bằng 0 và có 10 số)");
             }
+        }
+    }
+
+    /**
+     * Validate CMND không trùng lặp trong cùng một đơn đặt vé
+     * Quy định: Mỗi CMND chỉ được đặt 1 ghế duy nhất trong cùng một đơn
+     */
+    private void validateUniqueCMND(List<BookingTicket> tickets) throws Exception {
+        Set<String> cmndSet = new HashSet<>();
+
+        for (int i = 0; i < tickets.size(); i++) {
+            String cmnd = tickets.get(i).getCmnd().trim();
+
+            if (cmndSet.contains(cmnd)) {
+                throw new Exception("CMND/CCCD \"" + cmnd + "\" bị trùng lặp! " +
+                    "Quy định: Mỗi CMND chỉ được đặt 1 ghế duy nhất trong cùng một đơn.");
+            }
+
+            cmndSet.add(cmnd);
         }
     }
 

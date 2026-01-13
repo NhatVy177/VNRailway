@@ -218,6 +218,15 @@ function savePassengerInfo() {
         return;
     }
 
+    // Validate CMND không trùng với các vé khác
+    for (let i = 0; i < tickets.length; i++) {
+        if (i !== currentEditIndex && tickets[i].passenger && tickets[i].passenger.cmnd === cmnd) {
+            alert(`CMND/CCCD "${cmnd}" đã được sử dụng cho vé ${i + 1}!\n\nQuy định: Mỗi CMND chỉ được đặt 1 ghế duy nhất trong cùng một đơn.`);
+            if (modalCmnd) modalCmnd.focus();
+            return;
+        }
+    }
+
     // Lấy đối tượng giảm giá đã chọn
     const radios = document.getElementsByName('discountType');
     let selectedDoiTuong = '';
@@ -307,11 +316,15 @@ function handleFormSubmit() {
             // - Nếu có đối tượng giảm giá → dùng maThamSo đối tượng (TS009-TS011)
             // - Nếu không → dùng maThamSo giá vé gốc (GV001-GV012)
             const finalMaThamSo = ticket.doiTuong || ticket.maThamSo;
-            
+
             // Tạo hidden inputs
             createHiddenInput(form, `danhSachVe[${index}].maToa`, ticket.maToa);
             createHiddenInput(form, `danhSachVe[${index}].maCho`, ticket.maCho);
-            createHiddenInput(form, `danhSachVe[${index}].maThamSo`, finalMaThamSo);
+
+            // Only send maThamSo if it has a value (NULL = no discount)
+            if (finalMaThamSo) {
+                createHiddenInput(form, `danhSachVe[${index}].maThamSo`, finalMaThamSo);
+            }
             createHiddenInput(form, `danhSachVe[${index}].hoTen`, passenger.hoTen);
             createHiddenInput(form, `danhSachVe[${index}].cmnd`, passenger.cmnd);
             

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout(~{::section}, 'Vé đã đặt')}">
+<section class="my-bookings-page">
+    
+    <style>
+        /* Stub CSS - Sẽ chuyển sang file riêng sau */
+        .my-bookings-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-lg);
+            font-weight: 700;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 15px 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 0.95rem;
+        }
+
+        .alert i {
+            font-size: 1.2rem;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        /* Placeholder Content */
+        .placeholder-content {
+            padding: var(--spacing-xl);
+            background: white;
+            border-radius: var(--radius-md);
+            border: 2px dashed var(--color-border);
+            text-align: center;
+            color: #666;
+        }
+
+        .placeholder-content h3 {
+            margin-bottom: var(--spacing-md);
+            color: var(--color-secondary);
+        }
+
+        .placeholder-content p {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .placeholder-content code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        .debug-info {
+            margin-top: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: #f9f9f9;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+        }
+
+        .debug-info h4 {
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-primary);
+        }
+
+        .debug-info ul {
+            list-style: none;
+            padding-left: var(--spacing-md);
+        }
+
+        .debug-info li {
+            margin-bottom: 4px;
+        }
+
+        .debug-info strong {
+            color: var(--color-secondary);
+        }
+    </style>
+
+    <div class="container">
+        <h1 class="page-title">Danh sách vé đã đặt</h1>
+
+        <!-- ============================================
+             SUCCESS MESSAGE (từ flash attribute)
+             ============================================ -->
+        <div th:if="${successMessage != null}" class="alert alert-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span th:text="${successMessage}"></span>
+        </div>
+
+        <!-- ============================================
+             ERROR MESSAGE (từ flash attribute)
+             ============================================ -->
+        <div th:if="${errorMessage != null}" class="alert alert-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- ============================================
+             PAYMENT WARNING (nếu vừa đặt vé mới)
+             ============================================ -->
+        <div th:if="${isNewBooking}" class="alert alert-warning">
+            <i class="fa-solid fa-clock"></i>
+            <span>
+                <strong>Lưu ý:</strong> Vui lòng thanh toán trong 
+                <strong th:text="${paymentDeadlineHours} ?: '24'">24</strong> giờ 
+                để giữ vé. Sau thời gian này, vé sẽ tự động hủy.
+            </span>
+        </div>
+
+        <!-- ============================================
+             PLACEHOLDER CONTENT
+             ============================================ -->
+        <div class="placeholder-content">
+            <h3>🚧 Trang đang được phát triển</h3>
+            <p>Đây là trang <strong>stub</strong> tạm thời để test redirect từ booking.</p>
+            <p>Trang này sẽ hiển thị danh sách vé đã đặt với format giống <code>ViDuDanhSachVeDaDat.html</code></p>
+
+            <!-- Debug Info -->
+            <div class="debug-info">
+                <h4>📋 Debug Info (Flash Attributes):</h4>
+                <ul>
+                    <li><strong>successMessage:</strong> <span th:text="${successMessage} ?: 'null'">null</span></li>
+                    <li><strong>errorMessage:</strong> <span th:text="${errorMessage} ?: 'null'">null</span></li>
+                    <li><strong>maDonMoi:</strong> <span th:text="${maDonMoi} ?: 'null'">null</span></li>
+                    <li><strong>isNewBooking:</strong> <span th:text="${isNewBooking} ?: 'false'">false</span></li>
+                    <li><strong>paymentDeadlineHours:</strong> <span th:text="${paymentDeadlineHours} ?: 'null'">null</span></li>
+                </ul>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="debug-info">
+                <h4>✅ Next Steps:</h4>
+                <ul>
+                    <li>1. Tạo stored procedure: <code>sp_LayDanhSachVeDaDat</code></li>
+                    <li>2. Tạo DTO: <code>MyBookingDTO.java</code></li>
+                    <li>3. Tạo Service: <code>MyBookingService.java</code></li>
+                    <li>4. Query database trong Controller</li>
+                    <li>5. Render ticket cards với format ViDuDanhSachVeDaDat</li>
+                    <li>6. Implement pagination</li>
+                    <li>7. Implement button "Thanh toán"</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+</html>
