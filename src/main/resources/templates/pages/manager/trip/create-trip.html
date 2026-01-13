@@ -10,7 +10,7 @@
       <div class="form-card">
         <form
           class="form"
-          hx-post="/trips/"
+          hx-post="/manager/trips/"
           hx-target="#modal-root"
           hx-swap="innerHTML"
         >
@@ -29,7 +29,7 @@
               />
               <input type="hidden" name="routeId" th:value="${routeId}" />
               <a
-                th:href="@{/route/add-to-trip(returnUrl='/trips/new')}"
+                th:href="@{/manager/route/add-to-trip(returnUrl='/trips/new')}"
                 class="btn btn--primary"
               >
                 Chọn tuyến
@@ -67,7 +67,7 @@
               />
               <input type="hidden" name="trainId" th:value="${trainId}" />
               <a
-                th:href="@{/train/add-to-trip(returnUrl='/trips/new')}"
+                th:href="@{/manager/train/add-to-trip(returnUrl='/trips/new')}"
                 class="btn btn--primary"
               >
                 Chọn tàu

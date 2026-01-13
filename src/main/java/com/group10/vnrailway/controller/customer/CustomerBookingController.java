@@ -1,4 +1,4 @@
-package com.group10.vnrailway.controller;
+package com.group10.vnrailway.controller.customer;
 
 import com.group10.vnrailway.request.BookingRequest;
 import com.group10.vnrailway.service.BookingService;
@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/booking")
-public class BookingController {
+public class CustomerBookingController {
 
     @Autowired
     private BookingService bookingService;
@@ -44,7 +44,7 @@ public class BookingController {
         model.addAttribute("maGaDen", maGaDen);
         model.addAttribute("danhSachChoJson", danhSachChoJson);
 
-        return "pages/booking/booking-info"; 
+        return "pages/customer/booking/booking-info"; 
     }
 
     // ===============================

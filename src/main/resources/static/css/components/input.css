@@ -1,7 +1,7 @@
 .input {
   flex: 1;
   padding: 0.625rem 0.875rem;
-  background-color: var(--color-bg-input);
+  background-color: var(--color-input-bg);
   border: var(--border-default);
   border-radius: var(--border-radius-sm);
   font-size: 1rem;
@@ -18,7 +18,7 @@
 .input[readonly] {
   cursor: pointer;
   opacity: 1;
-  background-color: var(--color-bg-input);
+  background-color: var(--color-input-bg);
 }
 
 .input:disabled {

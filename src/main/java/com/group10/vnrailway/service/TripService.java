@@ -11,6 +11,8 @@ import com.group10.vnrailway.repository.TripRepository;
 import com.group10.vnrailway.request.CreateTripRequest;
 import com.group10.vnrailway.request.SearchTripRequest;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +21,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TripService {
 
-    private final TripRepository repository;
+    private final TripRepository tripRepository;
 
+    @PreAuthorize("hasRole('MANAGER')")
     public void createTrip(CreateTripRequest request) {
-        DbOutput<Void> output = repository.createTrip(
+        DbOutput<Void> output = tripRepository.createTrip(
                 request.getRouteId(),
                 request.getTrainId(),
                 request.getDepartureTime()
@@ -39,7 +42,7 @@ public class TripService {
 
     public PageResult<TripSearchResult> searchTrips(SearchTripRequest request) {
         // Lấy tất cả kết quả từ DB
-        DbOutput<TripSearchResult> output = repository.searchTrips(
+        DbOutput<TripSearchResult> output = tripRepository.searchTrips(
                 request.getMaGaDi(),
                 request.getMaGaDen(),
                 request.getNgayDi(),
@@ -82,7 +85,7 @@ public class TripService {
      * Get complete trip detail with carriages
      */
     public TripDetail getTripDetail(String tripId, String departureStationId, String arrivalStationId) {
-        TripDetail tripDetail = repository.getTripDetail(tripId, departureStationId, arrivalStationId);
+        TripDetail tripDetail = tripRepository.getTripDetail(tripId, departureStationId, arrivalStationId);
         
         if (tripDetail == null) {
             throw new IllegalArgumentException("Trip not found with ID: " + tripId);
@@ -99,7 +102,7 @@ public class TripService {
      * Get list of carriages for a trip
      */
     public List<Carriage> getCarriages(String tripId, String departureStationId, String arrivalStationId) {
-        List<Carriage> carriages = repository.getCarriages(tripId, departureStationId, arrivalStationId);
+        List<Carriage> carriages = tripRepository.getCarriages(tripId, departureStationId, arrivalStationId);
         
         if (carriages == null || carriages.isEmpty()) {
             throw new IllegalArgumentException("No carriages found for trip: " + tripId);

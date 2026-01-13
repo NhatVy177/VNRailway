@@ -1,0 +1,10 @@
+<th:block th:fragment="item(prefix, url, label)">
+  <a
+    th:href="${url}"
+    class="nav__item"
+    th:classappend="${currentURI != null && currentURI.startsWith(prefix)}
+         ? ' nav__item--active'"
+    th:text="${label}"
+  >
+  </a>
+</th:block>

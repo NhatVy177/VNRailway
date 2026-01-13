@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  lang="vi"
+  th:replace="~{layout/main :: layout(~{::#login-content}, 'Đăng nhập')}"
+>
+  <div id="login-content">
+    <section class="auth-page">
+      <div class="auth-page__container">
+        <div class="auth-card">
+          <h1 class="auth-card__title">Đăng nhập</h1>
+
+          <!-- Form -->
+          <form class="auth-form" method="post" th:action="@{/login}">
+            <!-- Số điện thoại -->
+            <div class="auth-form__group">
+              <label for="phone" class="auth-form__label">Số điện thoại</label>
+              <input
+                type="tel"
+                id="phone"
+                name="username"
+                class="auth-form__input"
+                placeholder="Nhập số điện thoại"
+                required
+              />
+            </div>
+
+            <!-- Password -->
+            <div class="auth-form__group">
+              <label for="password" class="auth-form__label">Mật khẩu</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="auth-form__input"
+                placeholder="Nhập mật khẩu"
+                required
+              />
+            </div>
+
+            <!-- Thông báo lỗi -->
+            <div
+              class="auth-form__alert"
+              th:if="${error}"
+              th:text="${error}"
+            ></div>
+
+            <!-- Nút submit -->
+            <button type="submit" class="auth-form__button">Đăng nhập</button>
+          </form>
+
+          <!-- Link -->
+          <div class="auth-card__footer">
+            <p class="auth-card__text">
+              <span>Bạn chưa có tài khoản? </span>
+              <a href="/register" class="auth-card__link">Đăng ký</a>
+            </p>
+
+            <p class="auth-card__text">
+              <span>Bạn là nhân viên? </span>
+              <a href="/employee-login" class="auth-card__link"
+                >Đăng nhập cho nhân viên</a
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</html>

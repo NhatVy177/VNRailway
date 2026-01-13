@@ -6,39 +6,106 @@
         <img src="/images/logo/logo.png" alt="VNRailWay" class="logo__image" />
       </div>
 
-      <!-- Navigation -->
-      <nav class="nav">
-        <a href="/statistics" class="nav__item">Thống kê</a>
-        <a href="/routes" class="nav__item">Tuyến</a>
-        <a href="/trains" class="nav__item">Tàu</a>
-        <a href="/trips" class="nav__item nav__item--active">Chuyến</a>
-        <a href="/employees" class="nav__item">Nhân viên</a>
-        <a href="/settings" class="nav__item">Cấu hình</a>
-      </nav>
+      <th:block th:if="${!isAuthPage}">
+        <th:block sec:authorize="isAuthenticated()">
+          <!-- Nav section -->
+          <nav class="nav">
+            <!-- ADMIN -->
+            <th:block sec:authorize="hasRole('ADMIN')">
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/admin/employees', '/admin/employees', 'Nhân viên')}"
+              />
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/admin/customers', '/admin/customers', 'Khách hàng')}"
+              />
+            </th:block>
 
-      <!-- User -->
-      <div class="header__user">
-        <!-- <span class="user__name" th:text="${userName}">Nguyễn Nhật Vy</span> -->
-        <span class="user__name">Nguyễn Nhật Vy</span>
-        <div class="user__avatar">
-          <img
-            src="/images/icons/user.png"
-            alt="User"
-            class="user__icon--image"
-          />
-          <input id="user-menu-toggle" class="user__toggle" type="checkbox" />
-          <label for="user-menu-toggle" class="user__arrow-label">
-            <img
-              src="/images/icons/down-arrow.png"
-              alt="Options"
-              class="user__arrow--image"
-            />
-          </label>
-          <div class="user__menu" aria-hidden="true">
-            <a href="/logout" class="user__menu-item">Đăng xuất</a>
+            <!-- MANAGER -->
+            <th:block sec:authorize="hasRole('MANAGER')">
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/manager/statistics', '/manager/statistics', 'Thống kê')}"
+              />
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/manager/routes', '/manager/routes', 'Tuyến')}"
+              />
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/manager/trains', '/manager/trains', 'Tàu')}"
+              />
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/manager/trips', '/manager/trips', 'Chuyến')}"
+              />
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/manager/employees', '/manager/employees', 'Nhân viên')}"
+              />
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/manager/settings', '/manager/settings', 'Cấu hình')}"
+              />
+            </th:block>
+
+            <!-- TICKET SELLER -->
+            <th:block sec:authorize="hasRole('TICKET_SELLER')">
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/ticket-seller/trips', '/ticket-seller/trips/search', 'Tra cứu chuyến tàu')}"
+              />
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/ticket-seller/tickets', '/ticket-seller/tickets/search', 'Tra cứu vé')}"
+              />
+            </th:block>
+
+            <!-- CUSTOMER -->
+            <th:block sec:authorize="hasRole('CUSTOMER')">
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/trips', '/trips/search', 'Tra cứu chuyến tàu')}"
+              />
+              <th:block
+                th:replace="~{fragments/nav-item :: item('/tickets', '/tickets', 'Vé đã đặt')}"
+              />
+            </th:block>
+          </nav>
+
+          <!-- User section -->
+          <div class="header__user">
+            <span
+              class="user__name"
+              sec:authentication="principal.fullName"
+            ></span>
+
+            <div class="user__avatar">
+              <img
+                src="/images/icons/user.png"
+                alt="User"
+                class="user__icon--image"
+              />
+              <input
+                id="user-menu-toggle"
+                class="user__toggle"
+                type="checkbox"
+              />
+              <label for="user-menu-toggle" class="user__arrow-label">
+                <img
+                  src="/images/icons/down-arrow.png"
+                  alt="Options"
+                  class="user__arrow--image"
+                />
+              </label>
+              <div class="user__menu" aria-hidden="true">
+                <form th:action="@{/logout}" method="post">
+                  <button type="submit" class="user__menu-item">
+                    Đăng xuất
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </th:block>
+
+        <th:block sec:authorize="isAnonymous()">
+          <div class="header__auth">
+            <a href="/login">Đăng nhập</a>
+            <a href="/register">Đăng ký</a>
+          </div>
+        </th:block>
+      </th:block>
     </div>
   </div>
 </header>
