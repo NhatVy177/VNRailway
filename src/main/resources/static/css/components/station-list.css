@@ -1,0 +1,21 @@
+.station-list__title {
+  font-weight: bold;
+  color: var(--color-secondary);
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.station-list__list {
+  list-style: decimal inside;
+  font-size: 0.9rem;
+  color: var(--color-secondary-dark);
+  font-weight: 500;
+  padding: 1rem;
+  margin-top: 2rem;
+  background-color: var(--color-secondary-light);
+}
+
+.station-list__item {
+  padding: var(--spacing-sm) 0.75rem;
+}

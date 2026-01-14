@@ -16,10 +16,7 @@ import com.group10.vnrailway.dto.PagedDbOutput;
 import com.group10.vnrailway.dto.RouteWithTotalKm;
 import com.group10.vnrailway.entity.Route;
 
-import lombok.RequiredArgsConstructor;
-
 @Repository
-@RequiredArgsConstructor
 public class RouteRepository {
 
     private final JdbcTemplate jdbcTemplate;

@@ -23,14 +23,17 @@ public class ManagerTripController {
 
     @GetMapping("/new")
     public String getCreateTrip(Model model,
-        @RequestParam(required = false) Long routeId,
-        @RequestParam(required = false) Long trainId) {
+        @RequestParam(required = false) String routeId,
+        @RequestParam(required = false) String routeName,
+        @RequestParam(required = false) String departureTime,
+        @RequestParam(required = false) String trainId,
+        @RequestParam(required = false) String trainName) {
 
-        model.addAttribute("routeId", "TN01");
-        model.addAttribute("routeName", "Hà Nội - Sài Gòn");
-
-        model.addAttribute("trainId", "D030");
-        model.addAttribute("trainName", "SE5");
+        model.addAttribute("routeId", routeId);
+        model.addAttribute("routeName", routeName);
+        model.addAttribute("departureTime", departureTime);
+        model.addAttribute("trainId", trainId);
+        model.addAttribute("trainName", trainName);
 
         return "pages/manager/trip/create-trip";
     }

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{layout/main :: layout(~{::section}, 'Danh sách tuyến')}"
+>
+  <section>
+    <div class="main__container">
+      <h1 class="main__title">Tuyến tàu</h1>
+
+      <div class="route-list__content">
+        <div class="route-list__sidebar">
+          <div
+            th:replace="~{fragments/station-list :: station-list(stations=${stations})}"
+          ></div>
+        </div>
+
+        <div class="route-list__main">
+          <div class="route-list__main-header">
+            <h3 class="route-list__section-title">Danh sách tuyến</h3>
+            <a href="/manager/routes/new" class="btn btn--primary btn--small"
+              >Thêm tuyến</a
+            >
+          </div>
+
+          <div id="route-list-wrapper" th:fragment="route-list-content">
+            <p class="route-list__route-count">
+              Tổng:
+              <span
+                class="route-list__route-count-number"
+                th:text="${routes.totalElements}"
+                >0</span
+              >
+            </p>
+
+            <!-- Table -->
+            <table class="table">
+              <thead>
+                <tr class="table__header-row">
+                  <th class="table__header-cell">Mã tuyến</th>
+                  <th class="table__header-cell">Tên tuyến</th>
+                  <th class="table__header-cell">Tổng số km</th>
+                  <th
+                    class="table__header-cell table__header-cell--action"
+                  ></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="route : ${routes.data}" class="table__body-row">
+                  <td class="table__body-cell" th:text="${route.id}">ID</td>
+                  <td class="table__body-cell" th:text="${route.name}">Name</td>
+                  <td class="table__body-cell" th:text="${route.totalKm}">
+                    KM
+                  </td>
+                  <td class="table__body-cell table__body-cell--action">
+                    <div class="action-icons__group">
+                      <div
+                        th:replace="~{fragments/edit-icon :: edit-icon(
+                        url=@{/manager/routes/{id}/edit(id=${route.id})}
+                      )}"
+                      ></div>
+                      <div
+                        th:replace="~{fragments/delete-icon :: delete-icon(
+                            url=@{/manager/routes/{id}/delete(id=${route.id})},
+                            message='Bạn chắc chắn muốn xóa tuyến này?'
+                          )}"
+                      ></div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div
+              th:replace="~{fragments/pagination :: pagination(
+                currentPage=${routes.page},
+                totalPages=${routes.totalPages},
+                paginationUrl='/manager/routes',
+                target='#route-list-wrapper'
+              )}"
+            ></div>
+          </div>
+
+          <!-- Confirm Delete Modal -->
+          <div
+            th:replace="~{fragments/confirm-modal :: confirm-modal('confirmDeleteModal')}"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</html>

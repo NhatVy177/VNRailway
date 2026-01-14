@@ -47,6 +47,7 @@
 .modal__actions {
   display: flex;
   justify-content: center;
+  gap: var(--spacing-md);
 }
 
 .modal__actions .btn {

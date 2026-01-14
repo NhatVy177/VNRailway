@@ -1,0 +1,13 @@
+<button
+  th:fragment="delete-icon(url, message)"
+  type="button"
+  class="action-icon"
+  th:attr="data-url=${url}, data-message=${message}"
+  @click="$dispatch('confirm-delete', {
+    url: $el.dataset.url,
+    message: $el.dataset.message
+  })"
+  title="Xóa"
+>
+  <img src="/images/icons/delete.png" alt="Xóa" class="action-icon__img" />
+</button>

@@ -13,6 +13,32 @@
           hx-post="/manager/trips/"
           hx-target="#modal-root"
           hx-swap="innerHTML"
+          x-data="{
+            routeId: null,
+            departureTime: '',
+            trainId: null,
+
+            setup(rId, dTime, tId) {
+              if (dTime && dTime.includes(',')) {
+                  const parts = dTime.split(',').filter(p => p.trim() !== '');
+                  dTime = parts[parts.length - 1]; 
+              }
+
+              this.routeId = (rId === 'null' || rId === '') ? null : rId;
+              this.departureTime = (dTime === 'null' || dTime === '') ? '' : dTime;
+              this.trainId = (tId === 'null' || tId === '') ? null : tId;
+            },
+
+            isValid() {
+                return this.routeId !== null && this.departureTime !== '';
+            },
+
+            selectTrain() {
+              if (!this.isValid()) return;
+              window.location.href = `/manager/trains/select?routeId=${this.routeId}&time=${this.departureTime}&returnUrl=/manager/trips/new`;
+            }
+          }"
+          th:x-init="|setup('${routeId}', '${departureTime}', '${trainId}')|"
         >
           <!-- Tuyến -->
           <div class="form__group">
@@ -27,10 +53,16 @@
                 required
                 th:value="${routeName}"
               />
-              <input type="hidden" name="routeId" th:value="${routeId}" />
+              <input
+                type="hidden"
+                name="routeId"
+                x-model="routeId"
+                th:value="${routeId}"
+              />
               <a
-                th:href="@{/manager/route/add-to-trip(returnUrl='/trips/new')}"
+                th:href="@{/manager/routes/select(returnUrl='/manager/trips/new', departureTime=${departureTime})}"
                 class="btn btn--primary"
+                @click="if(departureTime) $el.href += '&departureTime=' + departureTime"
               >
                 Chọn tuyến
               </a>
@@ -47,6 +79,8 @@
                 type="datetime-local"
                 name="departureTime"
                 class="input"
+                x-model="departureTime"
+                th:x-init="|departureTime = '${departureTime != null ? departureTime : ''}'|"
                 required
               />
             </div>
@@ -65,13 +99,21 @@
                 required
                 th:value="${trainName}"
               />
-              <input type="hidden" name="trainId" th:value="${trainId}" />
-              <a
-                th:href="@{/manager/train/add-to-trip(returnUrl='/trips/new')}"
+              <input
+                type="hidden"
+                name="trainId"
+                x-model="trainId"
+                th:value="${trainId}"
+              />
+              <button
+                type="button"
                 class="btn btn--primary"
+                @click="selectTrain()"
+                :disabled="!isValid()"
+                :class="{ 'btn--disabled': !isValid() }"
               >
                 Chọn tàu
-              </a>
+              </button>
             </div>
           </div>
 
