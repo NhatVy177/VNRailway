@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách nhân viên - Phân công</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; padding: 2rem; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: #007bff; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        
+        h2 { color: #333; font-size: 1.75rem; margin-bottom: 1rem; }
+        
+        .trip-info { background: #e7f3ff; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; border-left: 4px solid #007bff; }
+        .trip-info div { margin: 0.5rem 0; }
+        .trip-info strong { color: #007bff; }
+        
+        .note { color: #dc3545; font-weight: 600; margin-bottom: 1rem; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        thead { background: #414141; color: white; }
+        th { padding: 12px; text-align: left; font-weight: 600; }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+        tbody tr:hover { background: #f9f9f9; }
+        
+        .hours-low { color: #dc3545; font-weight: bold; }
+        .hours-normal { color: #333; }
+        
+        .btn-select { background: #007bff; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+        .btn-select:hover { background: #0056b3; }
+        
+        .pagination { display: flex; justify-content: flex-end; align-items: center; gap: 0.5rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
+        .page-btn { border: 1px solid #ccc; background: white; color: #333; padding: 6px 12px; border-radius: 4px; text-decoration: none; transition: all 0.2s; }
+        .page-btn:hover { background: #007bff; color: white; border-color: #007bff; }
+        
+        .empty-state { text-align: center; padding: 3rem; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Back link -->
+        <a th:href="@{/manager/assignments/{id}(id=${trip.maChuyenTau})}" class="back-link">
+            ← Quay lại chi tiết chuyến
+        </a>
+
+        <!-- Header -->
+        <h2>Chọn nhân viên - <span th:text="${type == 'laitau' ? 'Lái tàu' : 'Toa tàu'}">Lái tàu</span></h2>
+        <div class="note">
+            * Thời gian làm việc/tuần của mỗi nhân viên: 10 giờ → 45 giờ
+        </div>
+
+        <!-- Trip Info -->
+        <div class="trip-info">
+            <div><strong>Chuyến tàu:</strong> <span th:text="${trip.maChuyenTau}">TEST001</span></div>
+            <div><strong>Tuyến:</strong> <span th:text="${trip.tenTuyen}">Sài Gòn - Hà Nội</span></div>
+            <div><strong>Xuất phát:</strong> 
+                <span th:text="${#temporals.format(trip.thoiGianXuatPhat, 'HH:mm dd/MM/yyyy')}">10:00 15/01/2026</span>
+            </div>
+            <div><strong>Vai trò:</strong> 
+                <span th:text="${role}" style="color: #dc3545; font-weight: 600;">Lái chính</span>
+            </div>
+        </div>
+
+        <!-- Total Count -->
+        <div style="margin: 1rem 0;">
+            Tổng: <strong style="color: #007bff;" th:text="${totalElements}">0</strong> nhân viên
+        </div>
+
+        <!-- Employee Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 15%;">Mã NV</th>
+                    <th style="width: 30%;">Họ tên</th>
+                    <th style="width: 20%;">Số điện thoại</th>
+                    <th style="width: 20%;">Thời gian làm việc (giờ/tuần)</th>
+                    <th style="width: 15%;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="employee : ${employees}">
+                    <td th:text="${employee.maNV}">NV001</td>
+                    <td th:text="${employee.hoTen}">Nguyễn Văn A</td>
+                    <td th:text="${employee.sdt}">0123456789</td>
+                    <td>
+                        <span th:class="${employee.soGioLamViecTrongTuan != null and employee.soGioLamViecTrongTuan < 10 ? 'hours-low' : 'hours-normal'}"
+                              th:text="${employee.soGioLamViecTrongTuan != null ? #numbers.formatDecimal(employee.soGioLamViecTrongTuan, 1, 1) : '0'}">
+                            5.5
+                        </span>
+                    </td>
+                    <td>
+                        <!-- Form phân công với CSRF token -->
+                        <form method="post" style="display: inline;">
+                            <!-- ✅ CSRF Token - BẮT BUỘC -->
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            
+                            <!-- Hidden fields -->
+                            <input type="hidden" name="maNhanVien" th:value="${employee.maNV}"/>
+                            <input type="hidden" name="vaiTro" th:value="${role}"/>
+                            
+                            <!-- Phân công lái tàu -->
+                            <button 
+                                th:if="${type == 'laitau'}"
+                                type="submit" 
+                                class="btn-select"
+                                th:formaction="@{/manager/assignments/{id}/assign-driver(id=${trip.maChuyenTau})}">
+                                Chọn
+                            </button>
+                            
+                            <!-- Phân công toa tàu -->
+                            <th:block th:if="${type == 'toatau'}">
+                                <input type="hidden" name="maToa" th:value="${toa}"/>
+                                <button 
+                                    type="submit" 
+                                    class="btn-select"
+                                    th:formaction="@{/manager/assignments/{id}/assign-attendant(id=${trip.maChuyenTau})}">
+                                    Chọn
+                                </button>
+                            </th:block>
+                        </form>
+                    </td>
+                </tr>
+
+                <!-- Empty state -->
+                <tr th:if="${#lists.isEmpty(employees)}">
+                    <td colspan="5" class="empty-state">
+                        <strong>Không có nhân viên phù hợp</strong>
+                        <p style="margin-top: 0.5rem; color: #999;">Thử điều chỉnh bộ lọc hoặc kiểm tra lại điều kiện tìm kiếm</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination" th:if="${totalPages > 1}">
+            <a th:href="@{/manager/assignments/{id}/employees(
+                    id=${trip.maChuyenTau},
+                    type=${type},
+                    role=${role},
+                    toa=${toa},
+                    page=${page - 1})}"
+               th:if="${page > 1}"
+               class="page-btn">
+                ‹ Trước
+            </a>
+            
+            <span style="padding: 0 1rem;">
+                Trang <strong th:text="${page}">1</strong> / <span th:text="${totalPages}">1</span>
+            </span>
+            
+            <a th:href="@{/manager/assignments/{id}/employees(
+                    id=${trip.maChuyenTau},
+                    type=${type},
+                    role=${role},
+                    toa=${toa},
+                    page=${page + 1})}"
+               th:if="${page < totalPages}"
+               class="page-btn">
+                Sau ›
+            </a>
+        </div>
+
+    </div>
+</body>
+</html>

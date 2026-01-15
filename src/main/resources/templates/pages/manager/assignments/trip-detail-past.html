@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout(~{::section}, 'Chi tiết chuyến tàu')}">
+<section>
+    <div class="main__container">
+        <a th:href="@{/manager/assignments}" class="back-link">← Quay lại danh sách</a>
+        <h2 class="header-title">Chuyến tàu <span th:text="${trip.maChuyenTau}">37919</span> (Quá khứ)</h2>
+
+        <div class="grid-container">
+            <div class="card">
+                <h3>Thông tin chuyến</h3>
+                <div class="info-row"><span>Mã chuyến:</span> <strong th:text="${trip.maChuyenTau}">37919</strong></div>
+                <div class="info-row"><span>Tuyến:</span> <span th:text="${trip.tenTuyen}">Sài Gòn - Hà Nội</span></div>
+                <div class="info-row"><span>Đoàn tàu:</span> <span th:text="${trip.tenTau}">SE2</span></div>
+                <div class="info-row">
+                    <span>Thời gian chạy:</span> 
+                    <span>
+                         <span th:text="${#temporals.format(trip.thoiGianXuatPhat, 'HH:mm dd/MM/yyyy')}"></span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Tình trạng vé & Doanh thu</h3>
+                <div class="info-row"><span>Số vé đã bán:</span> <strong th:text="${trip.soVeDaBan}">209</strong></div>
+                <div class="info-row"><span>Doanh thu:</span> <span class="revenue" th:text="${#numbers.formatDecimal(trip.doanhThu, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">109,725,000 VNĐ</span></div>
+            </div>
+        </div>
+
+        <h3>Lịch sử phân công</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 50px;">STT</th>
+                    <th style="width: 150px;">Vai trò</th>
+                    <th>Nhân viên phụ trách</th>
+                    <th style="width: 260px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody class="past-actions">
+                <tr>
+                    <td>1</td>
+                    <td>Lái chính</td>
+                    <td>48295 - Nguyễn Quốc Bảo</td>
+                    <td>
+                        <div class="btn-action-group">
+                            <button class="btn-leave">Duyệt nghỉ phép</button>
+                            <button class="btn-assign">Phân công</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${assignments == null}">
+                    <td colspan="4" style="text-align:center; color: #666;">
+                         <em>Vui lòng truyền danh sách `assignments` từ Controller.</em>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout(~{::section}, 'Danh sách chuyến tàu')}">
+<section>
+    <div class="main__container">
+        <h2 class="header-title">Danh sách chuyến tàu</h2>
+
+        <div class="filter-container">
+            <form th:action="@{/manager/assignments/search}" method="post" class="search-form">
+                
+                <div class="search-group">
+                    <label>Mã chuyến</label>
+                    <input type="text" name="maChuyenTau" class="input" placeholder="Nhập mã..." th:value="${maChuyenTau}">
+                </div>
+                
+                <div class="search-group">
+                    <label>Trạng thái</label>
+                    <select name="trangThai" class="input">
+                        <option value="">Tất cả</option>
+                        <option value="Chưa đủ phân công" th:selected="${trangThai == 'Chưa đủ phân công'}">Cần phân công</option>
+                        <option value="Đủ phân công" th:selected="${trangThai == 'Đủ phân công'}">Đã đủ</option>
+                    </select>
+                </div>
+
+                <div class="search-group">
+                    <label>Ngày đi</label>
+                    <div class="date-range">
+                        <input type="date" name="ngayKhoiHanhTu" class="input" th:value="${ngayKhoiHanhTu}">
+                        <span>→</span>
+                        <input type="date" name="ngayKhoiHanhDen" class="input" th:value="${ngayKhoiHanhDen}">
+                    </div>
+                </div>
+
+                <div class="search-group search-btn-group">
+                    <input type="hidden" name="page" value="0">
+                    <button type="submit" class="btn btn--primary">Tìm kiếm</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="list-header">
+            <span>Tổng: <strong th:text="${totalItems != null ? totalItems : 0}">0</strong> chuyến</span>
+            <a href="#" class="btn btn--primary">Thêm chuyến</a>
+        </div>
+
+        <div th:if="${trips != null}" class="trip-list">
+            <a th:each="trip : ${trips}"
+               th:href="@{/manager/assignments/{id}(id=${trip.maChuyenTau})}"
+               class="trip-card-link">
+                
+                <div class="trip-card" 
+                     th:classappend="${trip.trangThaiPhanCong == 'Chưa đủ phân công'} ? 'card-incomplete' : 'card-complete'">
+                    
+                    <div class="trip-header">
+                        <span th:text="'Chuyến ' + ${trip.maChuyenTau}">Chuyến 37919</span>
+                        <span style="font-weight: normal; font-size: 0.9rem;">
+                           <span th:if="${!trip.laChuyenTuongLai}">Đã hoàn thành</span>
+                        </span>
+                    </div>
+
+                    <div class="trip-body">
+                        <div class="trip-info">
+                            <div><strong>Tuyến:</strong> <span th:text="${trip.tenTuyen}">Sài Gòn - Hà Nội</span></div>
+                            <div>
+                                <strong>Thời gian:</strong> 
+                                <span th:text="${#temporals.format(trip.thoiGianXuatPhat, 'HH:mm dd/MM/yyyy')}"></span> 
+                                → 
+                                <span th:text="${#temporals.format(trip.thoiGianDuKienDen, 'HH:mm dd/MM/yyyy')}"></span>
+                            </div>
+                            <div><strong>Tàu:</strong> <span th:text="${trip.tenTau}">SE2</span></div>
+                        </div>
+
+                        <div class="trip-status">
+                            <th:block th:if="${trip.laChuyenTuongLai}">
+                                <span>Số phân công đã có: <strong th:text="${trip.soPhanCongDaCo}">5</strong></span>
+                                <span>Số phân công còn thiếu: 
+                                    <strong class="missing-count" th:text="${trip.soConThieu}">2</strong>
+                                </span>
+                            </th:block>
+
+                            <th:block th:unless="${trip.laChuyenTuongLai}">
+                                <span>Số vé đã bán: <strong th:text="${trip.soVeDaBan}">112</strong></span>
+                                <span class="price-text" th:text="'Doanh thu: ' + ${#numbers.formatDecimal(trip.doanhThu, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                                    Doanh thu: 21,000,000 VNĐ
+                                </span>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="pagination" th:if="${totalPages > 0}">
+            <button type="button" class="page-btn" 
+                    th:attr="onclick=|changePage(${currentPage - 1})|"
+                    th:disabled="${currentPage == 0}">
+                &lt;
+            </button>
+
+            <span class="page-info">
+                Trang 
+                <input type="number" class="page-input"
+                    th:value="${currentPage + 1}" 
+                    th:attr="max=${totalPages}, min=1"
+                    onchange="changePage(this.value - 1)"> 
+                trên <strong th:text="${totalPages}">19</strong>
+            </span>
+
+            <button type="button" class="page-btn" 
+                    th:attr="onclick=|changePage(${currentPage + 1})|"
+                    th:disabled="${currentPage + 1 >= totalPages}">
+                &gt;
+            </button>
+        </div>
+    </div> <script>
+        function changePage(page) {
+            const form = document.querySelector('.search-form');
+            let pageInput = form.querySelector('input[name="page"]');
+            if (!pageInput) {
+                pageInput = document.createElement('input');
+                pageInput.type = 'hidden';
+                pageInput.name = 'page';
+                form.appendChild(pageInput);
+            }
+            pageInput.value = page;
+            form.submit();
+        }
+    </script>
+</section>
+</html>

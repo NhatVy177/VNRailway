@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết chuyến tàu - Phân công</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; padding: 2rem; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        
+        .alert { padding: 12px 16px; border-radius: 6px; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+        .alert--success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert--danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: #007bff; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        
+        h2 { color: #333; font-size: 1.75rem; margin-bottom: 1.5rem; }
+        h3 { color: #555; font-size: 1.25rem; margin: 1.5rem 0 1rem 0; }
+        
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 1.5rem 0; }
+        .card { border: 1px solid #e0e0e0; padding: 1.25rem; border-radius: 8px; background: #fafafa; }
+        .info-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #eee; }
+        .info-row:last-child { border-bottom: none; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        thead { background: #414141; color: white; }
+        th { padding: 12px; text-align: left; font-weight: 600; }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+        tbody tr:hover { background: #f9f9f9; }
+        
+        .btn-action-group { display: flex; gap: 8px; }
+        button { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.875rem; transition: all 0.2s; }
+        .btn-leave { background: #6c757d; color: white; }
+        .btn-leave:hover:not(:disabled) { background: #5a6268; }
+        .btn-assign { background: #007bff; color: white; }
+        .btn-assign:hover { background: #0056b3; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .status-assigned { color: #28a745; font-weight: 600; }
+        .status-leave { color: #dc3545; font-weight: 600; }
+        .status-empty { color: #999; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Messages -->
+        <div th:if="${successMessage}" class="alert alert--success">
+            <strong>✓ Thành công!</strong>
+            <span th:text="${successMessage}"></span>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert--danger">
+            <strong>✗ Lỗi!</strong>
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- Header -->
+        <a href="/manager/assignments" class="back-link">← Quay lại danh sách</a>
+        <h2>Chuyến tàu <span th:text="${trip.maChuyenTau}">TEST001</span></h2>
+
+        <!-- Info Grid -->
+        <div class="grid">
+            <div class="card">
+                <h3>Thông tin chuyến</h3>
+                <div class="info-row">
+                    <span>Mã chuyến:</span>
+                    <strong th:text="${trip.maChuyenTau}">TEST001</strong>
+                </div>
+                <div class="info-row">
+                    <span>Tuyến:</span>
+                    <span th:text="${trip.tenTuyen}">Sài Gòn - Hà Nội</span>
+                </div>
+                <div class="info-row">
+                    <span>Đoàn tàu:</span>
+                    <span th:text="${trip.tenTau}">SE1</span>
+                </div>
+                <div class="info-row">
+                    <span>Thời gian chạy:</span>
+                    <span>
+                        <span th:text="${#temporals.format(trip.thoiGianXuatPhat, 'HH:mm dd/MM/yyyy')}"></span> - 
+                        <span th:text="${#temporals.format(trip.thoiGianDuKienDen, 'HH:mm dd/MM/yyyy')}"></span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Tình trạng bán vé</h3>
+                <div class="info-row">
+                    <span>Số vé đã bán:</span>
+                    <strong th:text="${trip.soVeDaBan}">150</strong>
+                </div>
+                <div class="info-row">
+                    <span>Doanh thu:</span>
+                    <strong style="color: #28a745;" th:text="${#numbers.formatDecimal(trip.doanhThu, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">150,000,000 VNĐ</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <h3>Tình trạng phân công</h3>
+        <div style="margin: 1rem 0;">
+            <div>Số phân công đã có: <strong th:text="${stats.soPhanCongDaCo}">7</strong> / <span th:text="${stats.tongSoViTri}">10</span></div>
+            <div style="color: #dc3545; font-weight: 600;">Số phân công còn thiếu: <span th:text="${stats.soConThieu}">3</span></div>
+        </div>
+
+        <!-- Assignment Table -->
+        <h3>Danh sách phân công</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 60px;">STT</th>
+                    <th style="width: 200px;">Vai trò</th>
+                    <th>Nhân viên phụ trách</th>
+                    <th style="width: 280px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="a : ${assignments}">
+                    <td th:text="${a.stt}">1</td>
+                    <td th:text="${a.vaiTro}">Lái chính</td>
+                    <td>
+                        <span th:if="${a.maNV != null and a.maNV != ''}"
+                              th:classappend="${a.trangThai == 'Nghỉ phép' ? 'status-leave' : 'status-assigned'}">
+                            <span th:text="${a.maNV}">NV001</span> - 
+                            <span th:text="${a.tenNhanVien}">Nguyễn Văn A</span>
+                        </span>
+                        <span th:unless="${a.maNV != null and a.maNV != ''}" class="status-empty">
+                            -- Chưa phân công --
+                        </span>
+                    </td>
+                    <td>
+                        <div class="btn-action-group">
+                            <!-- Duyệt nghỉ phép -->
+                            <button class="btn-leave"
+                                    th:if="${a.maNV != null and a.maNV != '' and a.trangThai != 'Nghỉ phép'}"
+                                    th:data-ma-nv="${a.maNV}"
+                                    onclick="alert('Duyệt nghỉ phép: ' + this.getAttribute('data-ma-nv'))">
+                                Duyệt nghỉ phép
+                            </button>
+                            <button class="btn-leave" disabled
+                                    th:unless="${a.maNV != null and a.maNV != ''}">
+                                Duyệt nghỉ phép
+                            </button>
+
+                            <!-- Phân công Lái tàu -->
+                            <button class="btn-assign btn-assign-employee"
+                                    th:if="${a.loaiPhanCong == 'LAITAU'}"
+                                    th:data-trip-id="${trip.maChuyenTau}"
+                                    th:data-type="laitau"
+                                    th:data-role="${a.vaiTro}"
+                                    th:data-assigned="${a.maNV != null and a.maNV != ''}">
+                                <span th:text="${a.maNV != null and a.maNV != '' ? 'Thay đổi' : 'Phân công'}">Phân công</span>
+                            </button>
+                            
+                            <!-- Phân công Toa tàu -->
+                            <button class="btn-assign btn-assign-employee"
+                                    th:if="${a.loaiPhanCong == 'TOATAU'}"
+                                    th:data-trip-id="${trip.maChuyenTau}"
+                                    th:data-type="toatau"
+                                    th:data-role="${a.vaiTro}"
+                                    th:data-toa="${a.maToa}"
+                                    th:data-assigned="${a.maNV != null and a.maNV != ''}">
+                                <span th:text="${a.maNV != null and a.maNV != '' ? 'Thay đổi' : 'Phân công'}">Phân công</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Empty state -->
+                <tr th:if="${#lists.isEmpty(assignments)}">
+                    <td colspan="4" style="text-align: center; padding: 2rem; color: #666;">
+                        <em>Không có dữ liệu phân công</em>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top: 2rem; padding: 1rem; background: #e7f3ff; border-left: 4px solid #007bff; border-radius: 4px;">
+            <strong>💡 Hướng dẫn:</strong>
+            <ul style="margin: 0.5rem 0 0 1.5rem; line-height: 1.6;">
+                <li>Click <strong>"Phân công"</strong> để chọn nhân viên cho vị trí trống</li>
+                <li>Click <strong>"Thay đổi"</strong> để thay nhân viên đã phân công</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        // Handle assignment button clicks
+        document.querySelectorAll('.btn-assign-employee').forEach(button => {
+            button.addEventListener('click', function() {
+                const tripId = this.getAttribute('data-trip-id');
+                const type = this.getAttribute('data-type');
+                const role = this.getAttribute('data-role');
+                const toa = this.getAttribute('data-toa');
+                
+                let url = '/manager/assignments/' + tripId + '/employees?type=' + type + '&role=' + encodeURIComponent(role);
+                
+                if (toa) {
+                    url += '&toa=' + toa;
+                }
+                
+                window.location.href = url;
+            });
+        });
+    </script>
+
+</body>
+</html>
