@@ -34,3 +34,7 @@ build/
 
 ### Environment Variables ###
 .env
+
+tmpclaude-*
+test_encoding.txt
+*.log
