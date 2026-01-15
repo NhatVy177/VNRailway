@@ -1,0 +1,17 @@
+<!-- Edit Icon Fragment -->
+<!-- Usage:
+  th:replace="~{fragments/edit-icon :: edit-icon(url='/manager/routes/123/edit')}"
+-->
+
+<a
+  th:fragment="edit-icon(url)"
+  th:href="${url}"
+  class="action-icon"
+  title="Chỉnh sửa"
+>
+  <img
+    src="/images/icons/update.png"
+    alt="Chỉnh sửa"
+    class="action-icon__img"
+  />
+</a>

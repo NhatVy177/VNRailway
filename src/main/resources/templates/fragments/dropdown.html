@@ -1,0 +1,53 @@
+<!-- Fragment for dropdown/select (standalone) with HTMX & Alpine.js support -->
+<!-- Usage:
+  th:replace="~{fragments/dropdown :: dropdown(
+    id='sortType',
+    options=${optionList},
+    defaultValue=${currentValue},
+    defaultLabel='-- Chọn --'
+  )}"
+  
+  optionList: List of options [
+    { value: 'id', label: 'Mã đoàn tàu' },
+    { value: 'name', label: 'Tên đoàn tàu' },
+    ...
+  ]
+  
+  defaultValue: (optional) default selected value
+  defaultLabel: (optional) text cho default option, default là '-- Chọn --'
+  
+  Dùng HTMX:
+    th:replace="~{fragments/dropdown :: dropdown(
+      id='status',
+      options=${statusOptions},
+      attrs=${'hx-trigger': 'change', 'hx-post': '/api/filter', 'hx-target': 'body'}
+    )}"
+  
+  Dùng Alpine.js:
+    <div x-data="{ selected: '' }">
+      th:replace="~{fragments/dropdown :: dropdown(
+        id='filter',
+        options=${options},
+        attrs=${'@change': 'selected = $el.value; applyFilter()'}
+      )}"
+    </div>
+-->
+
+<select
+  th:id="${id}"
+  th:fragment="dropdown(id, options, defaultValue, defaultLabel, attrs)"
+  class="input dropdown__select"
+  th:attr="${attrs}"
+>
+  <option th:value="''" th:text="${defaultLabel ?: '-- Chọn --'}">
+    -- Chọn --
+  </option>
+  <option
+    th:each="option : ${options}"
+    th:value="${option.value}"
+    th:text="${option.label}"
+    th:selected="${option.value == defaultValue}"
+  >
+    Option
+  </option>
+</select>

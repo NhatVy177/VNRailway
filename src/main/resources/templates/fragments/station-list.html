@@ -1,0 +1,15 @@
+<!-- Station List Fragment -->
+<!-- Usage:
+  th:replace="~{fragments/station-list :: station-list(
+    stations=${stationList}
+  )}"
+-->
+
+<div th:fragment="station-list(stations)">
+  <h3 class="station-list__title">Danh sách ga</h3>
+  <ol class="station-list__list">
+    <li th:each="station : ${stations}" class="station-list__item">
+      <span class="station-list__name" th:text="${station.tenGa}">Station</span>
+    </li>
+  </ol>
+</div>

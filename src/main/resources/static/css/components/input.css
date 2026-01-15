@@ -11,7 +11,7 @@
 }
 
 .input:focus {
-  border-color: var(--color-primary);
+  border-color: var(--color-secondary);
   box-shadow: 0 0 0 3px rgba(133, 71, 89, 0.1);
 }
 

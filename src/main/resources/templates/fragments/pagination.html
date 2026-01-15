@@ -1,0 +1,85 @@
+<div th:fragment="pagination(currentPage, totalPages, paginationUrl, target)">
+  <div class="pagination">
+    <button
+      th:if="${currentPage > 1}"
+      class="pagination-icon__btn pagination-icon__btn--prev"
+      type="button"
+      th:hx-get="@{${paginationUrl}(page=${currentPage - 1})}"
+      th:hx-target="${target}"
+    >
+      <img
+        src="/images/icons/previous-page.png"
+        alt="Trang trước"
+        class="pagination-icon__icon"
+      />
+    </button>
+
+    <button
+      th:if="${currentPage == 1}"
+      class="pagination-icon__btn pagination-icon__btn--prev"
+      type="button"
+      disabled
+    >
+      <img
+        src="/images/icons/previous-page.png"
+        alt="Trang trước"
+        class="pagination-icon__icon"
+      />
+    </button>
+
+    <span class="pagination-icon__info">
+      <span>Trang</span>
+
+      <input
+        id="pageInput"
+        name="page"
+        type="number"
+        class="pagination-icon__input"
+        th:x-data="|{ maxPage: ${totalPages} }|"
+        th:attr="min=1, 
+           max=${totalPages}, 
+           value=${currentPage}, 
+           hx-get=@{${paginationUrl}}, 
+           hx-target=${target}"
+        x-on:keydown.enter.prevent="
+          if ($el.value >= 1 && $el.value <= maxPage) {
+              $el.dispatchEvent(new Event('submit-htmx'));
+          } else {
+              $el.value = $el.getAttribute('value');
+          }
+        "
+        hx-trigger="submit-htmx"
+      />
+
+      <span>trên</span>
+      <span th:text="${totalPages}">1</span>
+    </span>
+
+    <button
+      th:if="${currentPage < totalPages}"
+      class="pagination-icon__btn pagination-icon__btn--next"
+      type="button"
+      th:hx-get="@{${paginationUrl}(page=${currentPage + 1})}"
+      th:hx-target="${target}"
+    >
+      <img
+        src="/images/icons/next-page.png"
+        alt="Trang sau"
+        class="pagination-icon__icon"
+      />
+    </button>
+
+    <button
+      th:if="${currentPage == totalPages}"
+      class="pagination-icon__btn pagination-icon__btn--next"
+      type="button"
+      disabled
+    >
+      <img
+        src="/images/icons/next-page.png"
+        alt="Trang sau"
+        class="pagination-icon__icon"
+      />
+    </button>
+  </div>
+</div>

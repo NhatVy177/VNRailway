@@ -1,0 +1,35 @@
+<div
+  th:fragment="confirm-modal(modalId)"
+  th:id="${modalId}"
+  class="modal"
+  x-data="{ open: false, url: null, message: '' }"
+  @confirm-delete.window="
+    url = $event.detail.url;
+    message = $event.detail.message;
+    open = true
+  "
+  x-show="open"
+  x-cloak
+>
+  <div class="modal__overlay" @click="open = false"></div>
+
+  <div class="modal__content">
+    <h2 class="modal__title">Xác nhận</h2>
+    <p class="modal__message" x-text="message"></p>
+
+    <div class="modal__actions">
+      <button class="btn btn--cancel" @click="open = false">Hủy</button>
+
+      <button
+        class="btn btn--primary"
+        hx-post=""
+        :hx-post="url"
+        hx-target="#route-list-wrapper"
+        hx-swap="outerHTML"
+        @click="open = false"
+      >
+        Đồng ý
+      </button>
+    </div>
+  </div>
+</div>

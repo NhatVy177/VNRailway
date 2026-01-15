@@ -1,9 +1,8 @@
 .btn {
-  padding: 0.75rem 1.3rem;
+  padding: 0.75rem 1rem;
   font-size: 0.9rem;
   font-weight: 500;
   font-family: var(--font-primary);
-  min-width: 6rem;
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -20,6 +19,16 @@
   transform: translateY(0);
 }
 
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn:disabled:hover {
+  transform: none;
+}
+
 .btn--primary {
   background-color: var(--color-primary);
   color: white;
@@ -27,6 +36,31 @@
 
 .btn--primary:hover {
   background-color: var(--color-primary-dark);
+}
+
+.btn--primary:disabled {
+  background-color: var(--color-primary);
+}
+
+.btn--primary:disabled:hover {
+  background-color: var(--color-primary);
+}
+
+.btn--cancel {
+  background-color: var(--color-button-cancel);
+  color: white;
+}
+
+.btn--cancel:hover {
+  background-color: var(--color-button-cancel-dark);
+}
+
+.btn--cancel:disabled {
+  background-color: var(--color-button-cancel);
+}
+
+.btn--cancel:disabled:hover {
+  background-color: var(--color-button-cancel);
 }
 
 .form__control--with-button .btn {

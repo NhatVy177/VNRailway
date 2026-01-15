@@ -13,12 +13,20 @@
 @import url("./components/button.css");
 @import url("./components/form.css");
 @import url("./components/input.css");
-@import url("./components/info-modal.css");
+@import url("./components/modal.css");
+@import url("./components/table.css");
+@import url("./components/pagination.css");
+@import url("./components/dropdown.css");
+@import url("./components/station-list.css");
+@import url("./components/action-icons.css");
 
 /* Pages */
 @import url("./pages/common/auth.css");
 @import url("./pages/common/search-trip.css");
 @import url("./pages/common/seat-selection.css");
 @import url("./pages/common/trip-detail.css");
+
+@import url("./pages/manager/route-list.css");
 @import url("./pages/manager/create-trip.css");
+
 @import url("./pages/customer/booking-info.css");
