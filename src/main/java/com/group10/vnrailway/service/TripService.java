@@ -1,10 +1,18 @@
 package com.group10.vnrailway.service;
 
 import com.group10.vnrailway.dto.DbOutput;
+import com.group10.vnrailway.dto.EmployeeForAssignment;
 import com.group10.vnrailway.dto.PageResult;
 import com.group10.vnrailway.dto.TripSearchResult;
 import com.group10.vnrailway.dto.TripDetail;
 import com.group10.vnrailway.dto.Carriage;
+import com.group10.vnrailway.dto.TripAssignmentList;
+import com.group10.vnrailway.dto.TripAssignmentDetail;
+import com.group10.vnrailway.dto.ApproveLeaveRequest;
+import com.group10.vnrailway.dto.AssignAttendantRequest;
+import com.group10.vnrailway.dto.AssignDriverRequest;
+import com.group10.vnrailway.dto.AssignmentInfo;
+import com.group10.vnrailway.dto.AssignmentStatistics;
 import com.group10.vnrailway.exception.BusinessException;
 import com.group10.vnrailway.exception.SystemException;
 import com.group10.vnrailway.repository.TripRepository;
@@ -146,5 +154,184 @@ public class TripService {
             tripDetail.getTrainTypeDisplay(),
             tripDetail.getAvailableSeats()
         );
+    }
+
+    // ============================================================
+    // MANAGER ASSIGNMENT METHODS
+    // ============================================================
+
+    /**
+     * Lấy danh sách chuyến tàu cho quản lý phân công (có phân trang)
+     */
+    @PreAuthorize("hasRole('MANAGER')")
+    public PageResult<TripAssignmentList> getTripsForAssignmentPaged(
+            String maChuyenTau,
+            java.time.LocalDate ngayKhoiHanhTu,
+            java.time.LocalDate ngayKhoiHanhDen,
+            String loaiTau,
+            String trangThai,
+            int page,
+            int size) {
+
+        // Lấy tất cả kết quả từ method hiện có
+        List<TripAssignmentList> allTrips = getTripsForAssignment(
+                maChuyenTau, ngayKhoiHanhTu, ngayKhoiHanhDen, loaiTau, trangThai
+        );
+
+        // Tính toán pagination
+        int totalElements = allTrips.size();
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+
+        int fromIndex = Math.min(page * size, totalElements);
+        int toIndex = Math.min(fromIndex + size, totalElements);
+        List<TripAssignmentList> pageData = allTrips.subList(fromIndex, toIndex);
+
+        // Tạo PageResult
+        PageResult<TripAssignmentList> result = new PageResult<>();
+        result.setData(pageData);
+        result.setPage(page);
+        result.setSize(size);
+        result.setTotalElements(totalElements);
+        result.setTotalPages(totalPages);
+
+        return result;
+    }
+
+    /**
+     * Lấy danh sách chuyến tàu cho quản lý phân công (không phân trang)
+     */
+    @PreAuthorize("hasRole('MANAGER')")
+    public List<TripAssignmentList> getTripsForAssignment(
+            String maChuyenTau,
+            java.time.LocalDate ngayKhoiHanhTu,
+            java.time.LocalDate ngayKhoiHanhDen,
+            String loaiTau,
+            String trangThai) {
+
+        DbOutput<TripAssignmentList> output = tripRepository.getTripsForAssignment(
+                maChuyenTau, ngayKhoiHanhTu, ngayKhoiHanhDen, loaiTau, trangThai
+        );
+
+        if (output.isSuccess()) {
+            return output.getData() != null ? output.getData() : List.of();
+        }
+
+        String errorTitle = "Không thể lấy danh sách chuyến tàu";
+        if (output.isBusinessError()) {
+            throw new BusinessException(errorTitle, output.getMessage());
+        }
+        throw new SystemException(errorTitle);
+    }
+
+    /**
+     * Lấy chi tiết chuyến tàu phân công
+     */
+    @PreAuthorize("hasRole('MANAGER')")
+    public TripAssignmentDetail getTripAssignmentDetail(String maChuyenTau) {
+        TripAssignmentDetail detail = tripRepository.getTripAssignmentDetail(maChuyenTau);
+        
+        if (detail == null) {
+            throw new BusinessException("Không tìm thấy chuyến tàu", "Chuyến tàu không tồn tại");
+        }
+        
+        return detail;
+    }
+
+    /**
+     * Lấy thống kê phân công
+     */
+    @PreAuthorize("hasRole('MANAGER')")
+    public AssignmentStatistics getAssignmentStatistics(String maChuyenTau) {
+        AssignmentStatistics stats = tripRepository.getAssignmentStatistics(maChuyenTau);
+        
+        if (stats == null) {
+            throw new BusinessException("Không tìm thấy thống kê", "Không thể lấy thông tin phân công");
+        }
+        
+        return stats;
+    }
+
+    // ============================================================
+    // ASSIGNMENT METHODS
+    // ============================================================
+
+    /**
+     * Lấy danh sách nhân viên có thể phân công
+     */
+    @PreAuthorize("hasRole('MANAGER')")
+    public List<EmployeeForAssignment> getEmployeesForAssignment(
+            String maChuyenTau, 
+            String type) {
+        
+        // Map type từ URL param sang ChucVu trong database
+        String loaiNhanVien;
+        if ("laitau".equalsIgnoreCase(type)) {
+            loaiNhanVien = "LT";
+        } else if ("toatau".equalsIgnoreCase(type)) {
+            loaiNhanVien = "TT";
+        } else {
+            throw new BusinessException(
+                "Loại nhân viên không hợp lệ",
+                "Type phải là 'laitau' hoặc 'toatau'"
+            );
+        }
+        
+        return tripRepository.getEmployeesForAssignment(maChuyenTau, loaiNhanVien);
+    }
+
+    /**
+     * Lấy danh sách phân công hiện tại
+     */
+    @PreAuthorize("hasRole('MANAGER')")
+    public List<AssignmentInfo> getCurrentAssignments(String maChuyenTau) {
+        return tripRepository.getCurrentAssignments(maChuyenTau);
+    }
+
+    /**
+     * Phân công lái tàu
+     */
+    @PreAuthorize("hasRole('MANAGER')")
+    public void assignDriver(AssignDriverRequest request) {
+        DbOutput<Void> output = tripRepository.assignDriver(request);
+        
+        if (output.isSuccess()) return;
+        
+        String errorTitle = "Không thể phân công lái tàu";
+        if (output.isBusinessError()) {
+            throw new BusinessException(errorTitle, output.getMessage());
+        }
+        throw new SystemException(errorTitle);
+    }
+
+    /**
+     * Phân công nhân viên toa tàu
+     */
+    @PreAuthorize("hasRole('MANAGER')")
+    public void assignAttendant(AssignAttendantRequest request) {
+        DbOutput<Void> output = tripRepository.assignAttendant(request);
+        
+        if (output.isSuccess()) return;
+        
+        String errorTitle = "Không thể phân công nhân viên toa tàu";
+        if (output.isBusinessError()) {
+            throw new BusinessException(errorTitle, output.getMessage());
+        }
+        throw new SystemException(errorTitle);
+    }
+
+    /**
+     * Duyệt nghỉ phép và phân công người thay thế
+     */
+    @PreAuthorize("hasRole('MANAGER')")
+    public void approveLeaveAndAssignReplacement(ApproveLeaveRequest request) {
+        DbOutput<Void> output = tripRepository.approveLeaveAndAssignReplacement(request);
+        
+        if (output.isSuccess()) return;
+        
+        String errorTitle = "Không thể duyệt nghỉ phép";
+        if (output.isBusinessError()) {
+            throw new BusinessException(errorTitle, output.getMessage());
+        }
+        throw new SystemException(errorTitle);
     }
 }

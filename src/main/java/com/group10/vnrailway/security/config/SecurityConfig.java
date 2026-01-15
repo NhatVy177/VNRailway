@@ -27,6 +27,7 @@ public class SecurityConfig {
                                 "/",
                                 "/register",
                                 "/login",
+                                "/test/**",
                                 "/employee-login",
                                 "/error",
                                                 
