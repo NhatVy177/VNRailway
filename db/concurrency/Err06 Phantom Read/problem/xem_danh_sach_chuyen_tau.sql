@@ -16,7 +16,7 @@ BEGIN TRAN;
     PRINT N'--- BẮT ĐẦU ĐỌC LẦN 1 ---';
     SELECT MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat 
     FROM CHUYEN_TAU 
-    WHERE MaTuyen = @MaTuyen;
+    WHERE MaTuyen = @MaTuyen and ThoiGianXuatPhat > Getdate();
 
     -- 2. Tạo độ trễ: Dừng lại 10 giây
     -- Mục đích: Để Giao tác 2 có thời gian chen vào thêm chuyến tàu mới
@@ -28,7 +28,7 @@ BEGIN TRAN;
     PRINT N'--- ĐỌC LẦN 2 (SẼ THẤY BÓNG MA NẾU CÓ LỖI) ---';
     SELECT MaChuyenTau as machuyen, MaTuyen, MaDoanTau, ThoiGianXuatPhat 
     FROM CHUYEN_TAU 
-    WHERE MaTuyen = @MaTuyen;
+    WHERE MaTuyen = @MaTuyen and ThoiGianXuatPhat > Getdate();
 
 COMMIT TRAN;
 GO
