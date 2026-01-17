@@ -1,0 +1,244 @@
+.edit-route__content {
+  display: grid;
+  grid-template-columns: 275px 1fr;
+  margin-top: 2rem;
+  gap: var(--spacing-2xl);
+  align-items: start;
+}
+
+.edit-route__sidebar {
+  padding: var(--spacing-lg);
+  padding-top: 0;
+  height: fit-content;
+  top: var(--spacing-lg);
+}
+
+.edit-route__main {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-route__main-header {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.edit-route__section-title {
+  font-weight: bold;
+  color: var(--color-secondary);
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.edit-route__form {
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form__group--inline {
+  max-width: 200px;
+}
+
+.form__label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+}
+
+.form__label.required::after {
+  content: " *";
+  color: var(--color-error);
+}
+
+.form__input {
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  border: var(--border-default);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-primary);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  background-color: var(--color-input-bg);
+}
+
+.form__input:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(133, 71, 89, 0.1);
+}
+
+.form__input--small {
+  max-width: 5rem;
+}
+
+.edit-route__stations-section {
+  margin-top: 1rem;
+}
+
+.edit-route__subsection-title {
+  width: 100%;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: var(--border-default);
+  text-align: left;
+}
+
+.edit-route__subsection-title.form__label {
+  text-align: left;
+}
+
+.edit-route__table {
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+}
+
+.edit-route__table-header {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.edit-route__table-cell {
+  padding: 0.9rem;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.edit-route__table-cell--order {
+  width: 5rem;
+  text-align: center;
+}
+
+.edit-route__table tbody .edit-route__table-cell--order {
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+.edit-route__table-cell--number {
+  width: 15rem;
+  text-align: center;
+}
+
+.edit-route__table-row {
+  border-bottom: var(--border-default);
+  transition: background-color 0.2s;
+}
+
+.edit-route__table-row:last-child {
+  border-bottom: none;
+}
+
+.edit-route__table-row:hover {
+  background-color: var(--color-item-hover);
+}
+
+.edit-route__input-select,
+.edit-route__input-number {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  border: var(--border-default);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-primary);
+  background-color: var(--color-input-bg);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.edit-route__input-select {
+  text-align: center;
+}
+
+.edit-route__input-select:focus,
+.edit-route__input-number:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(133, 71, 89, 0.1);
+}
+
+.edit-route__input-number {
+  text-align: right;
+}
+
+.edit-route__actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: var(--border-default);
+  justify-content: flex-end;
+}
+
+.edit-route__actions .btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .edit-route__content {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .edit-route__sidebar {
+    position: static;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .edit-route__main-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-sm);
+  }
+
+  .edit-route__form {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .edit-route__table {
+    font-size: 0.75rem;
+  }
+
+  .edit-route__table-cell {
+    padding: 0.5rem;
+  }
+
+  .edit-route__table-cell--number {
+    width: 100px;
+  }
+
+  .edit-route__input-select,
+  .edit-route__input-number {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .edit-route__actions {
+    flex-direction: column;
+    justify-content: stretch;
+  }
+
+  .edit-route__actions .btn {
+    width: 100%;
+  }
+}

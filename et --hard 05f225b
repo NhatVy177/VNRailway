@@ -1,0 +1,25 @@
+[33m1dc0e59[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: checkout: moving from AnTonny_v2 to main
+[33m05f225b[m[33m ([m[1;31morigin/AnTonny_v2[m[33m, [m[1;32mAnTonny_v2[m[33m)[m HEAD@{1}: checkout: moving from main to AnTonny_v2
+[33m1dc0e59[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{2}: reset: moving to HEAD
+[33m1dc0e59[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{3}: checkout: moving from AnTonny_v2 to main
+[33m05f225b[m[33m ([m[1;31morigin/AnTonny_v2[m[33m, [m[1;32mAnTonny_v2[m[33m)[m HEAD@{4}: checkout: moving from main to AnTonny_v2
+[33m1dc0e59[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{5}: checkout: moving from AnTonny_v2 to main
+[33m05f225b[m[33m ([m[1;31morigin/AnTonny_v2[m[33m, [m[1;32mAnTonny_v2[m[33m)[m HEAD@{6}: commit: Manager feature
+[33m1dc0e59[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{7}: checkout: moving from main to AnTonny_v2
+[33m1dc0e59[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{8}: commit: Add manager assignment UI (css and templates)
+[33m3497563[m HEAD@{9}: commit: Add assignment and leave management stored procedures
+[33m206866b[m HEAD@{10}: commit: Add assignment controllers and DTOs
+[33m0602296[m HEAD@{11}: commit: Update assignment logic in repository and service
+[33mc3e1557[m HEAD@{12}: commit: Update .gitignore and resolve main.css conflict
+[33mf502a4f[m HEAD@{13}: pull: Merge made by the 'ort' strategy.
+[33ma2ac3e9[m HEAD@{14}: reset: moving to HEAD
+[33ma2ac3e9[m HEAD@{15}: commit: Add sequence scripts for VNRAILWAY
+[33m2c70c92[m HEAD@{16}: commit (merge): Resolve merge conflict: move my-bookings.html to customer/booking
+[33m4ab9e03[m HEAD@{17}: commit: Add my bookings feature and update booking service
+[33m0cb96ec[m HEAD@{18}: pull origin main: Merge made by the 'ort' strategy.
+[33md162edf[m[33m ([m[1;32mAnTonny[m[33m)[m HEAD@{19}: merge AnTonny: Fast-forward
+[33m082b73c[m HEAD@{20}: checkout: moving from AnTonny to main
+[33md162edf[m[33m ([m[1;32mAnTonny[m[33m)[m HEAD@{21}: commit: Update feature booking
+[33mf4e9b56[m[33m ([m[1;31morigin/AnTonny[m[33m)[m HEAD@{22}: commit: Chuc nang tra cuu chuyen tau va chi tiet chuyen tau
+[33m082b73c[m HEAD@{23}: checkout: moving from main to AnTonny
+[33m082b73c[m HEAD@{24}: clone: from https://github.com/minnn177/VNRailway.git

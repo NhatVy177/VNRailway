@@ -1,0 +1,13 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{layout/main :: layout(~{::section}, 'Lỗi hệ thống')}"
+>
+  <section>
+    <div class="main__container">
+      <h2 class="main__title">Lỗi hệ thống</h2>
+      <p class="error__message">Đã có lỗi xảy ra. Vui lòng thử lại sau.</p>
+      <a href="/" class="btn btn--primary">Quay về trang chủ</a>
+    </div>
+  </section>
+</html>

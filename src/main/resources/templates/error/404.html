@@ -1,0 +1,15 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{layout/main :: layout(~{::section}, 'Không tìm thấy trang')}"
+>
+  <section>
+    <div class="main__container">
+      <h2 class="main__title">Không tìm thấy trang</h2>
+      <p class="error__message">
+        Đường dẫn bạn truy cập không tồn tại hoặc đã bị xóa.
+      </p>
+      <a href="/" class="btn btn--primary">Quay về trang chủ</a>
+    </div>
+  </section>
+</html>

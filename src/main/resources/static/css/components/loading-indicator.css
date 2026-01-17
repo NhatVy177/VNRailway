@@ -1,0 +1,29 @@
+.global-loading {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.htmx-request .global-loading,
+.global-loading.htmx-request {
+  display: flex;
+}
+
+.spinner {
+  width: 64px;
+  height: 64px;
+  border: 6px solid #ddd;
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
