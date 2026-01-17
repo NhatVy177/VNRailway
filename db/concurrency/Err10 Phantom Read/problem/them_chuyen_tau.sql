@@ -1,4 +1,4 @@
-/* Thêm chuyến tàu */
+﻿/* Thêm chuyến tàu */
 CREATE OR ALTER PROC usp_10_err_ThemChuyenTau
 	@MaTuyen NCHAR(4),
 	@MaDoanTau NCHAR(4),

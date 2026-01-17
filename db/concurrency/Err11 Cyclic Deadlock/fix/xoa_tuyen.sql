@@ -1,7 +1,6 @@
 ﻿/* Xóa tuyến */
 CREATE OR ALTER PROC usp_11_fix_XoaTuyen
 	@MaTuyen NCHAR(4),
-	@MaNVThucHien NCHAR(10),
 	@ThongBao NVARCHAR(200) OUT
 AS
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
@@ -20,35 +19,8 @@ BEGIN TRAN;
 		RETURN -1003;
 	END;
 
-
-	-- 2. Kiểm tra nhân viên thực hiện tồn tại
-	IF NOT EXISTS (
-		SELECT 1
-		FROM NHAN_VIEN
-		WHERE MaNV = @MaNVThucHien
-	)
-	BEGIN
-		SET @ThongBao = N'Nhân viên không tồn tại.';
-		ROLLBACK TRAN;
-		RETURN -1011;
-	END;
-
-
-	-- 3. Kiểm tra nhân viên thực hiện có quyền quản lý tuyến này không
-	IF NOT EXISTS (
-		SELECT 1
-		FROM TUYEN
-		WHERE MaTuyen = @MaTuyen
-		  AND MaNVQL = @MaNVThucHien
-	)
-	BEGIN
-		SET @ThongBao = N'Tuyến không thuộc quyền quản lý của nhân viên này.';
-		ROLLBACK TRAN;
-		RETURN -1012;
-	END;
-
 	
-	-- 4. Kiểm tra có tồn tại chuyến thuộc tuyến này không
+	-- 2. Kiểm tra có tồn tại chuyến thuộc tuyến này không
 	IF EXISTS (
 		SELECT 1
 		FROM CHUYEN_TAU
@@ -61,7 +33,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 5. Xóa các liên kết đoàn tàu với tuyến
+	-- 3. Xóa các liên kết đoàn tàu với tuyến
 	DELETE FROM TUYEN_DOANTAU
 	WHERE MaTuyen = @MaTuyen;
 
@@ -76,7 +48,7 @@ BEGIN TRAN;
 	WAITFOR DELAY '00:00:10';
 
 
-	-- 6. Xóa danh sách ga của tuyến
+	-- 4. Xóa danh sách ga của tuyến
 	DELETE FROM TUYEN_GA
 	WHERE MaTuyen = @MaTuyen;
 
@@ -88,7 +60,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 7. Xóa tuyến
+	-- 5. Xóa tuyến
 	DELETE FROM TUYEN
 	WHERE MaTuyen = @MaTuyen;
 
@@ -107,6 +79,6 @@ GO
 
 --DECLARE @ReturnCode INT;
 --DECLARE @ThongBao NVARCHAR(200);
---EXEC @ReturnCode = usp_11_fix_XoaTuyen N'TN07', N'U010007', @ThongBao OUT;
+--EXEC @ReturnCode = usp_11_fix_XoaTuyen N'TN16', @ThongBao OUT;
 --PRINT CONCAT(@ReturnCode, N': ', @ThongBao);
 --GO

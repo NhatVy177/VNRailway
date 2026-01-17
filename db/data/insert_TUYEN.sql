@@ -1,4 +1,4 @@
-INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN01', N'Hà Nội – Sài Gòn', N'U010001');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN01', N'Hà Nội – Sài Gòn', N'U010008');
 INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN02', N'Hà Nội – Đà Nẵng', N'U010002');
 INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN03', N'Hà Nội – Vinh – Đồng Hới – Huế', N'U010003');
 INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN04', N'Hà Nội – Lào Cai', N'U010004');
@@ -10,3 +10,16 @@ INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN09', N'Sài Gòn – H
 INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN10', N'Sài Gòn – Quy Nhơn', N'U010010');
 INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN11', N'Sài Gòn – Nha Trang – Tuy Hoà', N'U010011');
 INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN12', N'Sài Gòn – Phan Thiết', N'U010012');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN13', N'Hà Nội – Nam Định – Thanh Hóa', N'U010002');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN14', N'Hà Nội – Ninh Bình – Vinh', N'U010003');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN15', N'Hà Nội – Bắc Ninh – Kép – Lạng Sơn', N'U010004');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN16', N'Hải Phòng – Hải Dương – Hà Nội', N'U010005');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN17', N'Đà Nẵng – Huế – Đông Hà – Đồng Hới', N'U010006');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN18', N'Vinh – Đồng Hới – Huế – Đà Nẵng', N'U010007');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN19', N'Sài Gòn – Nha Trang – Tuy Hòa – Quy Nhơn', N'U010008');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN20', N'Sài Gòn – Phan Thiết – Tháp Chàm', N'U010009');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN21', N'Yên Viên – Bắc Giang – Kép – Hạ Long', N'U010010');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN22', N'Lào Cai – Yên Bái – Phú Thọ – Hà Nội', N'U010011');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN23', N'Sài Gòn – Hà Nội – Lào Cai', N'U010011');
+INSERT INTO TUYEN (MaTuyen, TenTuyen, MaNVQL) VALUES (N'TN24', N'Đà Nẵng – Hà Nội – Sài Gòn', N'U010009');
+

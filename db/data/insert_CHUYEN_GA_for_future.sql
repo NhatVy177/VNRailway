@@ -1,7 +1,7 @@
 USE VNRAILWAY
 GO
 
--- Thêm dữ liệu CHUYEN_GA cho các chuyến tàu từ 15-01-2026 đến 15-04-2026
+-- Thêm dữ liệu CHUYEN_GA cho các chuyến tàu từ 15-01-2026 đến 02-05-2026
 
 -- Chuyến VNW2601A4F (TN01 - D024) - 19 ga
 INSERT INTO CHUYEN_GA (MaChuyenTau, MaGa, TrinhTu)
@@ -407,4 +407,19 @@ SELECT 'VNW2605FP6', MaGa, TrinhTu FROM TUYEN_GA WHERE MaTuyen = 'TN04';
 INSERT INTO CHUYEN_GA (MaChuyenTau, MaGa, TrinhTu)
 SELECT 'VNW2605GP7', MaGa, TrinhTu FROM TUYEN_GA WHERE MaTuyen = 'TN05';
 
+-- Chuyến VNW2B486C1 (TN23 - D030) - 17 ga
+INSERT INTO CHUYEN_GA (MaChuyenTau, MaGa, TrinhTu)
+SELECT 'VNW2B486C1', MaGa, TrinhTu FROM TUYEN_GA WHERE MaTuyen = 'TN23';
+
+-- Chuyến VNWA28EA53 (TN23 - D024) - 17 ga
+INSERT INTO CHUYEN_GA (MaChuyenTau, MaGa, TrinhTu)
+SELECT 'VNWA28EA53', MaGa, TrinhTu FROM TUYEN_GA WHERE MaTuyen = 'TN23';
+
+-- Chuyến VNW2ABD103 (TN24 - D009) - 16 ga
+INSERT INTO CHUYEN_GA (MaChuyenTau, MaGa, TrinhTu)
+SELECT 'VNW2ABD103', MaGa, TrinhTu FROM TUYEN_GA WHERE MaTuyen = 'TN24';
+
+-- Chuyến VNWB3192D1 (TN24 - D013) - 16 ga
+INSERT INTO CHUYEN_GA (MaChuyenTau, MaGa, TrinhTu)
+SELECT 'VNWB3192D1', MaGa, TrinhTu FROM TUYEN_GA WHERE MaTuyen = 'TN24';
 GO

@@ -1,7 +1,7 @@
 USE VNRAILWAY
 GO
 
--- Thêm dữ liệu chuyến tàu cho khoảng 15-01-2026 đến 15-04-2026
+-- Thêm dữ liệu chuyến tàu cho khoảng 15-01-2026 đến 02-05-2026
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNW2601A4F', N'TN01', N'D024', '2026-01-15 08:00:00', '2026-01-17 05:56:00');
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNW2601B5E', N'TN02', N'D001', '2026-01-15 12:30:00', '2026-01-17 10:34:00');
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNW2601C6D', N'TN03', N'D015', '2026-01-15 18:00:00', '2026-01-17 14:01:00');
@@ -103,5 +103,8 @@ INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiG
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNW2605EO5', N'TN03', N'D028', '2026-04-12 11:30:00', '2026-04-14 07:31:00');
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNW2605FP6', N'TN04', N'D002', '2026-04-13 06:45:00', '2026-04-13 15:37:00');
 INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNW2605GP7', N'TN05', N'D029', '2026-04-14 13:30:00', '2026-04-14 15:32:00');
-
+INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNW2B486C1', N'TN23', N'D030', '2026-04-27 05:30:00', '2026-04-28 16:31:00');
+INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNWA28EA53', N'TN23', N'D024', '2026-05-01 12:10:00', '2026-05-02 23:11:00');
+INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNW2ABD103', N'TN24', N'D009', '2026-04-27 05:30:00', '2026-04-28 10:26:00');
+INSERT INTO CHUYEN_TAU (MaChuyenTau, MaTuyen, MaDoanTau, ThoiGianXuatPhat, ThoiGianDuKienDen) VALUES (N'VNWB3192D1', N'TN24', N'D013', '2026-05-01 12:10:00', '2026-05-02 17:06:00');
 GO

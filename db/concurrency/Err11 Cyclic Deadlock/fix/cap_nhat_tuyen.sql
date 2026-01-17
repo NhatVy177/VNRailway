@@ -3,7 +3,6 @@ CREATE OR ALTER PROC usp_11_fix_CapNhatTuyen
 	@MaTuyen NCHAR(4),
 	@TenTuyen NVARCHAR(50),
 	@DanhSachGa dbo.TVP_DanhSachGaTrongTuyen READONLY,
-	@MaNVThucHien NCHAR(10),
 	@ThongBao NVARCHAR(200) OUT
 AS
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
@@ -23,34 +22,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 2. Kiểm tra nhân viên thực hiện tồn tại
-	IF NOT EXISTS (
-		SELECT 1
-		FROM NHAN_VIEN
-		WHERE MaNV = @MaNVThucHien
-	)
-	BEGIN
-		SET @ThongBao = N'Nhân viên không tồn tại.';
-		ROLLBACK TRAN;
-		RETURN -1011;
-	END;
-
-
-	-- 3. Kiểm tra nhân viên thực hiện có quyền quản lý tuyến này không
-	IF NOT EXISTS (
-		SELECT 1
-		FROM TUYEN
-		WHERE MaTuyen = @MaTuyen
-		  AND MaNVQL = @MaNVThucHien
-	)
-	BEGIN
-		SET @ThongBao = N'Tuyến không thuộc quyền quản lý của nhân viên này.';
-		ROLLBACK TRAN;
-		RETURN -1012;
-	END;
-
-	
-	-- 4. Kiểm tra có tồn tại chuyến chưa kết thúc nhưng đã có đơn đặt vé thuộc tuyến này không
+	-- 2. Kiểm tra có tồn tại chuyến chưa kết thúc nhưng đã có đơn đặt vé thuộc tuyến này không
 	IF EXISTS (
 		SELECT 1
 		FROM CHUYEN_TAU ct
@@ -69,7 +41,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 5. Kiểm tra tên tuyến có rỗng không
+	-- 3. Kiểm tra tên tuyến có rỗng không
 	IF LTRIM(RTRIM(@TenTuyen)) = ''
 	BEGIN
 		SET @ThongBao = N'Tên tuyến không được rỗng.';
@@ -78,7 +50,7 @@ BEGIN TRAN;
 	END;
 
 	
-	-- 6. Kiểm tra ga tồn tại
+	-- 4. Kiểm tra ga tồn tại
 	IF EXISTS (
 		SELECT 1
 		FROM @DanhSachGa ds
@@ -95,7 +67,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 7. Kiểm tra ga bị trùng
+	-- 5. Kiểm tra ga bị trùng
 	IF EXISTS (
 		SELECT MaGa
 		FROM @DanhSachGa
@@ -109,7 +81,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 8. Kiểm tra trình tự của ga có là số dương không
+	-- 6. Kiểm tra trình tự của ga có là số dương không
 	IF EXISTS (
 		SELECT 1 
 		FROM @DanhSachGa 
@@ -122,7 +94,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 9. Kiểm tra trình tự của ga bị trùng
+	-- 7. Kiểm tra trình tự của ga bị trùng
 	IF EXISTS (
 		SELECT TrinhTu
 		FROM @DanhSachGa
@@ -136,7 +108,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 10. Kiểm tra Khoảng cách giữa các ga có là số không âm không
+	-- 8. Kiểm tra khoảng cách giữa các ga có là số không âm không
 	IF EXISTS (
 		SELECT 1
 		FROM @DanhSachGa
@@ -149,7 +121,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 11. Kiểm tra ga đầu phải có thời gian di chuyển đến và khoảng cách bằng 0
+	-- 9. Kiểm tra ga đầu phải có thời gian di chuyển đến và khoảng cách bằng 0
 	-- Lấy thời gian di chuyển đến và khoảng cách
 	DECLARE @TGDiChuyenDenGaDau TIME;
 	DECLARE @KhoangCachDenGaDau DECIMAL(6,2);
@@ -180,7 +152,7 @@ BEGIN TRAN;
 	WAITFOR DELAY '00:00:10';
 
 
-	-- 12. Cập nhật danh sách ga của tuyến
+	-- 10. Cập nhật danh sách ga của tuyến
 	-- Xóa danh sách ga cũ của tuyến
 	DELETE FROM TUYEN_GA
 	WHERE MaTuyen = @MaTuyen;
@@ -220,7 +192,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 13. Cập nhật danh sách ga của chuyến thuộc tuyến
+	-- 11. Cập nhật danh sách ga của chuyến thuộc tuyến
 	-- Lấy danh sách chuyến cần được cập nhật thuộc tuyến này (là chuyến chưa kết thúc và cũng chưa có đơn đặt vé)
 	SELECT MaChuyenTau
 	INTO #ChuyenCanCapNhat
@@ -262,7 +234,7 @@ BEGIN TRAN;
 	END;
 
 
-	-- 14. Cập nhật thông tin tuyến
+	-- 12. Cập nhật thông tin tuyến
 	UPDATE TUYEN
 	SET TenTuyen = @TenTuyen
 	WHERE MaTuyen = @MaTuyen;
@@ -286,10 +258,10 @@ GO
 --DECLARE @DanhSachGa dbo.TVP_DanhSachGaTrongTuyen;
 --INSERT INTO @DanhSachGa (MaGa, TrinhTu, TGDiChuyenGiuaCacGa, KhoangCach)
 --VALUES
---    (N'GA009', 1, '00:00:00', 0),
---    (N'GA015', 2, '01:20:00', 75),
---    (N'GA034', 3, '00:25:00', 20);
+--    (N'GA012', 1, '00:00:00', 0),
+--    (N'GA010', 2, '00:50:00', 43),
+--    (N'GA009', 3, '00:45:00', 40);
 
---EXEC @ReturnCode = usp_11_fix_CapNhatTuyen N'TN07', N'Hà Nội – Lạng Sơn - Đồng Đăng', @DanhSachGa , N'U010007', @ThongBao OUT;
+--EXEC @ReturnCode = usp_11_fix_CapNhatTuyen N'TN16', N'Hải Phòng – Hà Nội', @DanhSachGa , @ThongBao OUT;
 --PRINT CONCAT(@ReturnCode, N': ', @ThongBao);
 --GO
