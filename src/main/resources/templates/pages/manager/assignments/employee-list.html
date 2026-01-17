@@ -64,9 +64,40 @@
             </div>
         </div>
 
+        <!-- Search Form -->
+        <form method="get" th:action="@{/manager/assignments/{id}/employees(id=${trip.maChuyenTau})}" style="margin: 1.5rem 0;">
+            <input type="hidden" name="type" th:value="${type}"/>
+            <input type="hidden" name="role" th:value="${role}"/>
+            <input type="hidden" name="toa" th:value="${toa}"/>
+            
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <input 
+                    type="text" 
+                    name="search" 
+                    th:value="${search}"
+                    placeholder="Tìm theo mã hoặc tên nhân viên..." 
+                    style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;"/>
+                <button type="submit" class="btn-select" style="padding: 10px 24px;">
+                    🔍 Tìm kiếm
+                </button>
+                <a th:href="@{/manager/assignments/{id}/employees(
+                        id=${trip.maChuyenTau},
+                        type=${type},
+                        role=${role},
+                        toa=${toa})}"
+                   class="page-btn"
+                   style="padding: 10px 20px; text-decoration: none;">
+                    ✖ Xóa lọc
+                </a>
+            </div>
+        </form>
+
         <!-- Total Count -->
         <div style="margin: 1rem 0;">
             Tổng: <strong style="color: #007bff;" th:text="${totalElements}">0</strong> nhân viên
+            <span th:if="${search != null and !search.isEmpty()}" style="color: #666;">
+                - Tìm kiếm: "<span th:text="${search}">keyword</span>"
+            </span>
         </div>
 
         <!-- Employee Table -->
@@ -141,6 +172,7 @@
                     type=${type},
                     role=${role},
                     toa=${toa},
+                    search=${search},
                     page=${page - 1})}"
                th:if="${page > 1}"
                class="page-btn">
@@ -156,6 +188,7 @@
                     type=${type},
                     role=${role},
                     toa=${toa},
+                    search=${search},
                     page=${page + 1})}"
                th:if="${page < totalPages}"
                class="page-btn">

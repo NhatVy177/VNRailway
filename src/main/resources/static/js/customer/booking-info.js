@@ -126,6 +126,18 @@ function renderTable() {
         tbody.innerHTML += row;
     });
 
+    // Kiểm tra xem có đang đổi vé không (dùng window.bookingData)
+    const maVeCu = window.bookingData?.maVeCu || '';
+    const phiDoiVe = parseFloat(window.bookingData?.phiDoiVe || 0);
+    const exchangeFeeRow = document.getElementById('exchangeFeeRow');
+    const exchangeFeeElement = document.getElementById('exchangeFee');
+    
+    if (maVeCu && phiDoiVe > 0 && exchangeFeeRow && exchangeFeeElement) {
+        exchangeFeeRow.style.display = '';
+        exchangeFeeElement.innerText = formatCurrency(phiDoiVe);
+        total += phiDoiVe; // Cộng phí đổi vé vào tổng
+    }
+
     const totalElement = document.getElementById('totalPrice');
     if (totalElement) {
         totalElement.innerText = formatCurrency(total);

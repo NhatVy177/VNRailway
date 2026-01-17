@@ -28,6 +28,7 @@
 
 @import url("./pages/manager/route-list.css");
 @import url("./pages/manager/create-trip.css");
+@import url("./pages/manager/train-management.css");
 
 @import url("./pages/manager/assignment.css");
 @import url("./pages/customer/booking-info.css");

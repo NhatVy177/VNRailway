@@ -36,6 +36,10 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEmployee() {
         return employee != null;
     }
+    
+    public String getUserId() {
+        return user.getId();
+    }
 
     @Override
     public String getUsername() {

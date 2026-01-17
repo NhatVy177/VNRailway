@@ -226,13 +226,34 @@ function handleConfirm() {
     const totalPrice = seatsData.reduce((sum, s) => sum + s.giaGoc, 0);
     const seatLabels = seatsData.map(s => s.maCho_Display).join(', ');
     
+    // Kiểm tra có đang đổi vé không để hiển thị message phù hợp
+    const maVeCuInput = document.getElementById('maVeCu');
+    const isExchanging = maVeCuInput && maVeCuInput.value;
+    
+    let confirmMessage = '';
+    if (isExchanging) {
+        // Đổi vé: Thông báo rõ chưa bao gồm phí 5%
+        confirmMessage = `Xác nhận đặt ${selectedSeats.length} chỗ: ${seatLabels}\n` +
+                        `Giá vé mới: ${new Intl.NumberFormat('vi-VN').format(totalPrice)} VNĐ\n` +
+                        `(Chưa bao gồm phí đổi vé 5%, sẽ được tính ở bước tiếp theo)`;
+    } else {
+        // Đặt vé mới bình thường
+        confirmMessage = `Xác nhận đặt ${selectedSeats.length} chỗ: ${seatLabels}\n` +
+                        `Tổng giá: ${new Intl.NumberFormat('vi-VN').format(totalPrice)} VNĐ?`;
+    }
+    
     // Confirm trước khi submit
-    if(confirm(`Xác nhận đặt ${selectedSeats.length} chỗ: ${seatLabels}\nTổng giá: ${new Intl.NumberFormat('vi-VN').format(totalPrice)} VNĐ?`)){
+    if(confirm(confirmMessage)){
         // Điền data vào form
         document.getElementById('formMaChuyenTau').value = tripId;
         document.getElementById('formMaGaDi').value = departureStationId;
         document.getElementById('formMaGaDen').value = arrivalStationId;
         document.getElementById('formDanhSachChoJson').value = JSON.stringify(seatsData);
+        
+        // Thêm maVeCu nếu đang đổi vé
+        if (isExchanging) {
+            document.getElementById('formMaVeCu').value = maVeCuInput.value;
+        }
         
         // Submit form POST
         document.getElementById('bookingForm').submit();

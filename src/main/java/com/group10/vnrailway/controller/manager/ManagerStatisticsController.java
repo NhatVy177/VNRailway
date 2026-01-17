@@ -11,6 +11,11 @@ public class ManagerStatisticsController {
 
   @GetMapping
   public String getStatistics(Model model) {
-      return "pages/manager/statistics/test";
+      return "pages/manager/statistics/employee-statistics";
+  }
+
+  @GetMapping("/employees")
+  public String getEmployeeStatistics(Model model) {
+      return "pages/manager/statistics/employee-statistics";
   }
 }

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout(~{::section}, 'Cấu hình')}">
+<head>
+    <link rel="stylesheet" th:href="@{/css/pages/manager/settings.css}" />
+</head>
+<section>
+    <div class="main__container">
+        <h1 class="page-title">Cấu hình hệ thống</h1>
+
+        <!-- Flash Messages -->
+        <div th:if="${successMessage}" class="alert alert-success" style="white-space: pre-line;" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-error" style="white-space: pre-line;" th:text="${errorMessage}"></div>
+
+        <!-- ===================== KHUYẾN MÃI RIÊNG ===================== -->
+        <div class="settings-section promotion-section">
+            <h2 class="section-title">⚡ Cấu hình Khuyến mãi</h2>
+            <form method="post" th:action="@{/manager/settings/update-khuyenmai}" class="settings-form">
+                <table class="settings-table promotion-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Mã</th>
+                            <th>Tên khuyến mãi</th>
+                            <th style="width: 180px;">Tỷ lệ giảm giá (%)</th>
+                            <th style="width: 100px;">Đơn vị</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${allThamSo}" 
+                            th:if="${item.maThamSo == 'TS009' or item.maThamSo == 'TS010' or item.maThamSo == 'TS011'}"
+                            class="promotion-row">
+                            <td th:text="${item.maThamSo}" class="code-cell"></td>
+                            <td th:text="${item.tenThamSo}" class="name-cell"></td>
+                            <td>
+                                <input type="number" 
+                                       th:name="${'khuyenmai_' + item.maThamSo}"
+                                       th:value="${item.giaTriThamSo}" 
+                                       class="input-field promotion-input"
+                                       step="0.01"
+                                       min="0"
+                                       max="100"
+                                       placeholder="Nhập 0-100"
+                                       style="width: 100%;"
+                                       required />
+                            </td>
+                            <td th:text="${item.donVi}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-promotion">
+                        🎯 Cập nhật Khuyến mãi
+                    </button>
+                    <p class="help-text">💡 Nhập giá trị từ 0 đến 100 (VD: Nhập 15 cho giảm giá 15%)</p>
+                </div>
+            </form>
+        </div>
+
+        <!-- ===================== THAM SỐ KHÁC ===================== -->
+        <div class="settings-section">
+            <h2 class="section-title">⚙️ Tham số hệ thống khác</h2>
+            <form method="post" th:action="@{/manager/settings/update-thamso}" class="settings-form">
+                <table class="settings-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">STT</th>
+                            <th style="width: 80px;">Mã</th>
+                            <th style="width: 120px;">Nhóm</th>
+                            <th>Tên tham số</th>
+                            <th style="width: 150px;">Giá trị</th>
+                            <th style="width: 100px;">Đơn vị</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item, iterStat : ${allThamSo}"
+                            th:unless="${item.maThamSo == 'TS009' or item.maThamSo == 'TS010' or item.maThamSo == 'TS011'}">
+                            <td th:text="${iterStat.count}"></td>
+                            <td th:text="${item.maThamSo}"></td>
+                            <td th:text="${item.nhomThamSo}"></td>
+                            <td th:text="${item.tenThamSo}"></td>
+                            <td>
+                                <input type="number" 
+                                       th:name="${'thamso_' + item.maThamSo}"
+                                       th:value="${item.giaTriThamSo}" 
+                                       class="input-field"
+                                       step="0.01"
+                                       th:min="${item.maThamSo.matches('TS007') ? 0 : 0.01}"
+                                       th:max="${item.maThamSo.matches('TS007') ? 100 : 10000000}"
+                                       style="width: 100%;"
+                                       required />
+                            </td>
+                            <td th:text="${item.donVi}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Cập nhật tất cả</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+</html>

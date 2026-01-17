@@ -323,9 +323,9 @@ public class TripRepository {
             sql,
             (rs, rowNum) -> new AssignmentStatistics(
                 rs.getInt("TongSoViTri"),
-                rs.getInt("SoPhanCongDaCo"),
-                rs.getInt("SoNghiPhep"),
-                rs.getInt("SoConThieu")
+                rs.getInt("SoNguoiDangLamViec"),  // Cột mới
+                rs.getInt("SoNguoiNghiPhep"),      // Cột mới
+                rs.getInt("SoViTriConThieu")      // Cột mới
             ),
             maChuyenTau, ""
         );
@@ -334,13 +334,14 @@ public class TripRepository {
     }
 
     /**
-     * Lấy danh sách nhân viên có thể phân công
+     * Lấy danh sách nhân viên có thể phân công (có hỗ trợ tìm kiếm)
      */
     public List<EmployeeForAssignment> getEmployeesForAssignment(
             String maChuyenTau, 
-            String loaiNhanVien) {
+            String loaiNhanVien,
+            String searchKeyword) {
         
-        String sql = "{CALL usp_LayDanhSachNhanVienVoiGioLamViec(?, ?, ?)}";
+        String sql = "{CALL usp_LayDanhSachNhanVienVoiGioLamViec(?, ?, ?, ?)}";
         
         try {
             return jdbcTemplate.query(
@@ -348,7 +349,8 @@ public class TripRepository {
                     var stmt = connection.prepareCall(sql);
                     stmt.setString(1, maChuyenTau);
                     stmt.setString(2, loaiNhanVien);
-                    stmt.registerOutParameter(3, Types.NVARCHAR);
+                    stmt.setString(3, searchKeyword);
+                    stmt.registerOutParameter(4, Types.NVARCHAR);
                     return stmt;
                 },
                 (rs, rowNum) -> new EmployeeForAssignment(

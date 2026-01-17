@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout(~{::section}, 'Đổi vé')}">
+<section class="ticket-change-page">
+    
+    <style>
+        .ticket-change-page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-lg);
+            font-weight: 700;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .info-value {
+            color: var(--color-secondary);
+            font-weight: 600;
+        }
+
+        .highlight-value {
+            color: var(--color-primary);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .warning-box i {
+            margin-right: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #d32f2f;
+        }
+
+        .btn-secondary {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #138496;
+        }
+
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--color-secondary);
+            margin: 24px 0 16px 0;
+            font-weight: 700;
+        }
+    </style>
+
+    <div class="container">
+        <h1 class="page-title">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            Đổi vé
+        </h1>
+
+        <!-- Thông tin vé hiện tại -->
+        <div class="info-card">
+            <h2 style="margin-top: 0; color: var(--color-secondary); font-size: 1.2rem;">
+                Thông tin vé hiện tại
+            </h2>
+            
+            <div class="info-row">
+                <span class="info-label">Mã vé:</span>
+                <span class="info-value" th:text="${ticket.maVe}">V000001</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">Hành khách:</span>
+                <span class="info-value" th:text="${ticket.tenKhachHang}">Nguyễn Văn A</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">Chuyến tàu:</span>
+                <span class="info-value" th:text="${ticket.maChuyenTau}">VNW051D768</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">Tuyến:</span>
+                <span class="info-value" th:text="${ticket.tenTuyen}">Sài Gòn - Hà Nội</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">Thời gian khởi hành:</span>
+                <span class="info-value" th:text="${#temporals.format(ticket.thoiGianXuatPhat, 'dd/MM/yyyy HH:mm')}">20/10/2025 19:30</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">Vị trí:</span>
+                <span class="info-value">
+                    Toa <span th:text="${ticket.maToa}">T001</span> - 
+                    Chỗ <span th:text="${ticket.soGhe}">G023</span> 
+                    (<span th:text="${ticket.loaiCho}">Ghế ngồi</span>)
+                </span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">Giá vé hiện tại:</span>
+                <span class="highlight-value">
+                    <span th:text="${#numbers.formatDecimal(ticket.giaVeCu, 0, 'COMMA', 0, 'POINT')}">290,000</span>đ
+                </span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">Phí đổi vé:</span>
+                <span class="highlight-value" style="color: #ff6b6b;">
+                    <span th:text="${#numbers.formatDecimal(ticket.phiDoiVe, 0, 'COMMA', 0, 'POINT')}">29,000</span>đ
+                </span>
+            </div>
+        </div>
+
+        <!-- Cảnh báo thời gian -->
+        <div class="warning-box">
+            <i class="fa-solid fa-clock"></i>
+            <strong>Lưu ý:</strong> Bạn cần đổi vé trước 
+            <strong th:text="${ticket.thoiGianToiThieuDoiVe}">120</strong> phút trước giờ khởi hành.
+            Thời gian còn lại: <strong th:text="${ticket.thoiGianConLai}">240</strong> phút.
+        </div>
+
+        <!-- Lựa chọn loại đổi vé -->
+        <h2 class="section-title">Chọn loại đổi vé</h2>
+
+        <div class="action-buttons">
+            <!-- Đổi chỗ trong cùng chuyến -->
+            <a th:href="@{/trips/{tripId}(tripId=${ticket.maChuyenTau}, departureStation=${ticket.maGaDi}, arrivalStation=${ticket.maGaDen}, maVeCu=${ticket.maVe})}"
+               class="btn btn-primary"
+               style="text-decoration: none; flex: 1; padding: 24px; text-align: center;">
+                <i class="fa-solid fa-chair" style="font-size: 2rem; display: block; margin-bottom: 10px;"></i>
+                <strong style="font-size: 1.1rem;">Đổi chỗ trong cùng chuyến</strong>
+                <p style="margin: 8px 0 0 0; font-size: 0.9rem; font-weight: normal; opacity: 0.9;">
+                    Chọn chỗ mới trong chuyến tàu này
+                </p>
+            </a>
+
+            <!-- Đổi sang chuyến khác -->
+            <a th:href="@{/trips/search(maVeCu=${ticket.maVe})}"
+               class="btn btn-secondary"
+               style="text-decoration: none; flex: 1; padding: 24px; text-align: center;">
+                <i class="fa-solid fa-train" style="font-size: 2rem; display: block; margin-bottom: 10px;"></i>
+                <strong style="font-size: 1.1rem;">Đổi sang chuyến khác</strong>
+                <p style="margin: 8px 0 0 0; font-size: 0.9rem; font-weight: normal; opacity: 0.9;">
+                    Tìm kiếm chuyến mới và chọn chỗ
+                </p>
+            </a>
+        </div>
+
+        <!-- Nút hủy -->
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/my-bookings" class="btn btn-cancel" style="max-width: 200px; text-decoration: none; display: inline-block;">
+                <i class="fa-solid fa-xmark"></i> Hủy
+            </a>
+        </div>
+
+        <!-- Thông tin chi tiết -->
+        <div class="info-card" style="margin-top: 20px;">
+            <h3 style="margin-top: 0; color: var(--color-secondary); font-size: 1.1rem;">
+                <i class="fa-solid fa-info-circle"></i> Thông tin chi tiết
+            </h3>
+            <div class="info-row">
+                <span class="info-label">Chuyến hiện tại:</span>
+                <span class="info-value" th:text="${ticket.maChuyenTau}">VNW051D768</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Vị trí hiện tại:</span>
+                <span class="info-value">
+                    Toa <span th:text="${ticket.maToa}">T001</span> - 
+                    Chỗ <span th:text="${ticket.soGhe}">G023</span>
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Phí đổi vé:</span>
+                <span class="highlight-value" style="color: #ff6b6b;">
+                    <span th:text="${#numbers.formatDecimal(ticket.phiDoiVe, 0, 'COMMA', 0, 'POINT')}">29,000</span>đ
+                </span>
+            </div>
+            <div class="info-row" style="border-bottom: none;">
+                <span class="info-label">Lưu ý:</span>
+                <span style="color: #666; font-size: 0.9rem;">
+                    Nếu chỗ mới có giá khác, bạn sẽ phải trả thêm/hoàn lại chênh lệch
+                </span>
+            </div>
+
+    </div>
+
+</section>
+</html>

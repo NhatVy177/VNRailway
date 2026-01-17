@@ -2,59 +2,112 @@
    SEARCH TRIP PAGE STYLES - COMPACT LAYOUT
    ================================================ */
 
-/* Search Card */
-.search-card {
-  background: white;
-  border: var(--border-default);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-  margin: var(--spacing-xl) 0;
-}
+/* ================================================
+   UPDATED SEARCH FORM STYLES
+   ================================================ */
 
-/* Search Form */
+/* Container chính: Chuyển sang Grid 4 cột */
 .search-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.search-form__row {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-md);
+  grid-template-columns: repeat(4, 1fr); /* Chia 4 cột đều nhau */
+  gap: var(--spacing-lg);
+  align-items: end; /* Căn đáy để Nút và Input thẳng hàng nhau */
 }
 
+/* Loại bỏ các row cũ nếu bạn chưa sửa HTML (hoặc set display: contents để grid xuyên qua) */
+.search-form__row {
+  display: contents; 
+}
+
+/* Tinh chỉnh từng ô nhập liệu */
 .search-form__group {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: 6px; /* Khoảng cách giữa Label và Input */
+  min-width: 0;
 }
 
 .search-form__label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-secondary);
+  color: #4b5563; /* Màu xám đậm hiện đại hơn */
+  margin: 0;
 }
 
+/* Input styles (đảm bảo chiều cao đồng bộ) */
+.search-form__group input,
+.search-form__group select {
+  height: 42px; /* Chiều cao cố định để thẳng hàng với nút */
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0 12px;
+  width: 100%;
+  box-sizing: border-box; /* Quan trọng để không bị vỡ layout */
+}
+
+/* Khu vực chọn giờ (Time range) */
 .time-range {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: 8px;
+}
+.time-range .input {
+  width: 100%; /* Để input giờ tự giãn */
 }
 
-.time-separator {
-  color: var(--color-secondary);
-  font-weight: 500;
-}
-
+/* --- NÚT TÌM KIẾM --- */
+/* Đưa nút vào trong lưới Grid thay vì nằm riêng */
 .search-form__actions {
+  grid-column: 4; /* Nằm ở cột cuối cùng */
+  margin: 0;
+  padding: 0;
+  border: none; /* Bỏ đường kẻ ngang cũ */
   display: flex;
-  justify-content: flex-start;
-  margin-top: var(--spacing-md);
+  align-items: flex-end; /* Căn xuống đáy */
 }
 
 .search-btn {
-  min-width: 150px;
+  width: 100%; /* Nút full chiều rộng ô grid */
+  height: 42px; /* Chiều cao bằng với Input */
+  font-weight: 600;
+  background-color: #854759; /* Giữ màu cũ của bạn */
+  color: white;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.search-btn:hover {
+  opacity: 0.9;
+}
+
+/* ================================================
+   RESPONSIVE (Cập nhật lại phần này)
+   ================================================ */
+
+/* Tablet (iPad): Chuyển thành 2 cột */
+@media (max-width: 1024px) {
+  .search-form {
+    grid-template-columns: repeat(2, 1fr); /* 2 cột x 4 dòng */
+  }
+  
+  .search-form__actions {
+    grid-column: span 2; /* Nút tìm kiếm chiếm hết chiều ngang ở dưới cùng */
+    margin-top: var(--spacing-md);
+  }
+}
+
+/* Mobile: Chuyển thành 1 cột */
+@media (max-width: 640px) {
+  .search-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .search-form__actions {
+    width: 100%;
+  }
 }
 
 /* Search Results */
@@ -293,10 +346,6 @@
     padding: var(--spacing-xl);
   }
 
-  .search-form__row {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
   .trip-card {
     padding: var(--spacing-lg) var(--spacing-xl);
   }
@@ -311,6 +360,15 @@
 
 /* Mobile - Smaller screens */
 @media (max-width: 767px) {
+  .search-form__row {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .search-card {
+    padding: var(--spacing-md);
+  }
+
   .trip-card__body {
     flex-direction: column;
     align-items: flex-start;

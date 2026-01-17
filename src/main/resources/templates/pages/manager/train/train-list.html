@@ -1,11 +1,224 @@
 <!DOCTYPE html>
 <html
   xmlns:th="http://www.thymeleaf.org"
-  th:replace="~{layout/main :: layout(~{::section}, 'Danh sách đoàn tàu')}"
+  th:replace="~{layout/main :: layout(~{::section}, 'Quản lý đoàn tàu')}"
 >
+  <head>
+    <link rel="stylesheet" th:href="@{/css/pages/manager/train-management.css}" />
+  </head>
   <section>
     <div class="main__container">
-      <h1 class="main__title">Danh sách đoàn tàu</h1>
+      <div class="train-header">
+        <h1 class="main__title">
+          <i class="bi bi-train-front-fill"></i>
+          Quản lý đoàn tàu
+        </h1>
+      </div>
+
+      <div th:if="${successMessage}" class="train-alert alert-success" role="alert">
+        <i class="bi bi-check-circle-fill"></i>
+        <span th:text="${successMessage}"></span>
+      </div>
+      <div th:if="${errorMessage}" class="train-alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span th:text="${errorMessage}"></span>
+      </div>
+
+      <div class="train-filter-card">
+        <div class="card-title">
+          <i class="bi bi-funnel-fill"></i>
+          Tìm kiếm & Lọc
+        </div>
+        <form th:action="@{/manager/trains}" method="get" class="row g-3">
+          <div class="col-md-3">
+            <label for="loaiTau" class="form-label">
+              <i class="bi bi-tag-fill"></i>  Loại tàu
+            </label>
+            <select name="loaiTau" id="loaiTau" class="form-select" th:value="${loaiTau}">
+              <option value="">Tất cả loại tàu</option>
+              <option value="S" th:selected="${loaiTau == 'S'}">🚄 Tàu sang</option>
+              <option value="T" th:selected="${loaiTau == 'T'}">🚂 Tàu thường</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="timKiem" class="form-label">
+              <i class="bi bi-search"></i> Tìm kiếm
+            </label>
+            <input 
+              type="text" 
+              name="timKiem" 
+              id="timKiem" 
+              class="form-control" 
+              placeholder="🔍 Nhập mã đoàn tàu, tên tàu, hãng sản xuất..."
+              th:value="${timKiem}"
+            />
+          </div>
+          <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="train-btn train-btn-primary me-2">
+              <i class="bi bi-search"></i> Tìm kiếm
+            </button>
+            <a th:href="@{/manager/trains}" class="train-btn train-btn-secondary">
+              <i class="bi bi-arrow-clockwise"></i> Làm mới
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <div class="train-actions">
+        <a th:href="@{/manager/trains/create}" class="train-btn train-btn-success">
+          <i class="bi bi-plus-circle-fill"></i> Thêm đoàn tàu mới
+        </a>
+      </div>
+
+      <div class="train-table-card train-fade-in">
+        <div class="train-table-header">
+          <h5>
+            <i class="bi bi-list-ul"></i>
+            Danh sách đoàn tàu
+          </h5>
+        </div>
+        <div class="table-responsive">
+          <table class="train-table">
+            <thead>
+              <tr>
+                <th><i class="bi bi-hash"></i> Mã</th>
+                <th><i class="bi bi-train-front"></i> Tên tàu</th>
+                <th><i class="bi bi-building"></i> Hãng SX</th>
+                <th><i class="bi bi-calendar-event"></i> Ngày vận hành</th>
+                <th><i class="bi bi-tag"></i> Loại tàu</th>
+                <th><i class="bi bi-stack"></i> Số toa</th>
+                <th><i class="bi bi-speedometer2"></i> Km/tuần</th>
+                <th><i class="bi bi-activity"></i> Trạng thái</th>
+                <th><i class="bi bi-clock-history"></i> Số chuyến</th>
+                <th><i class="bi bi-gear"></i> Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${trains == null or trains.isEmpty()}">
+                <td colspan="10">
+                  <div class="train-empty-state">
+                    <i class="bi bi-inbox"></i>
+                    <p>Không có dữ liệu đoàn tàu</p>
+                  </div>
+                </td>
+              </tr>
+              <tr th:each="train : ${trains}" class="train-history-item">
+                <td>
+                  <div class="train-code">
+                    <i class="bi bi-ticket-perforated-fill"></i>
+                    <span th:text="${train.maDoanTau}"></span>
+                  </div>
+                </td>
+                <td>
+                  <strong th:text="${train.tenTau}"></strong>
+                </td>
+                <td th:text="${train.hangSX}"></td>
+                <td>
+                  <i class="bi bi-calendar3"></i>
+                  <span th:text="${#temporals.format(train.ngVanHanh, 'dd/MM/yyyy')}"></span>
+                </td>
+                <td>
+                  <span 
+                    class="train-type-badge" 
+                    th:classappend="${train.loaiTau == 'S' ? 'type-fast' : 'type-normal'}"
+                  >
+                    <i th:class="${train.loaiTau == 'S' ? 'bi bi-lightning-charge-fill' : 'bi bi-train-front-fill'}"></i>
+                    <span th:text="${train.tenLoaiTau}"></span>
+                  </span>
+                </td>
+                <td>
+                  <span class="badge bg-secondary" th:text="${train.soToaTau}"></span> toa
+                </td>
+                <td>
+                  <div class="km-progress-container">
+                    <div class="km-progress-bar">
+                      <div 
+                        class="km-progress-fill"
+                        th:classappend="${train.trangThaiKm == 'BINH_THUONG' ? 'status-normal' : 
+                                         train.trangThaiKm == 'DUOI_MIN' ? 'status-low' : 'status-high'}"
+                        th:style="'width: ' + ${train.kmTrongTuan * 100 / train.kmToiDa} + '%'"
+                      ></div>
+                    </div>
+                    <div class="km-text">
+                      <strong th:text="${#numbers.formatDecimal(train.kmTrongTuan, 0, 2)}"></strong>
+                      / <span th:text="${#numbers.formatDecimal(train.kmToiDa, 0, 0)}"></span> km
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span 
+                    class="train-status-badge"
+                    th:classappend="${train.trangThaiKm == 'BINH_THUONG' ? 'status-normal' : 
+                                     train.trangThaiKm == 'DUOI_MIN' ? 'status-warning' : 'status-danger'}"
+                    th:text="${train.moTaTrangThai}"
+                  ></span>
+                </td>
+                <td>
+                  <span class="badge bg-info" th:text="${train.soChuyenTrongTuan}"></span> chuyến
+                </td>
+                <td>
+                  <div class="train-action-btns">
+                    <a 
+                      th:href="@{/manager/trains/{id}/history(id=${train.maDoanTau})}" 
+                      class="train-action-btn btn-info"
+                      title="Xem lịch sử"
+                    >
+                      <i class="bi bi-clock-history"></i>
+                    </a>
+                    <a 
+                      th:href="@{/manager/trains/{id}/edit(id=${train.maDoanTau})}" 
+                      class="train-action-btn btn-edit"
+                      title="Chỉnh sửa"
+                    >
+                      <i class="bi bi-pencil-square"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <nav th:if="${totalPages > 1}" aria-label="Phân trang">
+          <ul class="train-pagination">
+            <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+              <a 
+                class="page-link" 
+                th:href="@{/manager/trains(page=${currentPage - 1}, loaiTau=${loaiTau}, timKiem=${timKiem})}"
+              >
+                <i class="bi bi-chevron-left"></i> Trước
+              </a>
+            </li>
+            
+            <li 
+              th:each="i : ${#numbers.sequence(1, totalPages)}" 
+              class="page-item"
+              th:classappend="${i == currentPage ? 'active' : ''}"
+            >
+              <a 
+                class="page-link" 
+                th:href="@{/manager/trains(page=${i}, loaiTau=${loaiTau}, timKiem=${timKiem})}"
+                th:text="${i}"
+              ></a>
+            </li>
+            
+            <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+              <a 
+                class="page-link" 
+                th:href="@{/manager/trains(page=${currentPage + 1}, loaiTau=${loaiTau}, timKiem=${timKiem})}"
+              >
+                Sau <i class="bi bi-chevron-right"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="train-stats-footer">
+          <i class="bi bi-info-circle"></i>
+          Hiển thị <strong th:text="${trains != null ? trains.size() : 0}"></strong> 
+          trong tổng số <strong th:text="${totalElements ?: 0}"></strong> đoàn tàu
+        </div>
+      </div>
     </div>
   </section>
 </html>

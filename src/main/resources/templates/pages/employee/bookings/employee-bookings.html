@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout(~{::section}, 'Đặt vé')}">
+<section>
+    <div class="main__container">
+        <div class="train-header">
+            <h1 class="main__title">
+                <i class="bi bi-ticket-perforated"></i>
+                Quản lý đặt vé
+            </h1>
+            <div style="display: flex; gap: 10px;">
+                <a th:href="@{/employee/bookings/search}" class="train-btn train-btn-secondary">
+                    <i class="bi bi-search"></i> Tra cứu vé
+                </a>
+                <a th:href="@{/employee/trips/search}" class="train-btn train-btn-primary">
+                    <i class="bi bi-plus-circle"></i> Đặt vé mới
+                </a>
+            </div>
+        </div>
+
+        <!-- Flash messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="train-filter-card">
+            <div class="card-title">
+                <i class="bi bi-info-circle-fill"></i>
+                Hướng dẫn
+            </div>
+            <div class="alert alert-info mb-0">
+                <h5><i class="bi bi-plus-circle"></i> Đặt vé mới:</h5>
+                <ol class="mb-3">
+                    <li>Nhấn nút <strong>"Đặt vé mới"</strong> để tìm chuyến tàu</li>
+                    <li>Chọn chuyến tàu và ghế/giường phù hợp</li>
+                    <li>Nhập thông tin <strong>người đặt vé</strong> (họ tên và CMND/CCCD)</li>
+                    <li>Nhập thông tin <strong>hành khách</strong> cho từng vé</li>
+                    <li>Chọn phương thức thanh toán và hoàn tất đặt vé</li>
+                </ol>
+                
+                <h5><i class="bi bi-search"></i> Tra cứu vé:</h5>
+                <ol class="mb-0">
+                    <li>Nhấn nút <strong>"Tra cứu vé"</strong></li>
+                    <li>Nhập số điện thoại hoặc CMND/CCCD của khách hàng</li>
+                    <li>Xem danh sách vé đã đặt</li>
+                    <li>Có thể thanh toán hoặc đổi vé cho khách hàng</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- TODO: Thêm danh sách đơn đã đặt nếu cần -->
+    </div>
+</section>
+</html>

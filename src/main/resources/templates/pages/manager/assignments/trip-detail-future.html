@@ -41,6 +41,30 @@
         .status-assigned { color: #28a745; font-weight: 600; }
         .status-leave { color: #dc3545; font-weight: 600; }
         .status-empty { color: #999; font-style: italic; }
+        
+        /* Modal styles */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal.show { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 2rem; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 2px solid #007bff; padding-bottom: 1rem; }
+        .modal-title { font-size: 1.5rem; color: #333; font-weight: 600; }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+        .modal-close:hover { color: #333; }
+        .modal-body { margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #555; }
+        .form-control { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
+        .form-control:focus { outline: none; border-color: #007bff; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); }
+        .modal-footer { display: flex; gap: 1rem; justify-content: flex-end; }
+        .btn-primary { background: #007bff; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        .btn-primary:hover { background: #0056b3; }
+        .btn-secondary { background: #6c757d; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-secondary:hover { background: #5a6268; }
+        .employee-option { padding: 0.75rem; border-bottom: 1px solid #eee; cursor: pointer; }
+        .employee-option:hover { background: #f5f5f5; }
+        .employee-option input[type="radio"] { margin-right: 0.5rem; }
+        .info-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; }
+        .info-box strong { color: #856404; }
     </style>
 </head>
 <body>
@@ -99,9 +123,23 @@
 
         <!-- Stats -->
         <h3>Tình trạng phân công</h3>
-        <div style="margin: 1rem 0;">
-            <div>Số phân công đã có: <strong th:text="${stats.soPhanCongDaCo}">7</strong> / <span th:text="${stats.tongSoViTri}">10</span></div>
-            <div style="color: #dc3545; font-weight: 600;">Số phân công còn thiếu: <span th:text="${stats.soConThieu}">3</span></div>
+        <div style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #007bff;">
+            <div style="margin-bottom: 0.5rem;">
+                <strong>Tổng số vị trí:</strong> <span th:text="${stats.tongSoViTri}">10</span> vị trí
+            </div>
+            <div style="margin-bottom: 0.5rem;">
+                <strong>Đang làm việc:</strong> 
+                <span style="color: #28a745; font-weight: 600;" th:text="${stats.soPhanCongDaCo}">7</span> người
+                <span style="color: #666; font-size: 0.9rem;">(Thực hiện + Thay thế)</span>
+            </div>
+            <div style="margin-bottom: 0.5rem;">
+                <strong>Nghỉ phép:</strong> 
+                <span style="color: #ffc107; font-weight: 600;" th:text="${stats.soNghiPhep}">1</span> người
+            </div>
+            <div style="border-top: 1px solid #dee2e6; padding-top: 0.5rem; margin-top: 0.5rem;">
+                <strong>Còn thiếu:</strong> 
+                <span style="color: #dc3545; font-weight: 700; font-size: 1.1rem;" th:text="${stats.soConThieu}">3</span> vị trí
+            </div>
         </div>
 
         <!-- Assignment Table -->
@@ -130,12 +168,22 @@
                         </span>
                     </td>
                     <td>
-                        <div class="btn-action-group">
+                        <!-- Hiển thị khi nhân viên nghỉ phép -->
+                        <span class="leave-status" th:if="${a.trangThai == 'Nghỉ phép'}">
+                            🏖️ Nghỉ phép
+                        </span>
+                        
+                        <!-- Hiển thị nút thao tác khi không nghỉ phép -->
+                        <div class="btn-action-group" th:unless="${a.trangThai == 'Nghỉ phép'}">
                             <!-- Duyệt nghỉ phép -->
-                            <button class="btn-leave"
-                                    th:if="${a.maNV != null and a.maNV != '' and a.trangThai != 'Nghỉ phép'}"
+                            <button class="btn-leave btn-approve-leave"
+                                    th:if="${a.maNV != null and a.maNV != ''}"
+                                    th:data-trip-id="${trip.maChuyenTau}"
                                     th:data-ma-nv="${a.maNV}"
-                                    onclick="alert('Duyệt nghỉ phép: ' + this.getAttribute('data-ma-nv'))">
+                                    th:data-ten-nv="${a.tenNhanVien}"
+                                    th:data-vai-tro="${a.vaiTro}"
+                                    th:data-loai="${a.loaiPhanCong}"
+                                    th:data-toa="${a.maToa}">
                                 Duyệt nghỉ phép
                             </button>
                             <button class="btn-leave" disabled
@@ -186,6 +234,43 @@
 
     </div>
 
+    <!-- Modal Duyệt nghỉ phép -->
+    <div id="leaveModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🏖️ Duyệt nghỉ phép & Phân công thay thế</h3>
+                <button class="modal-close" onclick="closeLeaveModal()">&times;</button>
+            </div>
+            <form id="leaveForm" method="post">
+                <!-- CSRF Token - BẮT BUỘC cho Spring Security -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                
+                <div class="modal-body">
+                    <div class="info-box">
+                        <strong>📋 Nhân viên nghỉ phép:</strong>
+                        <div id="leaveEmployeeInfo" style="margin-top: 0.5rem;"></div>
+                    </div>
+
+                    <input type="hidden" id="maNhanVienNghiPhep" name="maNhanVienNghiPhep" />
+                    
+                    <div class="form-group">
+                        <label for="maNhanVienThayThe">Chọn nhân viên thay thế: <span style="color: red;">*</span></label>
+                        <select id="maNhanVienThayThe" name="maNhanVienThayThe" class="form-control" required>
+                            <option value="">-- Đang tải danh sách nhân viên --</option>
+                        </select>
+                        <small style="color: #666; display: block; margin-top: 0.5rem;">
+                            Chọn nhân viên có cùng vai trò để thay thế
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeLeaveModal()">Hủy</button>
+                    <button type="submit" class="btn-primary">✓ Xác nhận duyệt</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // Handle assignment button clicks
         document.querySelectorAll('.btn-assign-employee').forEach(button => {
@@ -204,6 +289,143 @@
                 window.location.href = url;
             });
         });
+
+        // Handle approve leave buttons
+        let currentLeaveData = {};
+        
+        document.querySelectorAll('.btn-approve-leave').forEach(button => {
+            button.addEventListener('click', function() {
+                const tripId = this.getAttribute('data-trip-id');
+                const maNV = this.getAttribute('data-ma-nv');
+                const tenNV = this.getAttribute('data-ten-nv');
+                const vaiTro = this.getAttribute('data-vai-tro');
+                const loai = this.getAttribute('data-loai');
+                const toa = this.getAttribute('data-toa');
+                
+                currentLeaveData = { tripId, maNV, tenNV, vaiTro, loai, toa };
+                openLeaveModal();
+            });
+        });
+
+        function openLeaveModal() {
+            const modal = document.getElementById('leaveModal');
+            const leaveForm = document.getElementById('leaveForm');
+            const leaveInfo = document.getElementById('leaveEmployeeInfo');
+            const maNVInput = document.getElementById('maNhanVienNghiPhep');
+            const selectReplacement = document.getElementById('maNhanVienThayThe');
+            
+            // Set form action
+            leaveForm.action = '/manager/assignments/' + currentLeaveData.tripId + '/approve-leave';
+            
+            // Display leave employee info
+            leaveInfo.innerHTML = `
+                <div style="padding: 0.5rem; background: white; border-radius: 4px; margin-top: 0.5rem;">
+                    <strong>${currentLeaveData.maNV}</strong> - ${currentLeaveData.tenNV}<br>
+                    <small style="color: #666;">Vai trò: ${currentLeaveData.vaiTro}</small>
+                </div>
+            `;
+            
+            // Set hidden input
+            maNVInput.value = currentLeaveData.maNV;
+            
+            // Load replacement employees
+            loadReplacementEmployees();
+            
+            modal.classList.add('show');
+        }
+
+        function closeLeaveModal() {
+            document.getElementById('leaveModal').classList.remove('show');
+            currentLeaveData = {};
+        }
+
+        function loadReplacementEmployees() {
+            const selectReplacement = document.getElementById('maNhanVienThayThe');
+            selectReplacement.innerHTML = '<option value="">⏳ Đang tải...</option>';
+            
+            // Build URL based on type
+            let url = '/manager/assignments/' + currentLeaveData.tripId + '/employees?';
+            
+            if (currentLeaveData.loai === 'LAITAU') {
+                url += 'type=laitau&role=' + encodeURIComponent(currentLeaveData.vaiTro);
+            } else if (currentLeaveData.loai === 'TOATAU') {
+                url += 'type=toatau&role=' + encodeURIComponent(currentLeaveData.vaiTro);
+                if (currentLeaveData.toa) {
+                    url += '&toa=' + currentLeaveData.toa;
+                }
+            }
+            
+            console.log('Fetching employees from:', url);
+            console.log('Current leave data:', currentLeaveData);
+            
+            fetch(url)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    console.log('HTML length:', html.length);
+                    
+                    // Parse HTML to extract employee from table rows
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const employeeRows = doc.querySelectorAll('tbody tr');
+                    
+                    console.log('Found employee rows:', employeeRows.length);
+                    
+                    if (employeeRows.length === 0) {
+                        selectReplacement.innerHTML = '<option value="">❌ Không có nhân viên phù hợp</option>';
+                        return;
+                    }
+                    
+                    let options = '<option value="">-- Chọn nhân viên thay thế --</option>';
+                    let count = 0;
+                    
+                    employeeRows.forEach((row, index) => {
+                        const cells = row.querySelectorAll('td');
+                        console.log('Row', index, '- cells:', cells.length);
+                        
+                        if (cells.length >= 4) {
+                            const maNV = cells[0].textContent.trim();
+                            const hoTen = cells[1].textContent.trim();
+                            const soGio = cells[3].textContent.trim();
+                            
+                            console.log('Employee:', maNV, '-', hoTen, '-', soGio);
+                            
+                            // Exclude the employee on leave
+                            if (maNV && maNV !== currentLeaveData.maNV) {
+                                options += `<option value="${maNV}">${maNV} - ${hoTen} (${soGio}h/tuần)</option>`;
+                                count++;
+                            } else if (maNV === currentLeaveData.maNV) {
+                                console.log('Skipping leave employee:', maNV);
+                            }
+                        }
+                    });
+                    
+                    console.log('Total eligible employees:', count);
+                    
+                    if (count === 0) {
+                        selectReplacement.innerHTML = '<option value="">❌ Không có nhân viên khác phù hợp</option>';
+                    } else {
+                        selectReplacement.innerHTML = options;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading employees:', error);
+                    selectReplacement.innerHTML = '<option value="">❌ Lỗi: ' + error.message + '</option>';
+                });
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('leaveModal');
+            if (event.target === modal) {
+                closeLeaveModal();
+            }
+        }
     </script>
 
 </body>

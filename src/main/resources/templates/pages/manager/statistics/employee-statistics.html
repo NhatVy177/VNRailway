@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{layout/main :: layout(~{::section}, 'Báo cáo thống kê')}"
+>
+  <section>
+    <div class="main__container">
+      <h1 class="main__title">Báo cáo thống kê</h1>
+
+      <!-- Tabs Header -->
+      <div class="statistics__tabs-header">
+        <button class="statistics__tab-btn statistics__tab-btn--active" onclick="switchTab('revenue')">
+          <i class="fas fa-chart-line"></i> Tình hình bán vé
+        </button>
+        <button class="statistics__tab-btn" onclick="switchTab('employees')">
+          <i class="fas fa-users"></i> Tình hình làm việc
+        </button>
+      </div>
+
+      <!-- TAB 1: REVENUE STATISTICS -->
+      <div id="revenueTab" class="statistics__tab-content statistics__tab-content--active">
+        <div class="statistics__filter-box">
+          <div class="statistics__filter-row">
+            <div class="statistics__filter-col">
+              <div class="form-group">
+                <label class="form-label">Từ ngày</label>
+                <input type="date" id="revenueStartDate" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Đến ngày</label>
+                <input type="date" id="revenueEndDate" class="form-input">
+              </div>
+            </div>
+
+            <div class="statistics__filter-col">
+              <div class="form-group">
+                <label class="form-label">Tiêu chí</label>
+                <select id="revenueCriteria" class="form-input" onchange="updateRevenueCriteria()">
+                  <option value="all">Tổng thể</option>
+                  <option value="route">Theo tuyến</option>
+                  <option value="seat">Theo loại chỗ</option>
+                </select>
+              </div>
+              <div class="form-group" id="routeFilterGroup" style="display:none;">
+                <label class="form-label">Chọn tuyến</label>
+                <select id="routeFilter" class="form-input">
+                  <option value="">Đang tải...</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="statistics__filter-actions">
+            <button class="btn btn--primary" onclick="generateRevenueReport()">
+              <i class="fas fa-chart-bar"></i> Thống kê
+            </button>
+          </div>
+        </div>
+
+        <!-- Revenue Summary -->
+        <div id="revenueSummary" class="statistics__summary-view" style="display:none;">
+          <div class="statistics__summary-cards">
+            <div class="statistics__summary-card">
+              <div class="statistics__card-label">Tổng doanh thu</div>
+              <div class="statistics__card-value" id="revTotalRevenue">-</div>
+            </div>
+            <div class="statistics__summary-card">
+              <div class="statistics__card-label">Tổng số vé</div>
+              <div class="statistics__card-value" id="revTotalTickets">-</div>
+            </div>
+            <div class="statistics__summary-card">
+              <div class="statistics__card-label">Doanh thu TB/vé</div>
+              <div class="statistics__card-value" id="revAvgRevenue">-</div>
+            </div>
+            <div class="statistics__summary-card">
+              <div class="statistics__card-label">Số chuyến tàu</div>
+              <div class="statistics__card-value" id="revTotalTrips">-</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revenue by Route Table -->
+        <div id="revenueByRouteView" class="statistics__table-view" style="display:none;">
+          <p class="statistics__table-info">Chi tiết doanh thu theo tuyến</p>
+          <table class="table">
+            <thead>
+              <tr class="table__header-row">
+                <th class="table__header-cell">Mã tuyến</th>
+                <th class="table__header-cell">Tên tuyến</th>
+                <th class="table__header-cell table__header-cell--center">Số vé</th>
+                <th class="table__header-cell table__header-cell--center">Tổng doanh thu</th>
+                <th class="table__header-cell table__header-cell--center">Tỷ lệ %</th>
+              </tr>
+            </thead>
+            <tbody id="revenueByRouteBody">
+              <tr>
+                <td colspan="5" class="table__body-cell table__body-cell--empty">
+                  Nhấn "Thống kê" để xem dữ liệu
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Revenue by Seat Type Table -->
+        <div id="revenueBySeatView" class="statistics__table-view" style="display:none;">
+          <p class="statistics__table-info">Chi tiết doanh thu theo loại chỗ</p>
+          <table class="table">
+            <thead>
+              <tr class="table__header-row">
+                <th class="table__header-cell">Loại toa</th>
+                <th class="table__header-cell">Loại chỗ</th>
+                <th class="table__header-cell table__header-cell--center">Số vé</th>
+                <th class="table__header-cell table__header-cell--center">Tổng doanh thu</th>
+                <th class="table__header-cell table__header-cell--center">Doanh thu TB</th>
+              </tr>
+            </thead>
+            <tbody id="revenueBySeatBody">
+              <tr>
+                <td colspan="5" class="table__body-cell table__body-cell--empty">
+                  Nhấn "Thống kê" để xem dữ liệu
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: EMPLOYEE STATISTICS -->
+      <div id="employeesTab" class="statistics__tab-content">
+        <div class="statistics__container">
+        <!-- Filter Section -->
+        <div class="statistics__filter-box">
+          <div class="statistics__filter-row">
+            <div class="statistics__filter-col">
+              <div class="form-group">
+                <label class="form-label">Tháng</label>
+                <select id="workMonth" class="form-input">
+                  <option value="1">Tháng 1</option>
+                  <option value="2">Tháng 2</option>
+                  <option value="3">Tháng 3</option>
+                  <option value="4">Tháng 4</option>
+                  <option value="5">Tháng 5</option>
+                  <option value="6">Tháng 6</option>
+                  <option value="7">Tháng 7</option>
+                  <option value="8">Tháng 8</option>
+                  <option value="9">Tháng 9</option>
+                  <option value="10">Tháng 10</option>
+                  <option value="11" selected>Tháng 11</option>
+                  <option value="12">Tháng 12</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Năm</label>
+                <select id="workYear" class="form-input">
+                  <option value="2024">2024</option>
+                  <option value="2025" selected>2025</option>
+                  <option value="2026">2026</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="statistics__filter-col">
+              <div class="form-group">
+                <label class="form-label">Loại báo cáo</label>
+                <select id="reportType" class="form-input" onchange="updateReportType()">
+                  <option value="summary">Tổng hợp</option>
+                  <option value="detail" selected>Chi tiết nhân viên</option>
+                  <option value="department">Theo bộ phận</option>
+                  <option value="violation">Vi phạm</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="violationThresholdGroup" style="display:none;">
+                <label class="form-label">Ngưỡng vi phạm</label>
+                <input type="number" id="violationThreshold" class="form-input" value="3" min="1" max="10">
+              </div>
+            </div>
+          </div>
+
+          <div class="statistics__filter-actions">
+            <button class="btn btn--primary" onclick="generateReport()">
+              <i class="fas fa-chart-bar"></i> Thống kê
+            </button>
+          </div>
+        </div>
+
+        <!-- Summary View (sp_ThongKeNhanVienTheoThang) -->
+        <div id="summaryView" class="statistics__summary-view" style="display:none;">
+          <div class="statistics__summary-cards">
+            <div class="statistics__summary-card">
+              <div class="statistics__card-label">Tổng nhân viên</div>
+              <div class="statistics__card-value" id="summaryTotalEmp">-</div>
+            </div>
+            <div class="statistics__summary-card">
+              <div class="statistics__card-label">Nhân viên đi làm</div>
+              <div class="statistics__card-value" id="summaryWorkingEmp">-</div>
+            </div>
+            <div class="statistics__summary-card">
+              <div class="statistics__card-label">Nhân viên nghỉ phép</div>
+              <div class="statistics__card-value" id="summaryLeaveEmp">-</div>
+            </div>
+            <div class="statistics__summary-card">
+              <div class="statistics__card-label">Tổng giờ làm việc</div>
+              <div class="statistics__card-value" id="summaryTotalHours">-</div>
+            </div>
+            <div class="statistics__summary-card">
+              <div class="statistics__card-label">Tỷ lệ vắng mặt</div>
+              <div class="statistics__card-value" id="summaryAbsenceRate">-</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detail View (sp_ThongKeChiTietNhanVien) -->
+        <div id="detailView" class="statistics__table-view">
+          <p class="statistics__table-info">
+            Tổng: <span id="totalRecords">0</span> nhân viên
+          </p>
+
+          <table class="table">
+            <thead>
+              <tr class="table__header-row">
+                <th class="table__header-cell">Mã NV</th>
+                <th class="table__header-cell">Họ tên</th>
+                <th class="table__header-cell">Số điện thoại</th>
+                <th class="table__header-cell">Bộ phận</th>
+                <th class="table__header-cell table__header-cell--center">Giờ làm việc</th>
+                <th class="table__header-cell table__header-cell--center">Số lần nghỉ phép</th>
+              </tr>
+            </thead>
+            <tbody id="detailTableBody">
+              <tr>
+                <td colspan="6" class="table__body-cell table__body-cell--empty">
+                  Nhấn "Thống kê" để xem dữ liệu
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Pagination -->
+          <div class="pagination" id="paginationControls">
+            <button class="pagination__btn" onclick="changePage(-1)">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="pagination__text">Trang</span>
+            <input 
+              type="number" 
+              class="pagination__input" 
+              id="currentPage" 
+              value="1" 
+              onchange="goToPage()" 
+              min="1"
+            >
+            <span class="pagination__text">trên <span id="totalPages">1</span></span>
+            <button class="pagination__btn" onclick="changePage(1)">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Department View (sp_ThongKeNhanVienTheoBoPhan) -->
+        <div id="departmentView" class="statistics__table-view" style="display:none;">
+          <p class="statistics__table-info">Thống kê theo bộ phận</p>
+
+          <table class="table">
+            <thead>
+              <tr class="table__header-row">
+                <th class="table__header-cell">Bộ phận</th>
+                <th class="table__header-cell table__header-cell--center">Số nhân viên</th>
+                <th class="table__header-cell table__header-cell--center">Tổng giờ làm việc</th>
+                <th class="table__header-cell table__header-cell--center">Trung bình giờ/người</th>
+              </tr>
+            </thead>
+            <tbody id="departmentTableBody">
+              <tr>
+                <td colspan="4" class="table__body-cell table__body-cell--empty">
+                  Nhấn "Thống kê" để xem dữ liệu
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Violation View (sp_ThongKeViPhamNhanVien) -->
+        <div id="violationView" class="statistics__table-view" style="display:none;">
+          <p class="statistics__table-info">Danh sách nhân viên vi phạm (nghỉ phép nhiều)</p>
+
+          <table class="table">
+            <thead>
+              <tr class="table__header-row">
+                <th class="table__header-cell">Mã NV</th>
+                <th class="table__header-cell">Họ tên</th>
+                <th class="table__header-cell">Số điện thoại</th>
+                <th class="table__header-cell">Bộ phận</th>
+                <th class="table__header-cell table__header-cell--center">Số lần nghỉ phép</th>
+                <th class="table__header-cell table__header-cell--center">Giờ làm việc</th>
+              </tr>
+            </thead>
+            <tbody id="violationTableBody">
+              <tr>
+                <td colspan="6" class="table__body-cell table__body-cell--empty">
+                  Nhấn "Thống kê" để xem dữ liệu
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      .statistics__container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Tabs */
+      .statistics__tabs-header {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid var(--color-border);
+      }
+
+      .statistics__tab-btn {
+        background: none;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-size: 16px;
+        font-weight: 600;
+        color: #777;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s;
+      }
+
+      .statistics__tab-btn:hover {
+        color: var(--color-primary);
+      }
+
+      .statistics__tab-btn--active {
+        color: var(--color-primary);
+        border-bottom-color: var(--color-primary);
+      }
+
+      .statistics__tab-content {
+        display: none;
+        animation: fadeIn 0.3s;
+      }
+
+      .statistics__tab-content--active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      .statistics__filter-box {
+        background: white;
+        border: 1px solid var(--color-border);
+        border-radius: var(--border-radius-sm);
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .statistics__filter-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .statistics__filter-col {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .statistics__filter-actions {
+        display: flex;
+        justify-content: center;
+      }
+
+      .statistics__summary-view {
+        margin-bottom: 2rem;
+      }
+
+      .statistics__summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .statistics__summary-card {
+        background: var(--color-primary-light);
+        border: 1px solid #f0d0d8;
+        padding: 1.5rem;
+        text-align: center;
+        border-radius: var(--border-radius-sm);
+      }
+
+      .statistics__card-label {
+        font-size: 14px;
+        color: #666;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .statistics__card-value {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--color-primary);
+      }
+
+      .statistics__chart-container {
+        background: white;
+        border: 1px solid var(--color-border);
+        border-radius: var(--border-radius-sm);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .statistics__chart-title {
+        text-align: center;
+        font-size: 14px;
+        color: #555;
+        margin-top: 1rem;
+        font-weight: 600;
+      }
+
+      .statistics__table-view {
+        background: white;
+        border: 1px solid var(--color-border);
+        border-radius: var(--border-radius-sm);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .statistics__table-info {
+        margin-bottom: 1rem;
+        font-weight: 600;
+        font-size: 14px;
+        color: #555;
+      }
+
+      .table__header-cell--center,
+      .table__body-cell--center {
+        text-align: center;
+      }
+
+      .table__body-cell--empty {
+        text-align: center;
+        color: #999;
+        padding: 2rem;
+      }
+
+      .highlight-red {
+        color: var(--color-error);
+        font-weight: bold;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+      }
+
+      .pagination__btn {
+        background: var(--color-secondary);
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .pagination__btn:hover {
+        background: var(--color-secondary-dark);
+      }
+
+      .pagination__text {
+        font-size: 14px;
+        color: #555;
+      }
+
+      .pagination__input {
+        width: 50px;
+        text-align: center;
+        padding: 0.25rem;
+        border: 1px solid var(--color-border);
+        border-radius: var(--border-radius-sm);
+      }
+    </style>
+
+    <script>
+      // ======= UTILITY FUNCTIONS =======
+      // FIX 8: Safe fetch with error handling
+      async function safeFetch(url) {
+        try {
+          const response = await fetch(url);
+          
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          
+          const data = await response.json();
+          
+          // Check if backend returned error
+          if (data.error) {
+            throw new Error(data.message || 'Có lỗi xảy ra');
+          }
+          
+          return data;
+          
+        } catch (error) {
+          console.error('Fetch error:', error);
+          throw error;
+        }
+      }
+
+      // FIX 1: Parse month/year from employee inputs
+      function getMonthYear() {
+        const month = document.getElementById('workMonth').value;
+        const year = document.getElementById('workYear').value;
+        
+        return {
+          month: parseInt(month, 10),
+          year: parseInt(year, 10)
+        };
+      }
+
+      // ======= TAB SWITCHING =======
+      function switchTab(tabName) {
+        // Hide all tabs
+        document.getElementById('revenueTab').classList.remove('statistics__tab-content--active');
+        document.getElementById('employeesTab').classList.remove('statistics__tab-content--active');
+        
+        // Remove active from all tab buttons
+        document.querySelectorAll('.statistics__tab-btn').forEach(btn => {
+          btn.classList.remove('statistics__tab-btn--active');
+        });
+        
+        // Show selected tab
+        if (tabName === 'revenue') {
+          document.getElementById('revenueTab').classList.add('statistics__tab-content--active');
+          event.target.classList.add('statistics__tab-btn--active');
+        } else if (tabName === 'employees') {
+          document.getElementById('employeesTab').classList.add('statistics__tab-content--active');
+          event.target.classList.add('statistics__tab-btn--active');
+        }
+      }
+
+      // ======= REVENUE TAB FUNCTIONS =======
+      let revenueMonthChart, tripMonthChart;
+
+      // Initialize charts
+      function initRevenueCharts() {
+        const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary') || '#854759';
+        
+        // Revenue Month Chart
+        const ctxRevenue = document.getElementById('revenueMonthChart').getContext('2d');
+        revenueMonthChart = new Chart(ctxRevenue, {
+          type: 'line',
+          data: {
+            labels: [],
+            datasets: [{
+              label: 'Doanh thu (triệu VNĐ)',
+              data: [],
+              borderColor: primaryColor,
+              backgroundColor: `${primaryColor}20`,
+              tension: 0.4,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+          }
+        });
+
+        // Trip Month Chart
+        const ctxTrip = document.getElementById('tripMonthChart').getContext('2d');
+        tripMonthChart = new Chart(ctxTrip, {
+          type: 'line',
+          data: {
+            labels: [],
+            datasets: [{
+              label: 'Số chuyến',
+              data: [],
+              borderColor: primaryColor,
+              tension: 0.4
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+          }
+        });
+      }
+
+      // FIX 3: Load routes for filter
+      async function loadRoutes() {
+        try {
+          const data = await safeFetch('/api/manager/statistics/routes');
+          
+          const routeSelect = document.getElementById('routeFilter');
+          routeSelect.innerHTML = '<option value="">Tất cả tuyến</option>';
+          
+          if (data.routes && data.routes.length > 0) {
+            data.routes.forEach(route => {
+              const option = document.createElement('option');
+              option.value = route.id;
+              option.textContent = route.name;
+              routeSelect.appendChild(option);
+            });
+          }
+        } catch (error) {
+          console.error('Error loading routes:', error);
+          document.getElementById('routeFilter').innerHTML = '<option value="">Lỗi tải dữ liệu</option>';
+        }
+      }
+
+      // FIX 6: Update criteria filter behavior
+      function updateRevenueCriteria() {
+        const criteria = document.getElementById('revenueCriteria').value;
+        const routeFilterGroup = document.getElementById('routeFilterGroup');
+        
+        // Show/hide route filter based on criteria
+        if (criteria === 'route') {
+          routeFilterGroup.style.display = 'block';
+        } else {
+          routeFilterGroup.style.display = 'none';
+        }
+      }
+
+      // FIX 5: Hiển thị/ẩn views theo criteria
+      async function generateRevenueReport() {
+        const startDate = document.getElementById('revenueStartDate').value;
+        const endDate = document.getElementById('revenueEndDate').value;
+        
+        if (!startDate || !endDate) {
+          alert('Vui lòng chọn khoảng thời gian');
+          return;
+        }
+        
+        const criteria = document.getElementById('revenueCriteria').value;
+        
+        // Hide all views first
+        document.getElementById('revenueSummary').style.display = 'none';
+        document.getElementById('revenueByRouteView').style.display = 'none';
+        document.getElementById('revenueBySeatView').style.display = 'none';
+        
+        try {
+          // Always show summary
+          document.getElementById('revenueSummary').style.display = 'block';
+          await fetchRevenueSummary(startDate, endDate);
+          
+          // Show specific view based on criteria
+          switch(criteria) {
+            case 'all':
+              // Chỉ hiển thị summary, không có biểu đồ
+              break;
+              
+            case 'route':
+              document.getElementById('revenueByRouteView').style.display = 'block';
+              await fetchRevenueByRoute(startDate, endDate);
+              break;
+              
+            case 'seat':
+              document.getElementById('revenueBySeatView').style.display = 'block';
+              await fetchRevenueBySeat(startDate, endDate);
+              break;
+          }
+        } catch (error) {
+          console.error('Error generating report:', error);
+          alert('Có lỗi xảy ra: ' + error.message);
+        }
+      }
+
+      // FIX 4: Format số tiền cho summary cards
+      // sp_ThongKeDoanhThu
+      async function fetchRevenueSummary(startDate, endDate) {
+        const data = await safeFetch(`/api/manager/statistics/revenue/summary?startDate=${startDate}&endDate=${endDate}`);
+        
+        document.getElementById('revTotalRevenue').textContent = 
+          (data.totalRevenue || 0).toLocaleString('vi-VN') + ' VNĐ';
+        document.getElementById('revTotalTickets').textContent = 
+          (data.totalTickets || 0).toLocaleString('vi-VN');
+        document.getElementById('revAvgRevenue').textContent = 
+          (data.avgRevenue || 0).toLocaleString('vi-VN') + ' VNĐ';
+        document.getElementById('revTotalTrips').textContent = 
+          (data.totalTrips || 0).toLocaleString('vi-VN');
+      }
+
+      // FIX 2: Xử lý response data format đúng
+      // sp_ThongKeDoanhThuTheoThang
+      async function fetchRevenueByMonth(startDate, endDate) {
+        const data = await safeFetch(`/api/manager/statistics/revenue/by-month?startDate=${startDate}&endDate=${endDate}`);
+        
+        if (data.months && data.months.length > 0) {
+          const labels = data.months.map(m => `${m.month}/${m.year}`);
+          const revenues = data.months.map(m => m.revenue || 0);
+          
+          revenueMonthChart.data.labels = labels;
+          revenueMonthChart.data.datasets[0].data = revenues;
+          revenueMonthChart.update();
+        }
+      }
+
+      // sp_ThongKeChuyenTauTheoThang
+      async function fetchTripsByMonth(startDate, endDate) {
+        const data = await safeFetch(`/api/manager/statistics/revenue/trips-by-month?startDate=${startDate}&endDate=${endDate}`);
+        
+        if (data.months && data.months.length > 0) {
+          const labels = data.months.map(m => `${m.month}/${m.year}`);
+          const trips = data.months.map(m => m.tripCount || 0);
+          
+          tripMonthChart.data.labels = labels;
+          tripMonthChart.data.datasets[0].data = trips;
+          tripMonthChart.update();
+        }
+      }
+
+      // sp_ThongKeDoanhThuTheoTuyen
+      async function fetchRevenueByRoute(startDate, endDate) {
+        const data = await safeFetch(`/api/manager/statistics/revenue/by-route?startDate=${startDate}&endDate=${endDate}`);
+        
+        const tbody = document.getElementById('revenueByRouteBody');
+        tbody.innerHTML = '';
+        
+        if (!data.routes || data.routes.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="table__body-cell table__body-cell--empty">Không có dữ liệu</td></tr>';
+          return;
+        }
+        
+        data.routes.forEach(route => {
+          const row = `
+            <tr class="table__body-row">
+              <td class="table__body-cell">${route.routeId}</td>
+              <td class="table__body-cell">${route.routeName}</td>
+              <td class="table__body-cell table__body-cell--center">${route.ticketCount.toLocaleString('vi-VN')}</td>
+              <td class="table__body-cell table__body-cell--center"><b>${route.revenue.toLocaleString('vi-VN')} VNĐ</b></td>
+              <td class="table__body-cell table__body-cell--center">${route.percentage.toFixed(1)}%</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      }
+
+      // sp_ThongKeDoanhThuTheoLoaiCho
+      async function fetchRevenueBySeat(startDate, endDate) {
+        const data = await safeFetch(`/api/manager/statistics/revenue/by-seat?startDate=${startDate}&endDate=${endDate}`);
+        
+        const tbody = document.getElementById('revenueBySeatBody');
+        tbody.innerHTML = '';
+        
+        if (!data.seats || data.seats.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="table__body-cell table__body-cell--empty">Không có dữ liệu</td></tr>';
+          return;
+        }
+        
+        data.seats.forEach(seat => {
+          const row = `
+            <tr class="table__body-row">
+              <td class="table__body-cell">${seat.seatType}</td>
+              <td class="table__body-cell">${seat.seatTypeName}</td>
+              <td class="table__body-cell table__body-cell--center">${seat.ticketCount.toLocaleString('vi-VN')}</td>
+              <td class="table__body-cell table__body-cell--center"><b>${seat.revenue.toLocaleString('vi-VN')} VNĐ</b></td>
+              <td class="table__body-cell table__body-cell--center">${seat.avgRevenue.toLocaleString('vi-VN')} VNĐ</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      }
+
+      // ======= EMPLOYEE TAB FUNCTIONS =======
+      let currentPage = 1;
+      let pageSize = 10;
+      let totalPages = 1;
+
+      // Update report type
+      function updateReportType() {
+        const reportType = document.getElementById('reportType').value;
+        const violationGroup = document.getElementById('violationThresholdGroup');
+        
+        // Show/hide violation threshold
+        if (reportType === 'violation') {
+          violationGroup.style.display = 'block';
+        } else {
+          violationGroup.style.display = 'none';
+        }
+
+        // Hide all views
+        document.getElementById('summaryView').style.display = 'none';
+        document.getElementById('detailView').style.display = 'none';
+        document.getElementById('departmentView').style.display = 'none';
+        document.getElementById('violationView').style.display = 'none';
+
+        // Show appropriate view based on report type
+        switch(reportType) {
+          case 'summary':
+            document.getElementById('summaryView').style.display = 'block';
+            break;
+          case 'detail':
+            document.getElementById('detailView').style.display = 'block';
+            break;
+          case 'department':
+            document.getElementById('departmentView').style.display = 'block';
+            break;
+          case 'violation':
+            document.getElementById('violationView').style.display = 'block';
+            break;
+        }
+      }
+
+      // FIX 1: Generate report with proper month/year parsing
+      async function generateReport() {
+        const { month, year } = getMonthYear();
+        const reportType = document.getElementById('reportType').value;
+
+        try {
+          switch(reportType) {
+            case 'summary':
+              await fetchSummaryData(month, year);
+              break;
+            case 'detail':
+              await fetchDetailData(month, year, currentPage, pageSize);
+              break;
+            case 'department':
+              await fetchDepartmentData(month, year);
+              break;
+            case 'violation':
+              const threshold = document.getElementById('violationThreshold').value;
+              await fetchViolationData(month, year, threshold);
+              break;
+          }
+        } catch (error) {
+          console.error('Error generating report:', error);
+          alert('Có lỗi xảy ra khi tạo báo cáo: ' + error.message);
+        }
+      }
+
+      // Fetch summary data (sp_ThongKeNhanVienTheoThang)
+      async function fetchSummaryData(month, year) {
+        const data = await safeFetch(`/api/manager/statistics/employees/summary?month=${month}&year=${year}`);
+
+        document.getElementById('summaryTotalEmp').textContent = data.totalEmployees || '-';
+        document.getElementById('summaryWorkingEmp').textContent = data.workingEmployees || '-';
+        document.getElementById('summaryLeaveEmp').textContent = data.leaveEmployees || '-';
+        document.getElementById('summaryTotalHours').textContent = (data.totalHours || 0).toFixed(1) + ' giờ';
+        document.getElementById('summaryAbsenceRate').textContent = (data.absenceRate || 0).toFixed(1) + '%';
+      }
+
+      // Fetch detail data (sp_ThongKeChiTietNhanVien)
+      async function fetchDetailData(month, year, page, size) {
+        const data = await safeFetch(`/api/manager/statistics/employees/detail?month=${month}&year=${year}&page=${page}&size=${size}`);
+
+        const tbody = document.getElementById('detailTableBody');
+        tbody.innerHTML = '';
+
+        if (!data.employees || data.employees.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="table__body-cell table__body-cell--empty">Không có dữ liệu</td></tr>';
+          return;
+        }
+
+        data.employees.forEach(emp => {
+          const row = `
+            <tr class="table__body-row">
+              <td class="table__body-cell">${emp.employeeId}</td>
+              <td class="table__body-cell">${emp.fullName}</td>
+              <td class="table__body-cell">${emp.phone}</td>
+              <td class="table__body-cell">${emp.department}</td>
+              <td class="table__body-cell table__body-cell--center"><b>${emp.workHours.toFixed(1)}</b></td>
+              <td class="table__body-cell table__body-cell--center ${emp.leaveCount > 2 ? 'highlight-red' : ''}">${emp.leaveCount}</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+
+        document.getElementById('totalRecords').textContent = data.totalRecords || 0;
+        totalPages = data.totalPages || 1;
+        document.getElementById('totalPages').textContent = totalPages;
+      }
+
+      // Fetch department data (sp_ThongKeNhanVienTheoBoPhan)
+      async function fetchDepartmentData(month, year) {
+        const data = await safeFetch(`/api/manager/statistics/employees/department?month=${month}&year=${year}`);
+
+        const tbody = document.getElementById('departmentTableBody');
+        tbody.innerHTML = '';
+
+        if (!data.departments || data.departments.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" class="table__body-cell table__body-cell--empty">Không có dữ liệu</td></tr>';
+          return;
+        }
+
+        data.departments.forEach(dept => {
+          const row = `
+            <tr class="table__body-row">
+              <td class="table__body-cell">${dept.departmentName}</td>
+              <td class="table__body-cell table__body-cell--center">${dept.employeeCount}</td>
+              <td class="table__body-cell table__body-cell--center"><b>${dept.totalHours.toFixed(1)}</b></td>
+              <td class="table__body-cell table__body-cell--center">${dept.avgHours.toFixed(1)}</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      }
+
+      // Fetch violation data (sp_ThongKeViPhamNhanVien)
+      async function fetchViolationData(month, year, threshold) {
+        const data = await safeFetch(`/api/manager/statistics/employees/violation?month=${month}&year=${year}&threshold=${threshold}`);
+
+        const tbody = document.getElementById('violationTableBody');
+        tbody.innerHTML = '';
+
+        if (!data.violations || data.violations.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="table__body-cell table__body-cell--empty">Không có nhân viên vi phạm</td></tr>';
+          return;
+        }
+
+        data.violations.forEach(vio => {
+          const row = `
+            <tr class="table__body-row">
+              <td class="table__body-cell">${vio.employeeId}</td>
+              <td class="table__body-cell">${vio.fullName}</td>
+              <td class="table__body-cell">${vio.phone}</td>
+              <td class="table__body-cell">${vio.department}</td>
+              <td class="table__body-cell table__body-cell--center highlight-red"><b>${vio.leaveCount}</b></td>
+              <td class="table__body-cell table__body-cell--center">${vio.workHours.toFixed(1)}</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      }
+
+      // Pagination functions
+      function changePage(direction) {
+        const newPage = currentPage + direction;
+        if (newPage >= 1 && newPage <= totalPages) {
+          currentPage = newPage;
+          document.getElementById('currentPage').value = currentPage;
+          generateReport();
+        }
+      }
+
+      function goToPage() {
+        const page = parseInt(document.getElementById('currentPage').value);
+        if (page >= 1 && page <= totalPages) {
+          currentPage = page;
+          generateReport();
+        } else {
+          document.getElementById('currentPage').value = currentPage;
+        }
+      }
+
+      // FIX 7: Initialize default values
+      document.addEventListener('DOMContentLoaded', function() {
+        // Set default revenue dates (last 30 days)
+        const today = new Date();
+        const lastMonth = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+        
+        document.getElementById('revenueStartDate').valueAsDate = lastMonth;
+        document.getElementById('revenueEndDate').valueAsDate = today;
+        
+        // Set default employee month/year (current month)
+        const currentYear = today.getFullYear();
+        const currentMonth = today.getMonth() + 1;
+        document.getElementById('workMonth').value = currentMonth;
+        document.getElementById('workYear').value = currentYear;
+        
+        // Initialize charts
+        initRevenueCharts();
+        
+        // Load routes for filter
+        loadRoutes();
+        
+        // Initialize employee tab
+        updateReportType();
+      });
+    </script>
+  </section>
+</html>

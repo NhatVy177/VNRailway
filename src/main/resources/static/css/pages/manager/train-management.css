@@ -1,0 +1,709 @@
+/* ================================================
+   TRAIN MANAGEMENT - QUẢN LÝ ĐOÀN TÀU
+   Refactored to use variables.css
+   ================================================ */
+
+/* =============== Variables Mapping =============== */
+:root {
+    /* Ánh xạ từ variables.css */
+    --train-primary: var(--color-primary);          /* #854759 */
+    --train-primary-light: var(--color-primary-light); /* #fce0e8 */
+    --train-secondary: var(--color-secondary);      /* #4b4a69 */
+    --train-dark: var(--color-secondary-dark);      /* #333244 */
+    --train-danger: var(--color-error);             /* #da4141 */
+    --train-danger-bg: var(--color-error-bg);       /* #fce0e8 */
+    
+    --train-border: var(--color-border);            /* #7d7d7d */
+    --train-bg-card: var(--color-input-bg);         /* #ffffff */
+    --train-text-muted: #6b7280;                    /* Giữ màu xám trung tính cho text phụ */
+    
+    /* Các màu trạng thái (Success/Warning/Info) chưa có trong variables.css 
+       -> Giữ nguyên hoặc điều chỉnh nhẹ để hợp tông */
+    --train-success: #10b981; 
+    --train-success-bg: #ecfdf5;
+    --train-warning: #f59e0b;
+    --train-warning-bg: #fffbeb;
+    --train-info: #06b6d4;
+    --train-info-bg: #e0f2fe;
+
+    /* Cấu hình chung */
+    --train-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --train-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --train-radius: var(--radius-lg);
+    --train-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --train-font: var(--font-primary);
+}
+
+body {
+    font-family: var(--train-font);
+}
+
+/* =============== Page Header =============== */
+.train-header {
+    /* Gradient từ Primary -> Secondary của hệ thống */
+    background: linear-gradient(135deg, var(--train-primary) 0%, var(--train-secondary) 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    border-radius: var(--train-radius);
+    box-shadow: var(--train-shadow-lg);
+}
+
+.train-header .main__title {
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.train-header .main__title i {
+    font-size: 2.25rem;
+}
+
+/* =============== Alerts =============== */
+.train-alert {
+    padding: 1rem 1.5rem;
+    border-radius: var(--train-radius);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: slideInDown 0.4s ease-out;
+    box-shadow: var(--train-shadow);
+    border-left: 4px solid;
+}
+
+.train-alert.alert-success {
+    background-color: var(--train-success-bg);
+    color: #065f46;
+    border-left-color: var(--train-success);
+}
+
+.train-alert.alert-danger {
+    background-color: var(--train-danger-bg);
+    color: #991b1b; /* Darken error for text readability */
+    border-left-color: var(--train-danger);
+}
+
+.train-alert i {
+    font-size: 1.5rem;
+}
+
+/* =============== Filter Card =============== */
+.train-filter-card {
+    background: var(--train-bg-card);
+    border-radius: var(--train-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--train-shadow);
+    border: 1px solid var(--train-border);
+    transition: var(--train-transition);
+}
+
+.train-filter-card:hover {
+    box-shadow: var(--train-shadow-lg);
+}
+
+.train-filter-card .card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--train-secondary); /* Dùng màu secondary cho tiêu đề con */
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.train-filter-card .form-label {
+    font-weight: 500;
+    color: var(--train-dark);
+    margin-bottom: 0.5rem;
+}
+
+.train-filter-card .form-control,
+.train-filter-card .form-select {
+    border: 1px solid var(--train-border); /* Mỏng lại theo style chung */
+    border-radius: var(--radius-md);
+    padding: 0.625rem 1rem;
+    transition: var(--train-transition);
+    background-color: var(--color-input-bg);
+}
+
+.train-filter-card .form-control:focus,
+.train-filter-card .form-select:focus {
+    border-color: var(--train-primary);
+    box-shadow: 0 0 0 3px var(--train-primary-light);
+    outline: none;
+}
+
+/* =============== Action Buttons =============== */
+.train-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.train-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--train-transition);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.train-btn i {
+    font-size: 1.125rem;
+}
+
+.train-btn-primary {
+    background: var(--train-primary);
+    color: white;
+}
+
+.train-btn-primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(133, 71, 89, 0.4); /* Shadow theo màu Primary */
+}
+
+.train-btn-success {
+    background: var(--train-success);
+    color: white;
+}
+
+.train-btn-success:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.train-btn-secondary {
+    background: var(--color-button-cancel); /* Dùng biến Cancel */
+    color: white;
+}
+
+.train-btn-secondary:hover {
+    background: var(--color-button-cancel-dark);
+}
+
+/* =============== Train Table =============== */
+.train-table-card {
+    background: var(--train-bg-card);
+    border-radius: var(--train-radius);
+    box-shadow: var(--train-shadow);
+    overflow: hidden;
+    border: 1px solid var(--train-border);
+}
+
+.train-table-header {
+    /* Dùng màu table head từ variables nhưng nhạt hơn chút cho phần header container */
+    background: var(--color-table-row); 
+    padding: 1.25rem 1.5rem;
+    border-bottom: 2px solid var(--train-border);
+}
+
+.train-table-header h5 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--train-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.train-table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+}
+
+.train-table thead th {
+    background: var(--color-table-head); /* Màu header từ variables (#414141) */
+    color: white; /* Header tối nên chữ phải trắng */
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--train-border);
+    white-space: nowrap;
+}
+
+.train-table tbody td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--train-border);
+    color: var(--train-dark);
+}
+
+.train-table tbody tr {
+    transition: var(--train-transition);
+    background-color: var(--train-bg-card);
+}
+
+/* Hover row màu giống biến --color-item-hover */
+.train-table tbody tr:hover {
+    background-color: var(--color-item-hover); 
+    transform: scale(1.002); /* Giảm scale nhẹ lại cho mượt */
+}
+
+.train-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* =============== Train Code Badge =============== */
+.train-code {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--train-primary);
+    padding: 0.25rem 0.75rem;
+    background: var(--train-primary-light); /* Dùng nền nhạt của Primary */
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--train-primary); /* Border mỏng theo màu chính */
+}
+
+.train-code i {
+    color: var(--train-secondary);
+}
+
+/* =============== Train Type Badge =============== */
+.train-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.train-type-badge.type-fast {
+    /* Giữ màu riêng cho logic nghiệp vụ nhưng style phẳng hơn */
+    background: var(--train-primary); 
+    color: white;
+}
+
+.train-type-badge.type-normal {
+    background: var(--train-secondary);
+    color: white;
+}
+
+/* =============== KM Progress =============== */
+.km-progress-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.km-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--color-table-row); /* Dùng màu xám nhạt */
+    border-radius: 9999px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--train-border);
+}
+
+.km-progress-fill {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.6s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer Effect - Giữ nguyên */
+.km-progress-fill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.km-progress-fill.status-low {
+    background: var(--train-warning);
+}
+
+.km-progress-fill.status-normal {
+    background: var(--train-success);
+}
+
+.km-progress-fill.status-high {
+    background: var(--train-danger);
+}
+
+.km-text {
+    font-size: 0.875rem;
+    color: var(--train-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.km-text strong {
+    color: var(--train-dark);
+    font-weight: 600;
+}
+
+/* =============== Status Badges =============== */
+.train-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.875rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: 1px solid;
+}
+
+.train-status-badge.status-normal {
+    background: var(--train-success-bg);
+    color: #065f46;
+    border-color: var(--train-success);
+}
+
+.train-status-badge.status-warning {
+    background: var(--train-warning-bg);
+    color: #92400e;
+    border-color: var(--train-warning);
+}
+
+.train-status-badge.status-danger {
+    background: var(--train-danger-bg);
+    color: #991b1b;
+    border-color: var(--train-danger);
+}
+
+/* =============== Action Buttons Group =============== */
+.train-action-btns {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.train-action-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    border: 1px solid;
+    transition: var(--train-transition);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.train-action-btn i {
+    font-size: 1.125rem;
+}
+
+/* Nút Lịch sử: Màu Info */
+.train-action-btn.btn-info {
+    background: var(--train-info-bg);
+    color: #0369a1;
+    border-color: var(--train-info);
+}
+
+.train-action-btn.btn-info:hover {
+    background: var(--train-info);
+    color: white;
+}
+
+/* Nút Chỉnh sửa: Màu Primary */
+.train-action-btn.btn-edit {
+    background: var(--train-primary-light);
+    color: var(--train-primary);
+    border-color: var(--train-primary);
+}
+
+.train-action-btn.btn-edit:hover {
+    background: var(--train-primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* =============== Pagination =============== */
+.train-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.train-pagination .page-item {
+    list-style: none;
+}
+
+.train-pagination .page-link {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--train-border);
+    color: var(--train-dark);
+    font-weight: 500;
+    transition: var(--train-transition);
+    text-decoration: none;
+    display: inline-block;
+    min-width: 2.5rem;
+    text-align: center;
+    background: var(--train-bg-card);
+}
+
+.train-pagination .page-link:hover {
+    background: var(--train-primary-light);
+    color: var(--train-primary);
+    border-color: var(--train-primary);
+    transform: translateY(-2px);
+}
+
+.train-pagination .page-item.active .page-link {
+    background: var(--train-primary);
+    color: white;
+    border-color: var(--train-primary);
+}
+
+.train-pagination .page-item.disabled .page-link {
+    opacity: 0.5;
+    background-color: var(--color-input-disabled);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* =============== Stats Footer =============== */
+.train-stats-footer {
+    text-align: center;
+    padding: 1.5rem;
+    background: var(--color-table-row); /* Xám nhạt */
+    border-top: 1px solid var(--train-border);
+    color: var(--train-text-muted);
+    font-size: 0.875rem;
+}
+
+.train-stats-footer strong {
+    color: var(--train-primary);
+    font-weight: 700;
+}
+
+/* =============== Empty State =============== */
+.train-empty-state {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: var(--color-input-placeholder);
+}
+
+.train-empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.train-empty-state p {
+    font-size: 1.125rem;
+    margin: 0;
+}
+
+/* =============== Form Styles =============== */
+.train-form-card {
+    background: var(--train-bg-card);
+    border-radius: var(--train-radius);
+    padding: 2rem;
+    box-shadow: var(--train-shadow-lg);
+    border: 1px solid var(--train-border);
+}
+
+.train-form-card .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.train-form-card label {
+    font-weight: 600;
+    color: var(--train-dark);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.train-form-card .required-mark {
+    color: var(--train-danger);
+    font-weight: 700;
+}
+
+.train-form-card input,
+.train-form-card select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--train-border);
+    border-radius: var(--radius-md);
+    transition: var(--train-transition);
+    font-size: 1rem;
+    background-color: var(--color-input-bg);
+}
+
+.train-form-card input:focus,
+.train-form-card select:focus {
+    outline: none;
+    border-color: var(--train-primary);
+    box-shadow: 0 0 0 4px var(--train-primary-light);
+}
+
+.train-form-card input[readonly] {
+    background-color: var(--color-input-disabled);
+    color: var(--train-text-muted);
+}
+
+.train-form-card .form-text {
+    color: var(--train-text-muted);
+    font-size: 0.875rem;
+    margin-top: 0.375rem;
+}
+
+.train-form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--train-border);
+}
+
+/* =============== History Timeline =============== */
+.train-history-item {
+    transition: var(--train-transition);
+}
+
+.train-history-item:hover {
+    background-color: var(--color-item-hover);
+}
+
+.train-route-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.train-station {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.train-station i {
+    font-size: 1rem;
+}
+
+.train-station.departure {
+    color: var(--train-success);
+}
+
+.train-station.arrival {
+    color: var(--train-danger);
+}
+
+/* =============== Animations =============== */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-1rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.train-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* =============== Responsive =============== */
+@media (max-width: 768px) {
+    .train-header .main__title {
+        font-size: 1.5rem;
+    }
+    
+    .train-actions {
+        flex-direction: column;
+    }
+    
+    .train-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .train-table {
+        font-size: 0.875rem;
+    }
+    
+    .train-table thead th,
+    .train-table tbody td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .train-action-btns {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .train-pagination {
+        gap: 0.25rem;
+    }
+    
+    .train-pagination .page-link {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+}
+
+/* =============== Print Styles =============== */
+@media print {
+    .train-filter-card,
+    .train-actions,
+    .train-action-btns,
+    .train-pagination {
+        display: none !important;
+    }
+    
+    .train-table-card {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+}

@@ -7,9 +7,11 @@ import com.group10.vnrailway.dto.PageResult;
 import com.group10.vnrailway.entity.Station;
 import com.group10.vnrailway.repository.StationRepository;
 import com.group10.vnrailway.request.SearchTripRequest;
+import com.group10.vnrailway.security.user.CustomUserDetails;
 import com.group10.vnrailway.service.TripService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +28,16 @@ public class CommonTripController {
 
 
     @GetMapping("/search")
-    public String getSearchTrip(Model model) {
+    public String getSearchTrip(
+            @RequestParam(required = false) String maVeCu,
+            Model model
+    ) {
         // Load station list for dropdown
         List<Station> stations = stationRepository.getAllStations();
         
         model.addAttribute("searchRequest", new SearchTripRequest());
         model.addAttribute("stations", stations);
+        model.addAttribute("maVeCu", maVeCu != null ? maVeCu : "");
         
         return "pages/common/trip/search-trip";
     }
@@ -41,6 +47,7 @@ public class CommonTripController {
     public String searchTrip(
             @ModelAttribute SearchTripRequest request,
             @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(required = false) String maVeCu,
             Model model
     ) {
         // Set page number from request parameter
@@ -55,6 +62,7 @@ public class CommonTripController {
         model.addAttribute("pageResult", pageResult);
         model.addAttribute("searchRequest", request);
         model.addAttribute("stations", stations);
+        model.addAttribute("maVeCu", maVeCu != null ? maVeCu : "");
 
         return "pages/common/trip/search-trip";
     }
@@ -81,6 +89,8 @@ public class CommonTripController {
             @PathVariable String tripId,
             @RequestParam("departureStation") String departureStationId,
             @RequestParam("arrivalStation") String arrivalStationId,
+            @RequestParam(required = false) String maVeCu,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             Model model) {
         
         try {
@@ -98,11 +108,20 @@ public class CommonTripController {
                 arrivalStationId
             );
             
+            // Kiểm tra role để xác định booking URL
+            String bookingUrl = "/booking/info";
+            if (userDetails != null && userDetails.getAuthorities().stream()
+                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_TICKET_SELLER"))) {
+                bookingUrl = "/employee/booking/info";
+            }
+            
             // Add attributes to model for Thymeleaf template
             model.addAttribute("tripDetail", tripDetail);
             model.addAttribute("carriages", carriages);
             model.addAttribute("departureStationId", departureStationId);
             model.addAttribute("arrivalStationId", arrivalStationId);
+            model.addAttribute("maVeCu", maVeCu != null ? maVeCu : "");
+            model.addAttribute("bookingUrl", bookingUrl);
             
             return "pages/common/trip/trip-detail";
             

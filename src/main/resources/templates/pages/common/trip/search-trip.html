@@ -18,6 +18,8 @@
         >
           <!-- Hidden input để giữ page number -->
           <input type="hidden" name="page" th:value="${searchRequest?.page}" id="pageInput" />
+          <!-- Hidden input để giữ mã vé cũ khi đổi vé -->
+          <input type="hidden" name="maVeCu" th:value="${maVeCu}" id="maVeCuInput" />
           
           <!-- Row 1: Ga đi, Ngày đi, Loại tàu -->
           <div class="search-form__row">
@@ -144,7 +146,8 @@
             th:href="@{/trips/{tripId}(
               tripId=${trip.maChuyenTau},
               departureStation=${trip.maGaDi},
-              arrivalStation=${trip.maGaDen}
+              arrivalStation=${trip.maGaDen},
+              maVeCu=${maVeCu}
             )}"
             class="trip-card-link"
           >

@@ -1,0 +1,273 @@
+Changed database context to 'VNRAILWAY'.
+========================================
+TEST CHỨC NĂNG QUẢN LÝ ĐOÀN TÀU
+========================================
+ 
+----------------------------------------
+TEST 1: sp_GetDanhSachDoanTau
+Mô tả: Lấy danh sách tất cả đoàn tàu
+----------------------------------------
+1a. Lấy tất cả đoàn tàu:
+MaDoanTau TenTau HangSX NgVanHanh SoNamHoatDong LoaiTau TenLoaiTau SoToaTau KmTrongTuan KmToiThieu KmToiDa TrangThaiKm MoTaTrangThai SoChuyenTrongTuan CacTuyenDangPhucVu
+--------- ------ ------ --------- ------------- ------- ---------- -------- ----------- ---------- ------- ----------- ------------- ----------------- ------------------
+D001 TN1 Hyundai Rotem 2012-05-19 14 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � �� N?ng
+D002 SNT1 Siemens 2009-10-20 17 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � L�o Cai
+D003 TN2 Hitachi 2010-04-13 16 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � �� N?ng
+D004 SE2 Kawasaki Heavy Industries 2011-03-12 15 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 NULL
+D005 TH2 Siemens 2010-01-25 16 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Phan Thi?t
+D006 SP3 Hyundai Rotem 2013-09-15 13 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D007 M22 Hitachi 2013-12-07 13 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � �?ng ��ng
+D008 HP2 Bombardier 2015-02-07 11 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Th�i Nguy�n
+D009 SE4 Kawasaki Heavy Industries 2015-08-18 11 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D010 DN2 Alstom 2015-04-01 11 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Quy Nh�n
+D011 DN1 Alstom 2015-03-01 11 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Quy Nh�n
+D012 TH1 Hyundai Rotem 2015-02-03 11 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Phan Thi?t
+D013 SE8 Hitachi 2010-11-20 16 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D014 SE7 Hitachi 2015-08-13 11 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D015 SP1 CRRC 2010-03-09 16 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D016 NA1 Kawasaki Heavy Industries 2011-07-22 15 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 K�p � H? Long
+D017 V02 Bombardier 2009-11-24 17 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Hu?
+D018 LP2 Hyundai Rotem 2011-11-17 15 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � H?i Ph?ng
+D019 SP4 Hitachi 2009-05-19 17 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D020 M21 CRRC 2011-10-02 15 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � �?ng ��ng
+D021 SQN1 Siemens 2012-05-27 14 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Nha Trang � Tuy Ho�
+D022 V01 CRRC 2010-09-21 16 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Hu?
+D023 HP1 CRRC 2010-10-05 16 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Th�i Nguy�n
+D024 SE1 Hitachi 2012-11-04 14 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D025 NA2 Hitachi 2009-08-09 17 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 K�p � H? Long
+D026 SNT2 Siemens 2013-12-09 13 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � L�o Cai
+D027 SE3 Bombardier 2012-04-12 14 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D028 SP2 Hitachi 2014-01-03 12 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D029 LP1 Siemens 2012-02-05 14 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � H?i Ph?ng
+D030 SE5 CRRC 2010-07-22 16 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+ 
+1b. Lọc theo loại tàu nhanh (S):
+MaDoanTau TenTau HangSX NgVanHanh SoNamHoatDong LoaiTau TenLoaiTau SoToaTau KmTrongTuan KmToiThieu KmToiDa TrangThaiKm MoTaTrangThai SoChuyenTrongTuan CacTuyenDangPhucVu
+--------- ------ ------ --------- ------------- ------- ---------- -------- ----------- ---------- ------- ----------- ------------- ----------------- ------------------
+D004 SE2 Kawasaki Heavy Industries 2011-03-12 15 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 NULL
+D006 SP3 Hyundai Rotem 2013-09-15 13 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D009 SE4 Kawasaki Heavy Industries 2015-08-18 11 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D013 SE8 Hitachi 2010-11-20 16 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D014 SE7 Hitachi 2015-08-13 11 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D015 SP1 CRRC 2010-03-09 16 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D019 SP4 Hitachi 2009-05-19 17 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D024 SE1 Hitachi 2012-11-04 14 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D027 SE3 Bombardier 2012-04-12 14 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D028 SP2 Hitachi 2014-01-03 12 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D030 SE5 CRRC 2010-07-22 16 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+ 
+1c. Tìm kiếm theo từ khóa "SE":
+MaDoanTau TenTau HangSX NgVanHanh SoNamHoatDong LoaiTau TenLoaiTau SoToaTau KmTrongTuan KmToiThieu KmToiDa TrangThaiKm MoTaTrangThai SoChuyenTrongTuan CacTuyenDangPhucVu
+--------- ------ ------ --------- ------------- ------- ---------- -------- ----------- ---------- ------- ----------- ------------- ----------------- ------------------
+D004 SE2 Kawasaki Heavy Industries 2011-03-12 15 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 NULL
+D009 SE4 Kawasaki Heavy Industries 2015-08-18 11 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D013 SE8 Hitachi 2010-11-20 16 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D014 SE7 Hitachi 2015-08-13 11 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D024 SE1 Hitachi 2012-11-04 14 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D027 SE3 Bombardier 2012-04-12 14 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D030 SE5 CRRC 2010-07-22 16 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+ 
+1d. Lọc đoàn tàu dưới mức km tối thiểu (tuần 15/04/2026):
+MaDoanTau TenTau HangSX NgVanHanh SoNamHoatDong LoaiTau TenLoaiTau SoToaTau KmTrongTuan KmToiThieu KmToiDa TrangThaiKm MoTaTrangThai SoChuyenTrongTuan CacTuyenDangPhucVu
+--------- ------ ------ --------- ------------- ------- ---------- -------- ----------- ---------- ------- ----------- ------------- ----------------- ------------------
+D001 TN1 Hyundai Rotem 2012-05-19 14 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � �� N?ng
+D002 SNT1 Siemens 2009-10-20 17 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � L�o Cai
+D004 SE2 Kawasaki Heavy Industries 2011-03-12 15 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 NULL
+D005 TH2 Siemens 2010-01-25 16 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Phan Thi?t
+D006 SP3 Hyundai Rotem 2013-09-15 13 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D007 M22 Hitachi 2013-12-07 13 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � �?ng ��ng
+D008 HP2 Bombardier 2015-02-07 11 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Th�i Nguy�n
+D009 SE4 Kawasaki Heavy Industries 2015-08-18 11 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D010 DN2 Alstom 2015-04-01 11 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Quy Nh�n
+D011 DN1 Alstom 2015-03-01 11 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Quy Nh�n
+D012 TH1 Hyundai Rotem 2015-02-03 11 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Phan Thi?t
+D013 SE8 Hitachi 2010-11-20 16 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D014 SE7 Hitachi 2015-08-13 11 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+D015 SP1 CRRC 2010-03-09 16 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D016 NA1 Kawasaki Heavy Industries 2011-07-22 15 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 K�p � H? Long
+D017 V02 Bombardier 2009-11-24 17 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Hu?
+D018 LP2 Hyundai Rotem 2011-11-17 15 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � H?i Ph?ng
+D019 SP4 Hitachi 2009-05-19 17 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D020 M21 CRRC 2011-10-02 15 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � �?ng ��ng
+D021 SQN1 Siemens 2012-05-27 14 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Nha Trang � Tuy Ho�
+D022 V01 CRRC 2010-09-21 16 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 S�i G?n � Hu?
+D023 HP1 CRRC 2010-10-05 16 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Th�i Nguy�n
+D025 NA2 Hitachi 2009-08-09 17 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 K�p � H? Long
+D026 SNT2 Siemens 2013-12-09 13 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � L�o Cai
+D028 SP2 Hitachi 2014-01-03 12 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � Vinh � �?ng H?i � Hu?
+D029 LP1 Siemens 2012-02-05 14 T Tàu thường 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � H?i Ph?ng
+D030 SE5 CRRC 2010-07-22 16 S Tàu nhanh 8 .00 500.00 4000.00 DUOI_MIN ⚠️ Dưới mức tối thiểu 0 H� N?i � S�i G?n
+ 
+ 
+----------------------------------------
+TEST 2: sp_GetChiTietDoanTau
+Mô tả: Xem chi tiết đoàn tàu
+----------------------------------------
+Chi tiết đoàn tàu: D001
+Msg 208, Level 16, State 1, Server DESKTOP-C019TLK\SQLEXPRESS, Procedure sp_GetChiTietDoanTau, Line 32
+Invalid object name 'GIUONG_GOP'.
+ 
+ 
+----------------------------------------
+TEST 3: sp_ThemDoanTau
+Mô tả: Thêm đoàn tàu mới
+----------------------------------------
+Thêm đoàn tàu mới: TEST
+✅ Thêm đoàn tàu thành công: TEST - Tàu Test
+Return Value: 0
+✅ Đã thêm thành công
+ 
+Test thêm đoàn tàu trùng mã (phải lỗi):
+Msg 50000, Level 16, State 1, Server DESKTOP-C019TLK\SQLEXPRESS, Procedure sp_ThemDoanTau, Line 63
+Mã đoàn tàu đã tồn tại: TEST
+Return Value: -1
+ 
+ 
+----------------------------------------
+TEST 4: sp_CapNhatDoanTau
+Mô tả: Cập nhật thông tin đoàn tàu
+----------------------------------------
+Thông tin trước khi cập nhật:
+MaDoanTau TenTau HangSX LoaiTau
+--------- ------ ------ -------
+TEST Tàu Test Test Corporation T
+
+(1 rows affected)
+ 
+Cập nhật tên tàu và loại tàu:
+✅ Cập nhật thông tin đoàn tàu thành công: TEST
+Return Value: 0
+ 
+Thông tin sau khi cập nhật:
+MaDoanTau TenTau HangSX LoaiTau
+--------- ------ ------ -------
+TEST Tàu Test Đã Cập Nhật Test Corporation S
+
+(1 rows affected)
+ 
+ 
+----------------------------------------
+TEST 5: sp_GetLichSuChuyenTauDoanTau
+Mô tả: Xem lịch sử chuyến tàu của đoàn tàu
+----------------------------------------
+Lịch sử chuyến tàu của đoàn tàu: D003
+Khoảng thời gian: 30 ngày gần nhất
+MaChuyenTau MaTuyen TenTuyen ThoiGianXuatPhat ThoiGianDuKienDen SoGioChay SoPhutChay GaDi GaDen SoGaDung KmChuyen SoDonDatVe DoanhThu NhanVienLaiTau TrangThai
+----------- ------- -------- ---------------- ----------------- --------- ---------- ---- ----- -------- -------- ---------- -------- -------------- ---------
+VNW5150103 TN02 H� N?i � �� N?ng 2025-12-29 19:20:00.000 2025-12-30 11:04:00.000 16 44 NULL NULL 0 791.00 0 .00 NULL Đã hoàn thành
+ 
+ 
+----------------------------------------
+TEST 6: sp_ThongKeHieuSuatDoanTau
+Mô tả: Thống kê hiệu suất hoạt động của đoàn tàu
+----------------------------------------
+6a. Thống kê tháng 4/2026 (tất cả đoàn tàu):
+MaDoanTau TenTau LoaiTau TenLoaiTau Thang Nam SoChuyenDaChay TongKm TrungBinhKmMoiChuyen TongSoGioChay SoVeDaBan TongDoanhThu TrungBinhDoanhThuMoiChuyen CacTuyenDaChay SoNgayHoatDong TyLeHoatDong
+--------- ------ ------- ---------- ----- --- -------------- ------ -------------------- ------------- --------- ------------ -------------------------- -------------- -------------- ------------
+D003 TN2 T Tàu thường 4 2026 3 2373.00 791.000000 49.700000 0 .00 .000000 H� N?i � �� N?ng 3 10.00
+D001 TN1 T Tàu thường 4 2026 3 2373.00 791.000000 49.700000 0 .00 .000000 H� N?i � �� N?ng 3 10.00
+D024 SE1 S Tàu nhanh 4 2026 1 1725.00 1725.000000 35.766666 0 .00 .000000 H� N?i � S�i G?n 1 3.33
+D027 SE3 S Tàu nhanh 4 2026 1 1725.00 1725.000000 35.766666 0 .00 .000000 H� N?i � S�i G?n 1 3.33
+D030 SE5 S Tàu nhanh 4 2026 1 1725.00 1725.000000 35.766666 0 .00 .000000 H� N?i � S�i G?n 1 3.33
+D009 SE4 S Tàu nhanh 4 2026 1 1725.00 1725.000000 35.766666 0 .00 .000000 H� N?i � S�i G?n 1 3.33
+D013 SE8 S Tàu nhanh 4 2026 1 1725.00 1725.000000 35.766666 0 .00 .000000 H� N?i � S�i G?n 1 3.33
+D014 SE7 S Tàu nhanh 4 2026 1 1725.00 1725.000000 35.766666 0 .00 .000000 H� N?i � S�i G?n 1 3.33
+D015 SP1 S Tàu nhanh 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D016 NA1 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D017 V02 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D018 LP2 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D019 SP4 S Tàu nhanh 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D020 M21 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D021 SQN1 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D022 V01 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D023 HP1 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D010 DN2 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D011 DN1 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D012 TH1 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D004 SE2 S Tàu nhanh 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D005 TH2 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D006 SP3 S Tàu nhanh 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D007 M22 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D008 HP2 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+TEST Tàu Test Đã Cập Nhật S Tàu nhanh 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D028 SP2 S Tàu nhanh 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D029 LP1 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D025 NA2 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D026 SNT2 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+D002 SNT1 T Tàu thường 4 2026 0 .00 .000000 .000000 0 .00 .000000 NULL 0 .00
+ 
+6b. Thống kê tháng 4/2026 (chỉ đoàn tàu D024):
+MaDoanTau TenTau LoaiTau TenLoaiTau Thang Nam SoChuyenDaChay TongKm TrungBinhKmMoiChuyen TongSoGioChay SoVeDaBan TongDoanhThu TrungBinhDoanhThuMoiChuyen CacTuyenDaChay SoNgayHoatDong TyLeHoatDong
+--------- ------ ------- ---------- ----- --- -------------- ------ -------------------- ------------- --------- ------------ -------------------------- -------------- -------------- ------------
+D024 SE1 S Tàu nhanh 4 2026 1 1725.00 1725.000000 35.766666 0 .00 .000000 H� N?i � S�i G?n 1 3.33
+ 
+ 
+----------------------------------------
+TEST 7: Tổng hợp - Quy trình quản lý đoàn tàu
+----------------------------------------
+Bước 1: Xem danh sách đoàn tàu loại S (nhanh)
+SoLuongTauNhanh
+---------------
+12
+
+(1 rows affected)
+ 
+Bước 2: Kiểm tra đoàn tàu có km dưới mức trong tuần hiện tại
+MaDoanTau TenTau KmTrongTuan
+--------- ------ -----------
+D001 TN1 .00
+D002 SNT1 .00
+D003 TN2 .00
+D004 SE2 .00
+D005 TH2 .00
+D006 SP3 .00
+D007 M22 .00
+D008 HP2 .00
+D009 SE4 .00
+D010 DN2 .00
+D011 DN1 .00
+D012 TH1 .00
+D013 SE8 .00
+D014 SE7 .00
+D015 SP1 .00
+D016 NA1 .00
+D017 V02 .00
+D018 LP2 .00
+D019 SP4 .00
+D020 M21 .00
+D021 SQN1 .00
+D022 V01 .00
+D023 HP1 .00
+D024 SE1 .00
+D025 NA2 .00
+D026 SNT2 .00
+D027 SE3 .00
+D028 SP2 .00
+D029 LP1 .00
+D030 SE5 .00
+TEST Tàu Test Đã Cập Nhật .00
+
+(31 rows affected)
+ 
+Bước 3: Top 5 đoàn tàu có doanh thu cao nhất tháng 4/2026
+MaDoanTau TenTau DoanhThu
+--------- ------ --------
+D006 SP3 .00
+D005 TH2 .00
+D004 SE2 .00
+D003 TN2 .00
+D002 SNT1 .00
+
+(5 rows affected)
+ 
+ 
+----------------------------------------
+CLEAN UP: Xóa dữ liệu test
+----------------------------------------
+
+(1 rows affected)
+✅ Đã xóa đoàn tàu test: TEST
+ 
+========================================
+KẾT THÚC TEST
+========================================

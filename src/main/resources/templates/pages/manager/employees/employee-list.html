@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{layout/main :: layout(~{::section}, 'Quản lý nhân viên')}"
+>
+  <section>
+    <link rel="stylesheet" th:href="@{/css/pages/manager/train-management.css}" />
+    <style>
+      .salary-badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        font-weight: 500;
+      }
+      .salary-badge-lt {
+        background-color: #e3f2fd;
+        color: #1976d2;
+      }
+      .salary-badge-tt {
+        background-color: #f3e5f5;
+        color: #7b1fa2;
+      }
+      .salary-amount {
+        font-weight: bold;
+        color: #2e7d32;
+        font-size: 1.1em;
+      }
+      .salary-detail {
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 4px;
+      }
+      /* Thêm định nghĩa cho nút Info nhỏ */
+      .train-btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+      }
+      .train-btn-info {
+        background-color: #0dcaf0;
+        color: white;
+      }
+      .train-btn-info:hover {
+        background-color: #0bb5d8;
+      }
+    </style>
+
+    <div class="main__container">
+      <div class="train-header">
+        <h1 class="main__title">
+          <i class="bi bi-people-fill"></i>
+          Quản lý nhân viên
+        </h1>
+      </div>
+
+      <!-- Bộ lọc và sắp xếp -->
+      <div class="train-filter-card">
+        <div class="card-title">
+          <i class="bi bi-funnel-fill"></i>
+          Tìm kiếm & Lọc
+        </div>
+        <form th:action="@{/manager/employees}" method="get" class="row g-3">
+          <div class="col-md-2">
+            <label for="thang" class="form-label">
+              <i class="bi bi-calendar-month"></i> Tháng
+            </label>
+            <select name="thang" id="thang" class="form-select">
+              <option value="">Tất cả</option>
+              <option value="1" th:selected="${thang == 1}">Tháng 1</option>
+              <option value="2" th:selected="${thang == 2}">Tháng 2</option>
+              <option value="3" th:selected="${thang == 3}">Tháng 3</option>
+              <option value="4" th:selected="${thang == 4}">Tháng 4</option>
+              <option value="5" th:selected="${thang == 5}">Tháng 5</option>
+              <option value="6" th:selected="${thang == 6}">Tháng 6</option>
+              <option value="7" th:selected="${thang == 7}">Tháng 7</option>
+              <option value="8" th:selected="${thang == 8}">Tháng 8</option>
+              <option value="9" th:selected="${thang == 9}">Tháng 9</option>
+              <option value="10" th:selected="${thang == 10}">Tháng 10</option>
+              <option value="11" th:selected="${thang == 11}">Tháng 11</option>
+              <option value="12" th:selected="${thang == 12}">Tháng 12</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="nam" class="form-label">
+              <i class="bi bi-calendar-event"></i> Năm
+            </label>
+            <select name="nam" id="nam" class="form-select">
+              <option value="">Tất cả</option>
+              <option value="2024" th:selected="${nam == 2024}">2024</option>
+              <option value="2025" th:selected="${nam == 2025}">2025</option>
+              <option value="2026" th:selected="${nam == 2026}">2026</option>
+              <option value="2027" th:selected="${nam == 2027}">2027</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="loaiNV" class="form-label">
+              <i class="bi bi-tag-fill"></i> Loại NV
+            </label>
+            <select name="loaiNV" id="loaiNV" class="form-select" th:value="${loaiNV}">
+              <option value="">Tất cả</option>
+              <option value="LT" th:selected="${loaiNV == 'LT'}">🚄 Lái tàu</option>
+              <option value="TT" th:selected="${loaiNV == 'TT'}">🚃 Toa tàu</option>
+              <option value="QL" th:selected="${loaiNV == 'QL'}">👔 Quản lý</option>
+              <option value="BV" th:selected="${loaiNV == 'BV'}">🎫 Bán vé</option>
+              <option value="AD" th:selected="${loaiNV == 'AD'}">⚙️ Quản trị viên</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="sortBy" class="form-label">
+              <i class="bi bi-sort-down"></i> Sắp xếp theo
+            </label>
+            <select name="sortBy" id="sortBy" class="form-select" th:value="${sortBy}">
+              <option value="TongLuong" th:selected="${sortBy == 'TongLuong'}">Lương</option>
+              <option value="HoTen" th:selected="${sortBy == 'HoTen'}">Họ tên</option>
+              <option value="MaNV" th:selected="${sortBy == 'MaNV'}">Mã NV</option>
+            </select>
+          </div>
+          <div class="col-md-1">
+            <label for="sortOrder" class="form-label">Thứ tự</label>
+            <select name="sortOrder" id="sortOrder" class="form-select" th:value="${sortOrder}">
+              <option value="DESC" th:selected="${sortOrder == 'DESC'}">↓</option>
+              <option value="ASC" th:selected="${sortOrder == 'ASC'}">↑</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="timKiem" class="form-label">
+              <i class="bi bi-search"></i> Tìm kiếm
+            </label>
+            <div class="input-group">
+              <input 
+                type="text" 
+                name="timKiem" 
+                id="timKiem" 
+                class="form-control" 
+                placeholder="Mã NV, họ tên, SĐT..."
+                th:value="${timKiem}"
+              />
+              <button type="submit" class="train-btn train-btn-primary">
+                <i class="bi bi-search"></i>
+              </button>
+              <a th:href="@{/manager/employees}" class="train-btn train-btn-secondary">
+                <i class="bi bi-arrow-clockwise"></i>
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Danh sách nhân viên -->
+      <div class="train-table-card train-fade-in" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; margin-top: 20px;">
+        <div class="train-table-header">
+          <h5>
+            <i class="bi bi-list-ul"></i>
+            Danh sách nhân viên
+          </h5>
+          <div class="text-muted" style="font-size: 0.9em;">
+            Tổng số: <strong th:text="${totalElements}"></strong> nhân viên
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="train-table">
+            <thead>
+              <tr>
+                <th><i class="bi bi-hash"></i> Mã NV</th>
+                <th><i class="bi bi-person"></i> Họ tên</th>
+                <th><i class="bi bi-telephone"></i> SĐT</th>
+                <th><i class="bi bi-tag"></i> Loại NV</th>
+                <th class="text-center"><i class="bi bi-train-front"></i> Chuyến</th>
+                <th class="text-center"><i class="bi bi-arrow-repeat"></i> Thay</th>
+                <th class="text-center"><i class="bi bi-calendar-x"></i> Nghỉ</th>
+                <th><i class="bi bi-cash-coin"></i> Tổng lương</th>
+                <th><i class="bi bi-gear"></i></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${employees == null or employees.isEmpty()}">
+                <td colspan="9">
+                  <div class="train-empty-state">
+                    <i class="bi bi-inbox"></i>
+                    <p>Không có nhân viên nào</p>
+                  </div>
+                </td>
+              </tr>
+              <tr th:each="emp : ${employees}">
+                <td>
+                  <span class="train-code" th:text="${emp.maNV}"></span>
+                </td>
+                <td><strong th:text="${emp.hoTen}"></strong></td>
+                <td th:text="${emp.sdt}"></td>
+                <td>
+                  <span th:if="${emp.maLoaiNV == 'LT'}" class="salary-badge salary-badge-lt">
+                    <i class="bi bi-train-front"></i> Lái tàu
+                  </span>
+                  <span th:if="${emp.maLoaiNV == 'TT'}" class="salary-badge salary-badge-tt">
+                    <i class="bi bi-collection"></i> Toa tàu
+                  </span>
+                  <span th:if="${emp.maLoaiNV != 'LT' && emp.maLoaiNV != 'TT'}" class="badge bg-secondary" th:text="${emp.tenLoaiNV}"></span>
+                </td>
+                <td class="text-center">
+                  <span class="badge bg-primary" th:if="${emp.maLoaiNV == 'LT' || emp.maLoaiNV == 'TT'}" th:text="${emp.soChuyenDaLam}"></span>
+                  <span th:if="${emp.maLoaiNV != 'LT' && emp.maLoaiNV != 'TT'}">-</span>
+                </td>
+                <td class="text-center">
+                  <span class="badge bg-success" th:if="${emp.maLoaiNV == 'LT' || emp.maLoaiNV == 'TT'}" th:text="${emp.soChuyenThayThe}"></span>
+                  <span th:if="${emp.maLoaiNV != 'LT' && emp.maLoaiNV != 'TT'}">-</span>
+                </td>
+                <td class="text-center">
+                  <span class="badge bg-warning" th:if="${emp.maLoaiNV == 'LT' || emp.maLoaiNV == 'TT'}" th:text="${emp.soChuyenNghiPhep}"></span>
+                  <span th:if="${emp.maLoaiNV != 'LT' && emp.maLoaiNV != 'TT'}">-</span>
+                </td>
+                <td>
+                  <div class="salary-amount" th:text="${#numbers.formatDecimal(emp.tongLuong, 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
+                </td>
+                <td>
+                  <div class="train-action-btns">
+                    <a th:href="@{/manager/employees/{id}(id=${emp.maNV}, thang=${thang}, nam=${nam})}" 
+                       class="train-btn train-btn-sm train-btn-info" 
+                       title="Xem chi tiết">
+                      <i class="bi bi-eye-fill"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Phân trang -->
+        <div class="train-pagination" th:if="${totalPages > 1}">
+          <nav>
+            <ul class="pagination justify-content-center mb-0">
+              <!-- Previous -->
+              <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                <a class="page-link" 
+                   th:href="@{/manager/employees(page=${currentPage - 1}, loaiNV=${loaiNV}, timKiem=${timKiem}, sortBy=${sortBy}, sortOrder=${sortOrder}, thang=${thang}, nam=${nam})}"
+                   aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              
+              <!-- Page numbers -->
+              <li class="page-item" 
+                  th:each="i : ${#numbers.sequence(1, totalPages)}"
+                  th:if="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}"
+                  th:classappend="${i == currentPage} ? 'active'">
+                <a class="page-link" 
+                   th:href="@{/manager/employees(page=${i}, loaiNV=${loaiNV}, timKiem=${timKiem}, sortBy=${sortBy}, sortOrder=${sortOrder}, thang=${thang}, nam=${nam})}"
+                   th:text="${i}">1</a>
+              </li>
+              
+              <!-- Next -->
+              <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                <a class="page-link" 
+                   th:href="@{/manager/employees(page=${currentPage + 1}, loaiNV=${loaiNV}, timKiem=${timKiem}, sortBy=${sortBy}, sortOrder=${sortOrder}, thang=${thang}, nam=${nam})}"
+                   aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <div class="text-center text-muted mt-2" style="font-size: 0.9em;">
+            Trang <strong th:text="${currentPage}"></strong> / <strong th:text="${totalPages}"></strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="train-filter-card mt-4">
+        <div class="card-title">
+          <i class="bi bi-info-circle-fill"></i>
+          Ghi chú công thức
+        </div>
+        <div class="alert alert-info mb-0" style="font-size: 0.9em;">
+          <strong>Lái tàu (LT) và Toa tàu (TT):</strong>
+          <br>Tổng lương = Lương CB + Phụ cấp + (Thù lao chuyến × Số chuyến đã làm) + (Thù lao thay thế × Số chuyến thay thế) - (Phạt nghỉ × Số chuyến nghỉ phép)
+          <hr class="my-2">
+          <strong>Nhân viên khác:</strong> Tổng lương = Lương CB + Phụ cấp
+          <hr class="my-2">
+          <small class="text-muted"><i class="bi bi-info-circle"></i> Lọc theo tháng/năm để xem lương của tháng cụ thể. Nếu không chọn sẽ hiển thị tổng cộng tất cả các chuyến.</small>
+        </div>
+      </div>
+    </div>
+  </section>
+</html>

@@ -79,10 +79,8 @@
                             </th:block>
 
                             <th:block th:unless="${trip.laChuyenTuongLai}">
-                                <span>Số vé đã bán: <strong th:text="${trip.soVeDaBan}">112</strong></span>
-                                <span class="price-text" th:text="'Doanh thu: ' + ${#numbers.formatDecimal(trip.doanhThu, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
-                                    Doanh thu: 21,000,000 VNĐ
-                                </span>
+                                <span>✓ Chuyến đã hoàn thành</span>
+                                <span style="color: #666;">Xem chi tiết để thống kê</span>
                             </th:block>
                         </div>
                     </div>

@@ -4,10 +4,12 @@ GO
 -- =============================================
 -- PROCEDURE: usp_LayDanhSachNhanVienVoiGioLamViec
 -- Lấy danh sách nhân viên CÓ THỂ phân công với số giờ làm việc trong tuần
+-- + Hỗ trợ tìm kiếm theo mã hoặc tên
 -- =============================================
 CREATE OR ALTER PROC usp_LayDanhSachNhanVienVoiGioLamViec
     @MaChuyenTau NCHAR(10),
     @LoaiNhanVien NCHAR(2), -- 'LT' = Lái tàu, 'TT' = Toa tàu
+    @SearchKeyword NVARCHAR(100) = NULL, -- Từ khóa tìm kiếm (mã hoặc tên)
     @ThongBao NVARCHAR(200) OUT
 AS
 BEGIN
@@ -75,6 +77,14 @@ BEGIN
             SELECT MaNV FROM PHANCONG_LAITAU WHERE MaChuyenTau = @MaChuyenTau
             UNION
             SELECT MaNV FROM PHANCONG_TOA WHERE MaChuyenTau = @MaChuyenTau
+        )
+        
+        -- Tìm kiếm theo mã hoặc tên
+        AND (
+            @SearchKeyword IS NULL 
+            OR @SearchKeyword = ''
+            OR nv.MaNV LIKE '%' + @SearchKeyword + '%'
+            OR nd.HoTen LIKE '%' + @SearchKeyword + '%'
         )
         
     -- Sắp xếp theo số giờ làm việc tăng dần (ưu tiên người làm ít giờ)

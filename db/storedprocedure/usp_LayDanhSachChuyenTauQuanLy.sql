@@ -15,6 +15,11 @@ CREATE OR ALTER PROC usp_LayDanhSachChuyenTauQuanLy
 AS
 BEGIN
     SET NOCOUNT ON;
+    
+    -- Xử lý chuỗi rỗng thành NULL
+    IF @MaChuyenTau = '' OR LTRIM(RTRIM(@MaChuyenTau)) = '' SET @MaChuyenTau = NULL;
+    IF @LoaiTau = '' OR LTRIM(RTRIM(@LoaiTau)) = '' SET @LoaiTau = NULL;
+    IF @TrangThai = '' OR LTRIM(RTRIM(@TrangThai)) = '' SET @TrangThai = NULL;
 
     -- Bảng tạm lưu kết quả
     DECLARE @KetQua TABLE (
@@ -109,8 +114,8 @@ BEGIN
       AND (@NgayKhoiHanhTu IS NULL OR CAST(CT.ThoiGianXuatPhat AS DATE) >= @NgayKhoiHanhTu)
       AND (@NgayKhoiHanhDen IS NULL OR CAST(CT.ThoiGianXuatPhat AS DATE) <= @NgayKhoiHanhDen);
 
-    -- Lọc theo trạng thái phân công
-    IF @TrangThai IS NOT NULL AND @TrangThai <> N'Tất cả'
+    -- Lọc theo trạng thái phân công (chỉ lọc khi có giá trị)
+    IF @TrangThai IS NOT NULL
     BEGIN
         DELETE FROM @KetQua
         WHERE TrangThaiPhanCong <> @TrangThai;

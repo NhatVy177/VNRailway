@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{layout/main :: layout(~{::section}, ~{isEdit ? 'Chỉnh sửa đoàn tàu' : 'Thêm đoàn tàu mới'})}"
+>
+  <section>
+    <div class="main__container">
+      <div class="train-header">
+        <h1 class="main__title">
+          <i th:class="${isEdit ? 'bi bi-pencil-square' : 'bi bi-plus-circle-fill'}"></i>
+          <span th:text="${isEdit ? 'Sửa thông tin đoàn tàu' : 'Thêm đoàn tàu mới'}"></span>
+        </h1>
+      </div>
+
+      <div th:if="${errorMessage}" class="train-alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span th:text="${errorMessage}"></span>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="train-form-card train-fade-in">
+            <form 
+              th:action="${isEdit ? '/manager/trains/' + train.id + '/edit' : '/manager/trains/create'}" 
+              method="post"
+            >
+              <div class="mb-3">
+                <label for="maDoanTau" class="form-label">
+                  <i class="bi bi-hash"></i> Mã đoàn tàu <span class="required-mark">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="maDoanTau" 
+                  name="maDoanTau"
+                  th:value="${train.id}"
+                  th:readonly="${isEdit}"
+                  required
+                  maxlength="4"
+                  placeholder="Ví dụ: D001"
+                />
+                <small class="form-text text-muted">Mã đoàn tàu gồm 4 ký tự</small>
+              </div>
+
+              <div class="mb-3">
+                <label for="tenTau" class="form-label">
+                  <i class="bi bi-train-front"></i> Tên tàu <span class="required-mark">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="tenTau" 
+                  name="tenTau"
+                  th:value="${train.name}"
+                  required
+                  maxlength="50"
+                  placeholder="Ví dụ: SE1, TN1"
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="hangSX" class="form-label">
+                  <i class="bi bi-building"></i> Hãng sản xuất <span class="required-mark">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="hangSX" 
+                  name="hangSX"
+                  th:value="${train.manufacturer}"
+                  required
+                  maxlength="50"
+                  placeholder="Ví dụ: Hitachi, Siemens"
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="ngVanHanh" class="form-label">
+                  <i class="bi bi-calendar-event"></i> Ngày vận hành <span class="required-mark">*</span>
+                </label>
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  id="ngVanHanh" 
+                  name="ngVanHanh"
+                  th:value="${train.operationDate}"
+                  required
+                />
+                <small class="form-text text-muted">Ngày đoàn tàu bắt đầu vận hành</small>
+              </div>
+
+              <div class="mb-3">
+                <label for="loaiTau" class="form-label">
+                  <i class="bi bi-tag"></i> Loại tàu <span class="required-mark">*</span>
+                </label>
+                <select class="form-select" id="loaiTau" name="loaiTau" required>
+                  <option value="">-- Chọn loại tàu --</option>
+                  <option value="S" th:selected="${train.type == 'S'}">Tàu sang (S)</option>
+                  <option value="T" th:selected="${train.type == 'T'}">Tàu thường (T)</option>
+                </select>
+              </div>
+
+              <div class="train-form-actions">
+                <a th:href="@{/manager/trains}" class="train-btn train-btn-secondary">
+                  <i class="bi bi-x-circle"></i> Hủy
+                </a>
+                <button type="submit" class="train-btn train-btn-success">
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span th:text="${isEdit ? 'Cập nhật' : 'Thêm mới'}"></span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</html>

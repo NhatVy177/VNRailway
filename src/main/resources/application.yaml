@@ -34,3 +34,5 @@ spring:
 logging:
   level:
     "[org.springframework.web.servlet.resource]": ERROR
+
+# Reload trigger: 2026-01-16 06:09:43

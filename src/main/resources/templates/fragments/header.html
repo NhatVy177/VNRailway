@@ -35,6 +35,9 @@
                 th:replace="~{fragments/nav-item :: item('/manager/trips', '/manager/trips', 'Chuyến')}"
               />
               <th:block
+                th:replace="~{fragments/nav-item :: item('/manager/assignments', '/manager/assignments', 'Phân công')}"
+              />
+              <th:block
                 th:replace="~{fragments/nav-item :: item('/manager/employees', '/manager/employees', 'Nhân viên')}"
               />
               <th:block
@@ -48,7 +51,7 @@
                 th:replace="~{fragments/nav-item :: item('/ticket-seller/trips', '/ticket-seller/trips/search', 'Tra cứu chuyến tàu')}"
               />
               <th:block
-                th:replace="~{fragments/nav-item :: item('/ticket-seller/tickets', '/ticket-seller/tickets/search', 'Tra cứu vé')}"
+                th:replace="~{fragments/nav-item :: item('/employee/bookings', '/employee/bookings/search', 'Tra cứu vé')}"
               />
             </th:block>
 
@@ -58,7 +61,7 @@
                 th:replace="~{fragments/nav-item :: item('/trips', '/trips/search', 'Tra cứu chuyến tàu')}"
               />
               <th:block
-                th:replace="~{fragments/nav-item :: item('/tickets', '/tickets', 'Vé đã đặt')}"
+                th:replace="~{fragments/nav-item :: item('/my-bookings', '/my-bookings', 'Vé đã đặt')}"
               />
             </th:block>
           </nav>

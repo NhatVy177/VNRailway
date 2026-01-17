@@ -32,26 +32,57 @@
             <thead>
                 <tr>
                     <th style="width: 50px;">STT</th>
+                    <th style="width: 200px;">Loại phân công</th>
                     <th style="width: 150px;">Vai trò</th>
                     <th>Nhân viên phụ trách</th>
-                    <th style="width: 260px;">Thao tác</th>
+                    <th style="width: 150px;">Trạng thái</th>
                 </tr>
             </thead>
-            <tbody class="past-actions">
-                <tr>
-                    <td>1</td>
-                    <td>Lái chính</td>
-                    <td>48295 - Nguyễn Quốc Bảo</td>
-                    <td>
-                        <div class="btn-action-group">
-                            <button class="btn-leave">Duyệt nghỉ phép</button>
-                            <button class="btn-assign">Phân công</button>
-                        </div>
+            <tbody>
+                <!-- Empty state -->
+                <tr th:if="${assignments == null or assignments.isEmpty()}">
+                    <td colspan="5" style="text-align:center; padding: 2rem; color: #666;">
+                        <em>Không có dữ liệu phân công</em>
                     </td>
                 </tr>
-                <tr th:if="${assignments == null}">
-                    <td colspan="4" style="text-align:center; color: #666;">
-                         <em>Vui lòng truyền danh sách `assignments` từ Controller.</em>
+                
+                <!-- Data rows -->
+                <tr th:each="assignment, iterStat : ${assignments}">
+                    <td th:text="${iterStat.count}">1</td>
+                    <td>
+                        <span th:if="${assignment.loaiPhanCong == 'LAITAU'}">🚂 Lái tàu</span>
+                        <span th:if="${assignment.loaiPhanCong == 'TOATAU'}">
+                            🚃 Toa tàu
+                            <small th:if="${assignment.maToa != null}" style="color: #666;" 
+                                   th:text="'(' + ${assignment.maToa} + ')'"></small>
+                        </span>
+                    </td>
+                    <td>
+                        <span th:text="${assignment.vaiTro}">Lái chính</span>
+                    </td>
+                    <td>
+                        <span th:if="${assignment.maNV != null and assignment.maNV != ''}"
+                              style="color: #28a745; font-weight: 500;">
+                            ✓ <span th:text="${assignment.maNV + ' - ' + assignment.tenNhanVien}">U010147 - Vũ Văn Minh</span>
+                        </span>
+                        <span th:unless="${assignment.maNV != null and assignment.maNV != ''}" 
+                              style="color: #999; font-style: italic;">
+                            -- Chưa phân công --
+                        </span>
+                    </td>
+                    <td>
+                        <span th:if="${assignment.trangThai == 'Nghỉ phép'}" 
+                              style="color: #dc3545; font-weight: 600;">
+                            🏖️ Nghỉ phép
+                        </span>
+                        <span th:if="${assignment.trangThai == 'Thay thế'}" 
+                              style="color: #ffc107; font-weight: 600;">
+                            🔄 Thay thế
+                        </span>
+                        <span th:if="${assignment.trangThai == 'Đang làm việc'}" 
+                              style="color: #28a745; font-weight: 600;">
+                            ✓ Đã hoàn thành
+                        </span>
                     </td>
                 </tr>
             </tbody>

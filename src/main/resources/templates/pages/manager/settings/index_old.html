@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout(~{::section}, 'Cấu hình')}">
+<head>
+    <link rel="stylesheet" th:href="@{/css/pages/manager/settings.css}" />
+</head>
+<section>
+    <div class="main__container">
+        <h1 class="page-title">Cấu hình</h1>
+
+        <!-- Flash Messages -->
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+        <!-- 1. Giá vé -->
+        <div class="settings-section">
+            <h2 class="section-title">1. Giá vé</h2>
+            
+            <form method="post" th:action="@{/manager/settings/update-giave}" class="settings-form">
+                <!-- ✅ FIX 1: THÊM CSRF TOKEN -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                
+                <table class="settings-table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Loại tàu</th>
+                            <th>Loại hạng</th>
+                            <th>Tầng</th>
+                            <th>Giá cơ bản theo km (VNĐ)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item, iterStat : ${giaVeList}">
+                            <td th:text="${iterStat.count}"></td>
+                            <td th:text="${item.loaiTau}"></td>
+                            <td th:text="${item.loaiCho}"></td>
+                            <td th:text="${item.tang == 0 ? '' : item.tang}"></td>
+                            <td>
+                                <!-- ✅ FIX 2: THÊM CLIENT-SIDE VALIDATION -->
+                                <input type="number" 
+                                       th:name="${'giave_' + item.maThamSo}"
+                                       th:value="${item.giaCoban}" 
+                                       class="input-field"
+                                       step="0.01"
+                                       min="100"
+                                       max="10000000"
+                                       required 
+                                       th:oninvalid="'this.setCustomValidity(\'Giá vé phải từ 100 đến 10,000,000 VNĐ\')'"
+                                       oninput="this.setCustomValidity('')"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 2. Tham số hệ thống -->
+        <div class="settings-section">
+            <h2 class="section-title">2. Tham số hệ thống</h2>
+
+            <form method="post" th:action="@{/manager/settings/update-thamso}" class="settings-form">
+                <!-- ✅ FIX 1: THÊM CSRF TOKEN -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                
+                <!-- Mua vé và thanh toán -->
+                <div class="param-group">
+                    <h3 class="group-title">Mua vé và thanh toán</h3>
+                    <div class="param-list">
+                        <div class="param-item" th:each="param, iterStat : ${thamSoGroups['Mua vé và thanh toán']}">
+                            <div class="param-info">
+                                <span class="param-number" th:text="${iterStat.count}"></span>
+                                <span class="param-name" th:text="${param.tenThamSo}"></span>
+                                <span class="param-unit" th:text="${'(' + param.donVi + ')'}"></span>
+                            </div>
+                            <!-- ✅ FIX 2: THÊM CLIENT-SIDE VALIDATION -->
+                            <input type="number" 
+                                   th:name="${'thamso_' + param.maThamSo}"
+                                   th:value="${param.giaTriThamSo}" 
+                                   class="input-field-sm"
+                                   step="0.01"
+                                   min="0.01"
+                                   required 
+                                   th:oninvalid="'this.setCustomValidity(\'Giá trị phải lớn hơn 0\')'"
+                                   oninput="this.setCustomValidity('')"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Đổi vé -->
+                <div class="param-group">
+                    <h3 class="group-title">Đổi vé</h3>
+                    <div class="param-list">
+                        <div class="param-item" th:each="param, iterStat : ${thamSoGroups['Đổi vé']}">
+                            <div class="param-info">
+                                <span class="param-number" th:text="${iterStat.count}"></span>
+                                <span class="param-name" th:text="${param.tenThamSo}"></span>
+                                <span class="param-unit" th:text="${'(' + param.donVi + ')'}"></span>
+                            </div>
+                            <!-- ✅ TS007: 0-100, rest: > 0 -->
+                            <input type="number" 
+                                   th:name="${'thamso_' + param.maThamSo}"
+                                   th:value="${param.giaTriThamSo}" 
+                                   class="input-field-sm"
+                                   step="0.01"
+                                   th:min="${param.maThamSo == 'TS007' ? 0 : 0.01}"
+                                   th:max="${param.maThamSo == 'TS007' ? 100 : null}"
+                                   required 
+                                   th:oninvalid="${param.maThamSo == 'TS007' ? 'this.setCustomValidity(\'Phí đổi vé từ 0-100%\')' : 'this.setCustomValidity(\'Giá trị phải lớn hơn 0\')'}"
+                                   oninput="this.setCustomValidity('')"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Giảm giá -->
+                <div class="param-group">
+                    <h3 class="group-title">Giảm giá</h3>
+                    <div class="param-list">
+                        <div class="param-item" th:each="param, iterStat : ${thamSoGroups['Giảm giá']}">
+                            <div class="param-info">
+                                <span class="param-number" th:text="${iterStat.count}"></span>
+                                <span class="param-name" th:text="${param.tenThamSo}"></span>
+                                <span class="param-unit" th:text="${'(' + param.donVi + ')'}"></span>
+                            </div>
+                            <!-- ✅ TỶ LỆ %: 0-100 -->
+                            <input type="number" 
+                                   th:name="${'thamso_' + param.maThamSo}"
+                                   th:value="${param.giaTriThamSo}" 
+                                   class="input-field-sm"
+                                   step="0.01"
+                                   min="0"
+                                   max="100"
+                                   required 
+                                   oninvalid="this.setCustomValidity('Tỷ lệ giảm giá từ 0-100%')"
+                                   oninput="this.setCustomValidity('')"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phân công -->
+                <div class="param-group">
+                    <h3 class="group-title">Phân công</h3>
+                    <div class="param-list">
+                        <div class="param-item" th:each="param, iterStat : ${thamSoGroups['Phân công']}">
+                            <div class="param-info">
+                                <span class="param-number" th:text="${iterStat.count}"></span>
+                                <span class="param-name" th:text="${param.tenThamSo}"></span>
+                                <span class="param-unit" th:text="${'(' + param.donVi + ')'}"></span>
+                            </div>
+                            <input type="number" 
+                                   th:name="${'thamso_' + param.maThamSo}"
+                                   th:value="${param.giaTriThamSo}" 
+                                   class="input-field-sm"
+                                   step="0.01"
+                                   min="0.01"
+                                   required 
+                                   oninvalid="this.setCustomValidity('Giá trị phải lớn hơn 0')"
+                                   oninput="this.setCustomValidity('')"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+</html>

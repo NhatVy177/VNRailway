@@ -43,14 +43,14 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**")
                         .hasRole("ADMIN")
 
-                        .requestMatchers("/manager/**")
+                        .requestMatchers("/manager/**", "/api/manager/**")
                         .hasRole("MANAGER")
 
-                        .requestMatchers("/ticket-seller/**")
+                        .requestMatchers("/ticket-seller/**", "/employee/**")
                         .hasRole("TICKET_SELLER")
         
                         .anyRequest()
-                        .hasRole("CUSTOMER")
+                        .authenticated()
                 )
                 .formLogin(login -> login
                         .loginPage("/login")

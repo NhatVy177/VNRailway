@@ -136,38 +136,189 @@
         </div>
 
         <!-- ============================================
-             PLACEHOLDER CONTENT
+             DANH SÁCH VÉ ĐÃ ĐẶT
              ============================================ -->
-        <div class="placeholder-content">
-            <h3>🚧 Trang đang được phát triển</h3>
-            <p>Đây là trang <strong>stub</strong> tạm thời để test redirect từ booking.</p>
-            <p>Trang này sẽ hiển thị danh sách vé đã đặt với format giống <code>ViDuDanhSachVeDaDat.html</code></p>
+        <div th:if="${bookingsByOrder != null and not bookingsByOrder.isEmpty()}">
+            <div th:each="entry : ${bookingsByOrder}" class="booking-card" style="background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                
+                <!-- Thông tin đơn (lấy từ vé đầu tiên) -->
+                <div th:with="firstTicket=${entry.value[0]}">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #e0e0e0;">
+                        <div>
+                            <h3 style="margin: 0 0 8px 0; color: var(--color-secondary);">
+                                Mã đơn: <span th:text="${firstTicket.maDon}">DH000001</span>
+                            </h3>
+                            <p style="margin: 0; color: #666; font-size: 0.9rem;">
+                                <i class="fa-solid fa-clock"></i>
+                                Đặt lúc: <span th:text="${#temporals.format(firstTicket.thoiGianDatVe, 'dd/MM/yyyy HH:mm')}">18/10/2025 14:30</span>
+                            </p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.2rem; font-weight: 700; color: var(--color-primary);">
+                                <span th:text="${#numbers.formatDecimal(firstTicket.tongTien, 0, 'COMMA', 0, 'POINT')}">580,000</span> VNĐ
+                            </div>
+                            <div style="margin-top: 5px;">
+                                <span th:if="${firstTicket.trangThaiThanhToan == 'Chưa thanh toán'}" 
+                                      style="background: #ffeaa7; color: #856404; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
+                                    Chưa thanh toán
+                                </span>
+                                <span th:if="${firstTicket.trangThaiThanhToan != 'Chưa thanh toán'}" 
+                                      style="background: #d4edda; color: #155724; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 600;"
+                                      th:text="${firstTicket.trangThaiThanhToan}">
+                                    Đã thanh toán
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Debug Info -->
-            <div class="debug-info">
-                <h4>📋 Debug Info (Flash Attributes):</h4>
-                <ul>
-                    <li><strong>successMessage:</strong> <span th:text="${successMessage} ?: 'null'">null</span></li>
-                    <li><strong>errorMessage:</strong> <span th:text="${errorMessage} ?: 'null'">null</span></li>
-                    <li><strong>maDonMoi:</strong> <span th:text="${maDonMoi} ?: 'null'">null</span></li>
-                    <li><strong>isNewBooking:</strong> <span th:text="${isNewBooking} ?: 'false'">false</span></li>
-                    <li><strong>paymentDeadlineHours:</strong> <span th:text="${paymentDeadlineHours} ?: 'null'">null</span></li>
-                </ul>
-            </div>
+                    <!-- Thông tin hành trình -->
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700; font-size: 1.1rem; color: var(--color-secondary);">
+                                    <span th:text="${firstTicket.tenGaDi}">Sài Gòn</span>
+                                </div>
+                                <div style="color: #666; font-size: 0.85rem;">
+                                    <span th:text="${firstTicket.maGaDi}">GA009</span>
+                                </div>
+                            </div>
+                            <div style="color: var(--color-primary);">
+                                <i class="fa-solid fa-arrow-right" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div style="flex: 1; text-align: right;">
+                                <div style="font-weight: 700; font-size: 1.1rem; color: var(--color-secondary);">
+                                    <span th:text="${firstTicket.tenGaDen}">Hà Nội</span>
+                                </div>
+                                <div style="color: #666; font-size: 0.85rem;">
+                                    <span th:text="${firstTicket.maGaDen}">GA034</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6; display: flex; justify-content: space-between; font-size: 0.9rem; color: #666;">
+                            <div>
+                                <i class="fa-solid fa-train"></i>
+                                <span th:text="${firstTicket.tenTau}">Tàu SE1</span>
+                                (<span th:text="${firstTicket.maChuyenTau}">VNW051D768</span>)
+                            </div>
+                            <div>
+                                <i class="fa-solid fa-calendar"></i>
+                                Khởi hành: <span th:text="${#temporals.format(firstTicket.thoiGianKhoiHanh, 'dd/MM/yyyy HH:mm')}">20/10/2025 19:30</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Next Steps -->
-            <div class="debug-info">
-                <h4>✅ Next Steps:</h4>
-                <ul>
-                    <li>1. Tạo stored procedure: <code>sp_LayDanhSachVeDaDat</code></li>
-                    <li>2. Tạo DTO: <code>MyBookingDTO.java</code></li>
-                    <li>3. Tạo Service: <code>MyBookingService.java</code></li>
-                    <li>4. Query database trong Controller</li>
-                    <li>5. Render ticket cards với format ViDuDanhSachVeDaDat</li>
-                    <li>6. Implement pagination</li>
-                    <li>7. Implement button "Thanh toán"</li>
-                </ul>
+                <!-- Danh sách vé trong đơn -->
+                <div style="margin-top: 15px;">
+                    <h4 style="margin-bottom: 10px; font-size: 1rem; color: var(--color-secondary);">
+                        <i class="fa-solid fa-ticket"></i>
+                        Danh sách vé (<span th:text="${entry.value.size()}">2</span> vé)
+                    </h4>
+                    <div style="display: grid; gap: 10px;">
+                        <div th:each="ticket, iterStat : ${entry.value}" 
+                             style="background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 12px; display: grid; grid-template-columns: auto 1fr auto auto auto; gap: 15px; align-items: center;">
+                            
+                            <!-- STT -->
+                            <div style="font-weight: 700; color: var(--color-primary); font-size: 1.1rem;">
+                                #<span th:text="${iterStat.count}">1</span>
+                            </div>
+                            
+                            <!-- Thông tin hành khách -->
+                            <div>
+                                <div style="font-weight: 600; color: var(--color-secondary);">
+                                    <span th:text="${ticket.tenHanhKhach}">Nguyễn Văn A</span>
+                                </div>
+                                <div style="color: #666; font-size: 0.85rem;">
+                                    CMND: <span th:text="${ticket.cmnd}">001234567890</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Thông tin chỗ -->
+                            <div style="text-align: center;">
+                                <div style="font-weight: 600; color: var(--color-primary);">
+                                    Toa <span th:text="${ticket.maToa}">T001</span> - Chỗ <span th:text="${ticket.maCho}">G023</span>
+                                </div>
+                                <div style="color: #666; font-size: 0.85rem;">
+                                    <span th:text="${ticket.loaiCho}">Ghế ngồi mềm</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Giá vé -->
+                            <div style="text-align: right;">
+                                <div style="font-weight: 700; color: var(--color-primary); font-size: 1.1rem;">
+                                    <span th:text="${#numbers.formatDecimal(ticket.giaVe, 0, 'COMMA', 0, 'POINT')}">290,000</span>đ
+                                </div>
+                                <div>
+                                    <span th:if="${ticket.trangThaiVe == 'Đã hủy'}" 
+                                          style="background: #f8d7da; color: #721c24; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">
+                                        Đã hủy
+                                    </span>
+                                    <span th:if="${ticket.trangThaiVe == 'Chưa thanh toán'}" 
+                                          style="background: #ffeaa7; color: #856404; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">
+                                        Chưa thanh toán
+                                    </span>
+                                    <span th:if="${ticket.trangThaiVe == 'Đã thanh toán'}" 
+                                          style="background: #d4edda; color: #155724; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">
+                                        Đã thanh toán
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Nút hành động -->
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Nút thanh toán (khi chưa thanh toán) -->
+                                <div th:if="${ticket.trangThaiVe == 'Chưa thanh toán'}">
+                                    <form th:action="@{/my-bookings/pay-ticket/{maVe}(maVe=${ticket.maVe})}"
+                                          method="post"
+                                          onsubmit="return confirm('Xác nhận thanh toán cho vé ' + '[[${ticket.maVe}]]' + '?');"
+                                          style="margin: 0;">
+                                        <button type="submit"
+                                                style="background: var(--color-primary); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; white-space: nowrap;">
+                                            <i class="fa-solid fa-credit-card"></i> Thanh toán
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                                <!-- Nút đổi vé (khi đã thanh toán) -->
+                                <div th:if="${ticket.trangThaiVe == 'Đã thanh toán'}">
+                                    <a th:href="@{/ticket-change/{maVe}(maVe=${ticket.maVe})}"
+                                       style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; white-space: nowrap; text-decoration: none; display: inline-block;">
+                                        <i class="fa-solid fa-arrow-right-arrow-left"></i> Đổi vé
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nút hành động -->
+                <div th:with="firstTicket=${entry.value[0]}" style="margin-top: 15px; display: flex; gap: 10px; justify-content: flex-end;">
+                    <form th:if="${firstTicket.trangThaiThanhToan == 'Chưa thanh toán'}"
+                          th:action="@{/my-bookings/pay/{maDon}(maDon=${firstTicket.maDon})}"
+                          method="post"
+                          onsubmit="return confirm('Xác nhận thanh toán cho đơn hàng ' + '[[${firstTicket.maDon}]]' + '?');"
+                          style="margin: 0;">
+                        <button type="submit"
+                                class="btn btn-primary"
+                                style="background: var(--color-primary); color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            <i class="fa-solid fa-credit-card"></i> Thanh toán
+                        </button>
+                    </form>
+                </div>
+
             </div>
+        </div>
+
+        <!-- Thông báo không có vé -->
+        <div th:if="${bookingsByOrder == null or bookingsByOrder.isEmpty()}" 
+             style="background: white; border-radius: 8px; padding: 40px; text-align: center; color: #666;">
+            <i class="fa-solid fa-ticket" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
+            <h3 style="color: var(--color-secondary); margin-bottom: 10px;">Chưa có vé nào</h3>
+            <p>Bạn chưa đặt vé nào. Hãy tìm kiếm chuyến tàu và đặt vé ngay!</p>
+            <a href="/search" class="btn btn-primary" 
+               style="display: inline-block; margin-top: 20px; background: var(--color-primary); color: white; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
+                <i class="fa-solid fa-magnifying-glass"></i> Tìm chuyến tàu
+            </a>
         </div>
 
     </div>

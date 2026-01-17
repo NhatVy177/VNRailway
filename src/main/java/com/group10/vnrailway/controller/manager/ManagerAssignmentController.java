@@ -104,6 +104,7 @@ public class ManagerAssignmentController {
             @RequestParam String type, // 'laitau' hoặc 'toatau'
             @RequestParam(required = false) String role, // 'lai-chinh', 'lai-phu', etc.
             @RequestParam(required = false) String toa, // Mã toa (nếu là toa tàu)
+            @RequestParam(required = false) String search, // Từ khóa tìm kiếm
             @RequestParam(required = false, defaultValue = "1") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
             Model model) {
@@ -112,9 +113,9 @@ public class ManagerAssignmentController {
             // Trim mã chuyến tàu
             String trimmedMaChuyenTau = maChuyenTau.trim();
             
-            // Lấy danh sách nhân viên
+            // Lấy danh sách nhân viên (có hỗ trợ search)
             List<EmployeeForAssignment> employees = 
-                tripService.getEmployeesForAssignment(trimmedMaChuyenTau, type);
+                tripService.getEmployeesForAssignment(trimmedMaChuyenTau, type, search);
             
             // Lấy thông tin chuyến tàu (để hiển thị header)
             TripAssignmentDetail trip = tripService.getTripAssignmentDetail(trimmedMaChuyenTau);
@@ -132,6 +133,7 @@ public class ManagerAssignmentController {
             model.addAttribute("type", type);
             model.addAttribute("role", role);
             model.addAttribute("toa", toa);
+            model.addAttribute("search", search);
             model.addAttribute("page", page);
             model.addAttribute("size", size);
             model.addAttribute("totalElements", totalElements);

@@ -20,6 +20,14 @@
 
             <!-- Hidden input: JSON data từ trip-detail -->
             <input type="hidden" id="danhSachChoJson" th:value="${danhSachChoJson}">
+            
+            <!-- Hidden inputs: Thông tin đổi vé (để JS đọc) -->
+            <input type="hidden" id="maVeCu" th:value="${maVeCu}">
+            <input type="hidden" id="phiDoiVe" th:value="${phiDoiVe}">
+            <input type="hidden" id="giaVeCu" th:value="${giaVeCu}">
+            
+            <!-- Hidden input: maVeCu để submit form -->
+            <input type="hidden" name="maVeCu" th:value="${maVeCu}">
 
             <!-- Bảng danh sách vé -->
             <div class="booking-table-wrapper">
@@ -39,6 +47,11 @@
                         <!-- Dynamic rows được render bởi JS -->
                     </tbody>
                     <tfoot>
+                        <tr id="exchangeFeeRow" style="display: none;">
+                            <td colspan="5" class="footer-spacer"></td>
+                            <td class="footer-label">Phí đổi vé (5%):</td>
+                            <td class="footer-value" id="exchangeFee">0</td>
+                        </tr>
                         <tr>
                             <td colspan="5" class="footer-spacer"></td>
                             <td class="footer-label">Tổng:</td>
@@ -193,7 +206,10 @@
         window.bookingData = {
             maChuyenTau: /*[[${maChuyenTau}]]*/ 'SE2',
             maGaDi: /*[[${maGaDi}]]*/ 'SG',
-            maGaDen: /*[[${maGaDen}]]*/ 'HN'
+            maGaDen: /*[[${maGaDen}]]*/ 'HN',
+            maVeCu: /*[[${maVeCu}]]*/ '',
+            phiDoiVe: /*[[${phiDoiVe}]]*/ 0,
+            giaVeCu: /*[[${giaVeCu}]]*/ 0
         };
     </script>
 </section>

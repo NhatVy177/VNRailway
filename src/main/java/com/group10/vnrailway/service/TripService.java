@@ -256,12 +256,13 @@ public class TripService {
     // ============================================================
 
     /**
-     * Lấy danh sách nhân viên có thể phân công
+     * Lấy danh sách nhân viên có thể phân công (với tìm kiếm)
      */
     @PreAuthorize("hasRole('MANAGER')")
     public List<EmployeeForAssignment> getEmployeesForAssignment(
             String maChuyenTau, 
-            String type) {
+            String type,
+            String searchKeyword) {
         
         // Map type từ URL param sang ChucVu trong database
         String loaiNhanVien;
@@ -276,7 +277,7 @@ public class TripService {
             );
         }
         
-        return tripRepository.getEmployeesForAssignment(maChuyenTau, loaiNhanVien);
+        return tripRepository.getEmployeesForAssignment(maChuyenTau, loaiNhanVien, searchKeyword);
     }
 
     /**

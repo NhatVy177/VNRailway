@@ -1,15 +1,26 @@
 package com.group10.vnrailway.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PageResult<T> {
     private List<T> data;
-    private int page;
-    private int size;
     private long totalElements;
     private int totalPages;
+    private int page;
+    private int size;
+
+    public PageResult(List<T> data, int totalElements, int totalPages, int page) {
+        this.data = data;
+        this.totalElements = totalElements;
+        this.totalPages = totalPages;
+        this.page = page;
+    }
 
     public void setSize(int size) {
         this.size = size;

@@ -3,6 +3,7 @@ package com.group10.vnrailway.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.group10.vnrailway.dto.BookingTicket;
 import com.group10.vnrailway.request.BookingRequest;
+import com.group10.vnrailway.request.OfflineBookingRequest;
 import com.group10.vnrailway.repository.BookingRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,18 +188,118 @@ public class BookingService {
         System.out.println("Mã đơn: " + maDonMoi);
         System.out.println("===============================");
         
-        // Kiểm tra return code
-        if (returnCode == null || returnCode != 0) {
+        // Kiểm tra return code (0 = success, negative = error)
+        if (returnCode == null || returnCode < 0) {
             // Có lỗi xảy ra
             String errorMessage = thongBao != null ? thongBao : "Lỗi không xác định khi đặt vé";
             throw new Exception(errorMessage);
         }
         
-        // Thành công - trả về mã đơn
+        // Thành công (returnCode == 0) - trả về mã đơn
         if (maDonMoi == null || maDonMoi.trim().isEmpty()) {
             throw new Exception("Đặt vé thành công nhưng không nhận được mã đơn");
         }
         
         return maDonMoi.trim();
+    }
+
+    /**
+     * Tạo đơn đặt vé offline cho nhân viên bán vé
+     * 
+     * @param request OfflineBookingRequest chứa thông tin đặt vé và thông tin người đặt
+     * @param maNV Mã nhân viên bán vé
+     * @return Mã đơn đặt vé
+     * @throws Exception nếu có lỗi
+     */
+    public String taoDonDatVeOffline(OfflineBookingRequest request, String maNV) throws Exception {
+        
+        // 1. Validate input
+        validateOfflineBookingRequest(request, maNV);
+        
+        // 2. Convert danh sách vé sang JSON
+        String jsonDanhSachVe = convertOfflineTicketsToJson(request);
+        
+        // 3. Gọi stored procedure offline
+        Map<String, Object> result = bookingRepository.callTaoDonDatVeOffline(
+                request.getMaChuyenTau(),
+                request.getMaGaDi(),
+                request.getMaGaDen(),
+                maNV,
+                request.getPhuongThucTT(),
+                jsonDanhSachVe,
+                request.getNguoiDatHoTen(),
+                request.getNguoiDatCMND()
+        );
+        
+        // 4. Xử lý kết quả
+        return handleStoredProcedureResult(result);
+    }
+
+    /**
+     * Validate thông tin offline booking request
+     */
+    private void validateOfflineBookingRequest(OfflineBookingRequest request, String maNV) throws Exception {
+        if (request == null) {
+            throw new Exception("Booking request không được null");
+        }
+        
+        if (maNV == null || maNV.trim().isEmpty()) {
+            throw new Exception("Mã nhân viên không được để trống");
+        }
+        
+        if (request.getMaChuyenTau() == null || request.getMaChuyenTau().trim().isEmpty()) {
+            throw new Exception("Mã chuyến tàu không được để trống");
+        }
+        
+        if (request.getMaGaDi() == null || request.getMaGaDi().trim().isEmpty()) {
+            throw new Exception("Mã ga đi không được để trống");
+        }
+        
+        if (request.getMaGaDen() == null || request.getMaGaDen().trim().isEmpty()) {
+            throw new Exception("Mã ga đến không được để trống");
+        }
+        
+        if (request.getPhuongThucTT() == null || request.getPhuongThucTT().trim().isEmpty()) {
+            throw new Exception("Phương thức thanh toán không được để trống");
+        }
+        
+        // Validate thông tin người đặt vé
+        if (request.getNguoiDatHoTen() == null || request.getNguoiDatHoTen().trim().isEmpty()) {
+            throw new Exception("Họ tên người đặt vé không được để trống");
+        }
+        
+        if (request.getNguoiDatCMND() == null || request.getNguoiDatCMND().trim().isEmpty()) {
+            throw new Exception("CMND/CCCD người đặt vé không được để trống");
+        }
+        
+        // Validate CMND format
+        String cmnd = request.getNguoiDatCMND().trim();
+        if (!cmnd.matches("\\d{9,12}")) {
+            throw new Exception("CMND/CCCD người đặt không hợp lệ (chỉ nhập số, 9-12 ký tự)");
+        }
+        
+        if (request.getDanhSachVe() == null || request.getDanhSachVe().isEmpty()) {
+            throw new Exception("Danh sách vé không được để trống");
+        }
+        
+        // Validate từng vé
+        for (int i = 0; i < request.getDanhSachVe().size(); i++) {
+            BookingTicket ticket = request.getDanhSachVe().get(i);
+            validateTicket(ticket, i);
+        }
+
+        // Validate CMND không trùng lặp
+        validateUniqueCMND(request.getDanhSachVe());
+    }
+
+    /**
+     * Convert danh sách vé offline sang JSON
+     */
+    private String convertOfflineTicketsToJson(OfflineBookingRequest request) throws Exception {
+        try {
+            return mapper.writeValueAsString(request.getDanhSachVe());
+        } catch (Exception ex) {
+            throw new Exception("Lỗi khi chuyển đổi danh sách vé sang JSON: " + ex.getMessage());
+        }
     }
 }
