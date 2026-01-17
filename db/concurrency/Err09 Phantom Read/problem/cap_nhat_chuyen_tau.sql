@@ -219,6 +219,6 @@ GO
 
 --DECLARE @ReturnCode INT;
 --DECLARE @ThongBao NVARCHAR(200);
---EXEC @ReturnCode = usp_10_err_CapNhatChuyenTau N'VNW8F484B2', N'TN01', N'D030', '2026-04-18 08:10:00', @ThongBao OUT;
+--EXEC @ReturnCode = usp_10_err_CapNhatChuyenTau N'VNWA28EA53', N'TN23', N'D030', '2026-05-01 09:00:00', @ThongBao OUT;
 --PRINT CONCAT(@ReturnCode, N': ', @ThongBao);
 --GO
