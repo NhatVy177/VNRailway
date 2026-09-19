@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: vnrailway-app
+    ports:
+      - "80:8080" # Map port 80 of the host to port 8080 of the container
+    environment:
+      # Bạn hãy thay thế các thông tin bên dưới bằng thông tin thật của Azure SQL
+      - SERVER_PORT=8080
+      - DB_URL=jdbc:sqlserver://vnrailway-server.database.windows.net:1433;databaseName=VNRAILWAY;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+      - DB_USERNAME=adminvnrailway
+      - DB_PASSWORD=[NHẬP_MẬT_KHẨU_AZURE_CỦA_BẠN_VÀO_ĐÂY]
+      - DB_DRIVER=com.microsoft.sqlserver.jdbc.SQLServerDriver
+    restart: unless-stopped
